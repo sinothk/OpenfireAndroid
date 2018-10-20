@@ -16,6 +16,8 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.iqregister.AccountManager;
+import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.io.IOException;
 
@@ -156,19 +158,29 @@ public class IMHelper {
     public static IMResult login(String userName, String pwd) {
         try {
 
+            if (isAuthenticated()) {
+                disconnect();
+            }
+
             if (!checkConnection()) {
                 exeConnection();
             }
 
-            if (isAuthenticated()) {
-                return new IMResult(IMCode.SUCCESS, "当前已登录");
-            } else {
-                connection.login(userName, pwd);
-                return new IMResult(IMCode.SUCCESS, "登录成功");
-            }
+            connection.login(userName, pwd);
+            return new IMResult(IMCode.SUCCESS, "登录成功");
+
         } catch (XMPPException | SmackException | IOException e) {
             e.printStackTrace();
-            return new IMResult(IMCode.ERROR, "登录失败", e.getMessage());
+
+            disconnect();
+
+            String errorMsg = e.getMessage();
+
+            if (!TextUtils.isEmpty(errorMsg) && errorMsg.contains("not-authorized")) {
+                return new IMResult(IMCode.ERROR, "账号或密码错误", errorMsg);
+            } else {
+                return new IMResult(IMCode.ERROR, "登录失败", errorMsg);
+            }
         }
     }
 
@@ -197,7 +209,7 @@ public class IMHelper {
     }
 
 
-    public static IMResult logout() {
+    public static IMResult disconnect() {
         try {
             connection.disconnect();
             return new IMResult(IMCode.SUCCESS, "退出成功");
@@ -209,11 +221,11 @@ public class IMHelper {
     }
 
 
-    public static void logout(final Activity mActivity, final IMCallback imCallback) {
+    public static void disconnect(final Activity mActivity, final IMCallback imCallback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final IMResult result = logout();
+                final IMResult result = disconnect();
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -223,6 +235,67 @@ public class IMHelper {
             }
         }).start();
     }
+
+    /**
+     * 注册
+     *
+     * @param userName
+     * @param userPwd
+     * @return
+     */
+    private static IMResult signUp(String userName, String userPwd) {
+        try {
+            if (isAuthenticated()) {
+                disconnect();
+            }
+
+            if (!checkConnection()) {
+                exeConnection();
+            }
+
+            AccountManager.getInstance(connection).createAccount(userName, userPwd);
+
+            return new IMResult(IMCode.SUCCESS, "注册成功");
+
+        } catch (XMPPException | SmackException e) {
+            e.printStackTrace();
+
+            String errorMsg = e.getMessage();
+
+            if (!TextUtils.isEmpty(errorMsg) && errorMsg.contains("conflict")) {
+                return new IMResult(IMCode.ERROR, "账号已存在", errorMsg);
+            } else {
+                return new IMResult(IMCode.ERROR, "注册失败", errorMsg);
+            }
+        }
+    }
+
+    /**
+     * 注册
+     *
+     * @param currActivity
+     * @param userName
+     * @param userPwd
+     * @param imCallback
+     */
+    public static void signUp(final Activity currActivity, final String userName, final String userPwd, final IMCallback imCallback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                final IMResult result = signUp(userName, userPwd);
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(result);
+                    }
+                });
+            }
+        }).start();
+    }
+
 
     /**
      * =================================================

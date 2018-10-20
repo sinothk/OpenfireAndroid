@@ -26,6 +26,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:background="@color/colorAccent"
+        android:onClick="registerBtn"
+        android:text="注  册"
+        android:textColor="#FFF" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorAccent"
         android:onClick="loginBtn"
         android:text="登  录"
         android:textColor="#FFF" />

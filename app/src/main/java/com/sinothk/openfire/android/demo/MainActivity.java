@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         userPwdEt = this.findViewById(R.id.userPwdEt);
         logMsgTv = this.findViewById(R.id.logMsgTv);
 
-        IMHelper.init("192.168.1.61", "192.168.1.61", 5222);
+        IMHelper.init("127.0.0.1", "192.168.2.135", 5222);
 
         IMHelper.exeConnection(this, new IMCallback() {
             @Override
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        IMHelper.login(MainActivity.this, "test1", "123456", new IMCallback() {
+        IMHelper.login(MainActivity.this, userName, userPwd, new IMCallback() {
             @Override
             public void onStart() {
 
@@ -101,7 +101,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void logoutBtn(View view) {
-        IMHelper.logout(MainActivity.this, new IMCallback() {
+        IMHelper.disconnect(MainActivity.this, new IMCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onEnd(IMResult result) {
+                if (result.getCode() == IMCode.SUCCESS) {
+                    show(result.getTip());
+                    logPrint(result.getTip());
+                } else {
+                    show(result.getTip());
+                    logPrint(result.getMsg());
+                }
+            }
+        });
+    }
+
+    public void registerBtn(View view) {
+
+        String userName = userNameEt.getText().toString();
+        String userPwd = userPwdEt.getText().toString();
+
+        IMHelper.signUp(MainActivity.this, userName, userPwd, new IMCallback(){
             @Override
             public void onStart() {
 
