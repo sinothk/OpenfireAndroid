@@ -29,9 +29,12 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation project(':OpenfireAndroid')
 
+    implementation project(':OpenfireAndroid')
+//    implementation 'com.github.sinothk:OpenfireAndroid:1.0.1022'
+    
     //
     implementation 'com.github.sinothk:CommUnit:2.3.0926'
     implementation 'com.github.sinothk:TabView:1.0.1009'
+
 }

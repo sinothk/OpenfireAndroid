@@ -44,23 +44,6 @@ class SignInActivity : AppCompatActivity() {
 
         ViewUtil.focusMoveToEnd(userNameEt)
         ViewUtil.focusMoveToEnd(userPwdEt)
-
-
-//        IMHelper.exeConnection(this, object : IMCallback {
-//            override fun onStart() {
-//
-//            }
-//
-//            override fun onEnd(result: IMResult) {
-//                if (result.code == IMCode.SUCCESS) {
-//                    show(result.tip)
-//                    logPrint(result.tip)
-//                } else {
-//                    show(result.tip)
-//                    logPrint(result.msg)
-//                }
-//            }
-//        })
     }
 
     private fun logPrint(msg: String) {

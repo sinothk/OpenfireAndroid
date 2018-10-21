@@ -10,14 +10,11 @@ import com.sinothk.openfire.android.xmpp.XmppConnection
 import org.jivesoftware.smack.SmackException
 import org.jivesoftware.smack.packet.Presence
 import org.jivesoftware.smack.roster.Roster
-import org.jivesoftware.smack.roster.RosterEntries
 import org.jivesoftware.smack.roster.RosterEntry
 import org.jivesoftware.smack.roster.RosterListener
-import org.jivesoftware.smackx.search.UserSearchManager
-import org.jivesoftware.smackx.xdata.FormField
 import org.jxmpp.jid.EntityFullJid
 import org.jxmpp.jid.Jid
-import java.util.ArrayList
+import java.util.*
 
 
 /**
