@@ -6,7 +6,9 @@ import android.util.Log;
 
 import com.sinothk.openfire.android.bean.IMCode;
 import com.sinothk.openfire.android.bean.IMResult;
+import com.sinothk.openfire.android.bean.IMUser;
 import com.sinothk.openfire.android.inters.IMCallback;
+import com.sinothk.openfire.android.xmpp.XmppConnection;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -17,7 +19,10 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.iqregister.AccountManager;
-import org.jxmpp.stringprep.XmppStringprepException;
+import org.jivesoftware.smackx.vcardtemp.packet.VCard;
+import org.jxmpp.jid.EntityFullJid;
+import org.jxmpp.jid.parts.Domainpart;
+import org.jxmpp.jid.parts.Localpart;
 
 import java.io.IOException;
 
@@ -29,25 +34,34 @@ import java.io.IOException;
  */
 public class IMHelper {
 
-    // 连接实体
-    private static AbstractXMPPConnection connection;
-
-    private static String serverName;
-    private static String serverIp;
-    private static int serverPort;
     private static String TAG = IMHelper.class.getSimpleName();
 
+//    private static void returnInfo(Activity currActivity, final IMCallback callback,
+//                                   final IMResult iMResult) {
+//        if (currActivity == null || callback == null || iMResult == null) {
+//            return;
+//        }
+//        currActivity.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                callback.onEnd(iMResult);
+//            }
+//        });
+//    }
+
     public static void init(String server_name, String server_ip, int server_port) {
-        serverName = server_name;
-        serverIp = server_ip;
-        serverPort = server_port;
+        XmppConnection.init(server_name, server_ip, server_port);
+    }
+
+    public static XmppConnection getConnection() {
+        return XmppConnection.getInstance();
     }
 
     /**
      * 判断是否已连接
      */
     public static boolean checkConnection() {
-        return null != connection && connection.isConnected();
+        return XmppConnection.getInstance().checkConnection();
     }
 
     /**
@@ -57,7 +71,7 @@ public class IMHelper {
      * @return
      */
     public static boolean isAuthenticated() {
-        return connection != null && connection.isConnected() && connection.isAuthenticated();
+        return XmppConnection.getInstance().isAuthenticated();
     }
 
     /**
@@ -65,29 +79,36 @@ public class IMHelper {
      */
     public static void exeConnection(final Activity currActivity, final IMCallback callback) {
 
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                callback.onStart();
+            }
+        });
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (currActivity == null || callback == null) {
-                    Log.e(TAG, "openConnection -> 参数为空 ...");
-                    return;
+
+                if (XmppConnection.getInstance().checkConfig()) {
+
+                    final IMResult imResult = exeConnection();
+
+                    currActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 执行连接
+                            callback.onEnd(imResult);
+                        }
+                    });
 
                 } else {
                     currActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onStart();
+                            callback.onEnd(new IMResult(IMCode.ERROR, "参数初始化有误", "连接参数异常：请检查IMHelper.init(*)是否已经调用！"));
                         }
                     });
-                }
-
-                if (TextUtils.isEmpty(serverName) || TextUtils.isEmpty(serverIp) || serverPort == 0) {
-                    returnInfo(currActivity, callback, new IMResult(IMCode.ERROR, "参数初始化有误", "连接参数异常：请检查IMHelper.init(*)是否已经调用！"));
-
-                } else {
-                    // 执行连接
-                    IMResult result = exeConnection();
-                    returnInfo(currActivity, callback, result);
                 }
             }
         }).start();
@@ -99,54 +120,19 @@ public class IMHelper {
      * @return
      */
     public static IMResult exeConnection() {
-        if (null == connection || !connection.isAuthenticated()) {
-
-            SmackConfiguration.DEBUG = true;
-
-            XMPPTCPConnectionConfiguration.Builder config = XMPPTCPConnectionConfiguration.builder();
-
-            //设置openfire主机IP
-//                config.setHostAddress(InetAddress.getByName(serverIp));
-            config.setHost(serverIp);
-
-            //设置openfire服务器名称
-//                config.setXmppDomain(serverName);
-            config.setServiceName(serverName);
-
-            //设置端口号：默认5222
-            config.setPort(serverPort);
-            //禁用SSL连接
-            config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled).setCompressionEnabled(false);
-            //设置Debug
-            config.setDebuggerEnabled(true);
-            //设置离线状态
-            config.setSendPresence(false);
-            //设置开启压缩，可以节省流量
-            config.setCompressionEnabled(true);
-
-            //需要经过同意才可以添加好友
-            Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.manual);
-
-            // 将相应机制隐掉
-            //SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
-            //SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
-
-            connection = new XMPPTCPConnection(config.build());
-
-            try {
-                connection.connect();// 连接到服务器
-                return new IMResult(IMCode.SUCCESS, "连接成功");
-
-            } catch (XMPPException | SmackException | IOException e) {
-                e.printStackTrace();
-                connection = null;
-
-                return new IMResult(IMCode.ERROR, "连接异常", e.getMessage());
-            }
-        } else {
+        if (XmppConnection.getInstance().checkConnection() || XmppConnection.getInstance().isAuthenticated()) {
             return new IMResult(IMCode.SUCCESS, "当前已是连接状态");
         }
+
+        if (null == XmppConnection.getInstance().getConnection()) {
+            return new IMResult(IMCode.ERROR, "连接异常");
+        } else {
+            return new IMResult(IMCode.SUCCESS, "连接成功");
+        }
     }
+
+
+    // ===================================================================
 
     /**
      * 用户登录
@@ -156,30 +142,26 @@ public class IMHelper {
      * @return
      */
     public static IMResult login(String userName, String pwd) {
-        try {
 
-            if (isAuthenticated()) {
-                disconnect();
-            }
+        if (isAuthenticated()) {
+            disconnect();
+        }
 
-            if (!checkConnection()) {
-                exeConnection();
-            }
+        if (!checkConnection()) {
+            exeConnection();
+        }
 
-            connection.login(userName, pwd);
+        String result = XmppConnection.getInstance().login(userName, pwd);
+
+        if (TextUtils.isEmpty(result)) {
             return new IMResult(IMCode.SUCCESS, "登录成功");
-
-        } catch (XMPPException | SmackException | IOException e) {
-            e.printStackTrace();
-
+        } else {
             disconnect();
 
-            String errorMsg = e.getMessage();
-
-            if (!TextUtils.isEmpty(errorMsg) && errorMsg.contains("not-authorized")) {
-                return new IMResult(IMCode.ERROR, "账号或密码错误", errorMsg);
+            if (result.contains("not-authorized")) {
+                return new IMResult(IMCode.ERROR, "账号或密码错误", result);
             } else {
-                return new IMResult(IMCode.ERROR, "登录失败", errorMsg);
+                return new IMResult(IMCode.ERROR, "登录失败", result);
             }
         }
     }
@@ -192,6 +174,14 @@ public class IMHelper {
      * @return
      */
     public static void login(final Activity currActivity, final String userName, final String pwd, final IMCallback callback) {
+
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                callback.onStart();
+            }
+        });
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -211,7 +201,7 @@ public class IMHelper {
 
     public static IMResult disconnect() {
         try {
-            connection.disconnect();
+            XmppConnection.getInstance().closeConnection();
             return new IMResult(IMCode.SUCCESS, "退出成功");
 
         } catch (Exception e) {
@@ -221,7 +211,7 @@ public class IMHelper {
     }
 
 
-    public static void disconnect(final Activity mActivity, final IMCallback imCallback) {
+    public static void logout(final Activity mActivity, final IMCallback imCallback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -239,33 +229,30 @@ public class IMHelper {
     /**
      * 注册
      *
-     * @param userName
+     * @param account
      * @param userPwd
      * @return
      */
-    private static IMResult signUp(String userName, String userPwd) {
-        try {
-            if (isAuthenticated()) {
-                disconnect();
-            }
+    private static IMResult signUp(String account, String userPwd) {
+        if (isAuthenticated()) {
+            disconnect();
+        }
 
-            if (!checkConnection()) {
-                exeConnection();
-            }
+        if (!checkConnection()) {
+            exeConnection();
+        }
 
-            AccountManager.getInstance(connection).createAccount(userName, userPwd);
+        String result = XmppConnection.getInstance().register(account, userPwd);
 
+        if (TextUtils.isEmpty(result)) {
             return new IMResult(IMCode.SUCCESS, "注册成功");
+        } else {
+            disconnect();
 
-        } catch (XMPPException | SmackException e) {
-            e.printStackTrace();
-
-            String errorMsg = e.getMessage();
-
-            if (!TextUtils.isEmpty(errorMsg) && errorMsg.contains("conflict")) {
-                return new IMResult(IMCode.ERROR, "账号已存在", errorMsg);
+            if (result.contains("conflict")) {
+                return new IMResult(IMCode.ERROR, "账号已存在", result);
             } else {
-                return new IMResult(IMCode.ERROR, "注册失败", errorMsg);
+                return new IMResult(IMCode.ERROR, "注册失败", result);
             }
         }
     }
@@ -279,6 +266,13 @@ public class IMHelper {
      * @param imCallback
      */
     public static void signUp(final Activity currActivity, final String userName, final String userPwd, final IMCallback imCallback) {
+
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
 
         new Thread(new Runnable() {
             @Override
@@ -297,21 +291,30 @@ public class IMHelper {
     }
 
 
-    /**
-     * =================================================
-     */
-    private static void returnInfo(Activity currActivity, final IMCallback callback, final IMResult iMResult) {
-        if (currActivity == null || callback == null || iMResult == null) {
-            return;
-        }
+    public static IMUser getCurrUser() {
+        IMUser imUser = new IMUser();
+        try {
+            // 账号
+            EntityFullJid entityFullJid = XmppConnection.getInstance().getConnection().getUser();
+            Localpart localpart = entityFullJid.getLocalpart();
+            imUser.setUserName(localpart.toString());
+            //
+            Domainpart domainpart = entityFullJid.getDomain();
+            if (domainpart == null) {
 
-        currActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                callback.onEnd(iMResult);
             }
-        });
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return imUser;
     }
 
+    // ========================================== 其他账号 ================================================
+
+    public static VCard getUserVCard(String nameStr) {
+        return XmppConnection.getInstance().getUserVCard(nameStr);
+    }
 
 }

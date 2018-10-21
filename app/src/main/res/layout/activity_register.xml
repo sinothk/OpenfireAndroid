@@ -38,20 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:background="@color/theme"
-        android:onClick="loginBtn"
-        android:text="登  录"
-        android:textColor="#FFF" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:onClick="gotoRegisterBtns"
+        android:onClick="registerBtn"
         android:text="注册新账号"
-        android:textColor="@color/theme" />
+        android:textColor="#FFF" />
 
     <ScrollView
         android:layout_width="match_parent"

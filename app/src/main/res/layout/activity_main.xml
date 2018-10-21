@@ -1,74 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="30dp">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/userNameEt"
+    <LinearLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="用户名"
-        android:text="test1" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/userPwdEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="密码"
-        android:text="123456" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorAccent"
-        android:onClick="registerBtn"
-        android:text="注  册"
-        android:textColor="#FFF" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorAccent"
-        android:onClick="loginBtn"
-        android:text="登  录"
-        android:textColor="#FFF" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorAccent"
-        android:onClick="logoutBtn"
-        android:text="退  出"
-        android:textColor="#FFF" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
+        <android.support.v4.view.ViewPager
+            android:id="@+id/mViewPager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:overScrollMode="never" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="日志：" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#888" />
 
-            <TextView
-                android:id="@+id/logMsgTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="" />
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+        <com.sinothk.tab.weiXin.AlphaTabsIndicator
+            android:id="@+id/alphaIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal">
+
+            <com.sinothk.tab.weiXin.AlphaTabView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="5dp"
+                app:tabIconNormal="@drawable/ic_nav_im_normal"
+                app:tabIconSelected="@drawable/ic_nav_im_active"
+                app:tabText="消息"
+                app:tabTextSize="13sp"
+                app:textColorNormal="#999999"
+                app:textColorSelected="@color/theme" />
+
+            <com.sinothk.tab.weiXin.AlphaTabView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="5dp"
+                app:tabIconNormal="@drawable/ic_nav_contacts_normal"
+                app:tabIconSelected="@drawable/ic_nav_contacts_active"
+                app:tabText="通讯录"
+                app:tabTextSize="13sp"
+                app:textColorNormal="#999999"
+                app:textColorSelected="@color/theme" />
+
+            <com.sinothk.tab.weiXin.AlphaTabView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="5dp"
+                app:tabIconNormal="@drawable/ic_nav_mine_normal"
+                app:tabIconSelected="@drawable/ic_nav_mine_active"
+                app:tabText="我的"
+                app:tabTextSize="13sp"
+                app:textColorNormal="#999999"
+                app:textColorSelected="@color/theme" />
+        </com.sinothk.tab.weiXin.AlphaTabsIndicator>
+    </LinearLayout>
+</RelativeLayout>

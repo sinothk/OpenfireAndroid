@@ -26,14 +26,17 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
+
     implementation 'com.android.support:appcompat-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     // smack依赖
-    api 'org.igniterealtime.smack:smack-android-extensions:4.1.5'
-    api 'org.igniterealtime.smack:smack-experimental:4.1.5'
-    api 'org.igniterealtime.smack:smack-tcp:4.1.5'
-    api 'org.igniterealtime.smack:smack-core:4.1.5'
+    api 'de.measite.minidns:minidns-hla:0.2.2'
+//    api 'org.igniterealtime.smack:smack-android:4.1.5'
+//    api 'org.igniterealtime.smack:smack-android-extensions:4.1.5'
+//    api 'org.igniterealtime.smack:smack-experimental:4.1.5'
+//    api 'org.igniterealtime.smack:smack-tcp:4.1.5'
+//    api 'org.igniterealtime.smack:smack-core:4.1.5'
 }
