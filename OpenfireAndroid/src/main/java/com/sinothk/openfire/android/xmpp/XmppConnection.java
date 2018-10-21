@@ -247,7 +247,7 @@ public class XmppConnection {
      *
      * @param account  注册帐号
      * @param password 注册密码
-     * @return 1、注册成功 0、注册失败
+     * @return 注册成功 /注册失败
      */
     public String register(String account, String password) {
         if (getConnection() == null)
@@ -275,6 +275,7 @@ public class XmppConnection {
         XMPPConnection con = getConnection();
         if (con == null)
             return;
+
         Presence presence;
         try {
             switch (code) {
@@ -301,6 +302,7 @@ public class XmppConnection {
                     con.sendStanza(presence);
                     Log.v("state", "设置离开");
                     break;
+
 //                case 4:
 //                    Roster roster = connection.getRoster();
 //                    Collection<RosterEntry> entries = roster.getEntries();
@@ -320,11 +322,13 @@ public class XmppConnection {
 //                    connection.sendPacket(presence);
 //                    Log.v("state", "设置隐身");
 //                    break;
+
                 case 5:
                     presence = new Presence(Presence.Type.unavailable);
                     con.sendStanza(presence);
                     Log.v("state", "设置离线");
                     break;
+
                 default:
                     break;
             }
@@ -411,25 +415,30 @@ public class XmppConnection {
     public Drawable getUserImage(String user) {
         if (getConnection() == null)
             return null;
+
         ByteArrayInputStream bais = null;
+
         try {
             VCard vcard = new VCard();
             // 加入这句代码，解决No VCard for
-            ProviderManager.addIQProvider("vCard", "vcard-temp",
-                    new org.jivesoftware.smackx.vcardtemp.provider.VCardProvider());
+            ProviderManager.addIQProvider("vCard", "vcard-temp", new org.jivesoftware.smackx.vcardtemp.provider.VCardProvider());
+
             if (user == null || user.equals("") || user.trim().length() <= 0) {
                 return null;
             }
+
             try {
-                VCardManager.getInstanceFor(getConnection()).loadVCard(
-                        JidCreate.entityBareFrom(user + "@" + getConnection().getServiceName()));
+                VCardManager.getInstanceFor(getConnection()).loadVCard(JidCreate.entityBareFrom(user + "@" + getConnection().getServiceName()));
+
             } catch (XmppStringprepException | SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
                 e.printStackTrace();
             }
 
             if (vcard.getAvatar() == null)
                 return null;
+
             bais = new ByteArrayInputStream(vcard.getAvatar());
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -599,6 +608,7 @@ public class XmppConnection {
     public boolean changeImage(File file) {
         if (getConnection() == null)
             return false;
+
         try {
             VCard vcard = new VCard();
             vcard.load(getConnection());
@@ -609,15 +619,14 @@ public class XmppConnection {
             String encodedImage = StringUtils.encodeHex(bytes);
             vcard.setAvatar(bytes, encodedImage);
             vcard.setEncodedImage(encodedImage);
-            vcard.setField("PHOTO", "<TYPE>image/jpg</TYPE><BINVAL>"
-                    + encodedImage + "</BINVAL>", true);
+            vcard.setField("PHOTO", "<TYPE>image/jpg</TYPE><BINVAL>" + encodedImage + "</BINVAL>", true);
 
-            ByteArrayInputStream bais = new ByteArrayInputStream(
-                    vcard.getAvatar());
+            ByteArrayInputStream bais = new ByteArrayInputStream(vcard.getAvatar());
             FormatTools.getInstance().InputStream2Bitmap(bais);
 
             vcard.save(getConnection());
             return true;
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;

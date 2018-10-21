@@ -36,19 +36,6 @@ public class IMHelper {
 
     private static String TAG = IMHelper.class.getSimpleName();
 
-//    private static void returnInfo(Activity currActivity, final IMCallback callback,
-//                                   final IMResult iMResult) {
-//        if (currActivity == null || callback == null || iMResult == null) {
-//            return;
-//        }
-//        currActivity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                callback.onEnd(iMResult);
-//            }
-//        });
-//    }
-
     public static void init(String server_name, String server_ip, int server_port) {
         XmppConnection.init(server_name, server_ip, server_port);
     }
@@ -289,7 +276,6 @@ public class IMHelper {
             }
         }).start();
     }
-
 
     public static IMUser getCurrUser() {
         IMUser imUser = new IMUser();
