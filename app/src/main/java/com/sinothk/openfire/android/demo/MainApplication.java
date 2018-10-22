@@ -1,10 +1,12 @@
 package com.sinothk.openfire.android.demo;
 
 import android.app.Application;
+import android.text.TextUtils;
 
 import com.sinothk.comm.utils.PreferUtil;
 import com.sinothk.comm.utils.ToastUtil;
 import com.sinothk.openfire.android.IMHelper;
+import com.sinothk.openfire.android.demo.model.StringValue;
 import com.sinothk.openfire.android.xmpp.XmppConnection;
 
 import org.jivesoftware.smack.SmackException;
@@ -30,12 +32,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-//        IMHelper.init("127.0.0.1", "192.168.2.135", 5222);
-        IMHelper.init("127.0.0.1", "192.168.124.19", 5222);
-
         PreferUtil.init(this);
         ToastUtil.init(this);
     }
-
-
 }

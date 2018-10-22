@@ -6,13 +6,15 @@
     android:padding="30dp">
 
     <ImageView
+        android:id="@+id/avatarIv"
         android:layout_width="@dimen/dp_60"
         android:layout_height="@dimen/dp_60"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dp_40"
+        android:clickable="true"
+        android:focusable="true"
         android:scaleType="centerCrop"
         android:src="@drawable/bg" />
-
 
     <EditText
         android:id="@+id/userNameEt"
@@ -42,11 +44,12 @@
         android:text="登  录"
         android:textColor="#FFF" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
+        android:background="@null"
         android:clickable="true"
         android:focusable="true"
         android:onClick="registerBtn"

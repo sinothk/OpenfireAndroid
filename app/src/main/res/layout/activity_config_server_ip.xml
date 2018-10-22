@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/win_bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_layout" />
+
+    <include layout="@layout/line_4_part" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_old_password"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="end|center_vertical"
+            android:text="服务器名"
+            android:textColor="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+
+        <EditText
+            android:id="@+id/serverNameEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/tv_old_password"
+            android:background="@null"
+            android:hint="填写服务器名称"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16"
+            android:text=""
+            android:textColor="@color/theme"
+            android:textColorHint="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+    </RelativeLayout>
+
+    <include layout="@layout/line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_new_password"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="end|center_vertical"
+            android:text="服务地址"
+            android:textColor="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/tv_new_password"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp_10">
+
+            <EditText
+                android:id="@+id/ip0Et"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/win_bg"
+                android:gravity="center"
+                android:hint="192"
+                android:inputType="number"
+                android:text=""
+                android:textColor="@color/theme"
+                android:textColorHint="@color/list_title_sub"
+                android:textSize="@dimen/sp_14" />
+
+            <TextView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="center"
+                android:text="·"
+                android:textColor="@color/theme"
+                android:textSize="@dimen/sp_12" />
+
+            <EditText
+                android:id="@+id/ip1Et"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/win_bg"
+                android:gravity="center"
+                android:hint="168"
+                android:inputType="number"
+                android:text=""
+                android:textColor="@color/theme"
+                android:textColorHint="@color/list_title_sub"
+                android:textSize="@dimen/sp_14" />
+
+            <TextView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="center"
+                android:text="·"
+                android:textColor="@color/theme"
+                android:textSize="@dimen/sp_12" />
+
+            <EditText
+                android:id="@+id/ip2Et"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/win_bg"
+                android:gravity="center"
+                android:hint="1"
+                android:inputType="number"
+                android:text=""
+                android:textColor="@color/theme"
+                android:textColorHint="@color/list_title_sub"
+                android:textSize="@dimen/sp_14" />
+
+            <TextView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="center"
+                android:text="·"
+                android:textColor="@color/theme"
+                android:textSize="@dimen/sp_12" />
+
+            <EditText
+                android:id="@+id/ip3Et"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/win_bg"
+                android:gravity="center"
+                android:hint="36"
+                android:inputType="number"
+                android:text=""
+                android:textColor="@color/theme"
+                android:textColorHint="@color/list_title_sub"
+                android:textSize="@dimen/sp_14" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <include layout="@layout/line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_confirm_password"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="end|center_vertical"
+            android:text="服务端口"
+            android:textColor="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+
+        <EditText
+            android:id="@+id/serverPortEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/dp_10"
+            android:layout_toEndOf="@id/tv_confirm_password"
+            android:background="@color/win_bg"
+            android:hint="确认输入服务端口"
+            android:inputType="number"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16"
+            android:text="5222"
+            android:textColor="@color/theme"
+            android:textColorHint="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/okBtn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_42"
+        android:layout_margin="@dimen/dp_30"
+        android:background="@color/theme"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="立即修改"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16" />
+</LinearLayout>
+

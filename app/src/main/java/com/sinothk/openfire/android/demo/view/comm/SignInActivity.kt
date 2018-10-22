@@ -23,8 +23,6 @@ import java.util.*
 import com.jiangyy.easydialog.LoadingDialog
 
 
-
-
 /**
 
  * @ author LiangYT
@@ -47,6 +45,10 @@ class SignInActivity : AppCompatActivity() {
 
         ViewUtil.focusMoveToEnd(userNameEt)
         ViewUtil.focusMoveToEnd(userPwdEt)
+
+        avatarIv.setOnClickListener() {
+            IntentUtil.openActivity(this@SignInActivity, ConfigServerActivity::class.java).start()
+        }
     }
 
     private fun logPrint(msg: String) {
@@ -70,7 +72,7 @@ class SignInActivity : AppCompatActivity() {
         }
 
         val loadingDialog = LoadingDialog.Builder(this@SignInActivity)
-        loadingDialog.setTitle("正在加载ing...")
+        loadingDialog.setTitle("正在登录...")
 
         IMHelper.login(this@SignInActivity, userName, userPwd, object : IMCallback {
             override fun onStart() {

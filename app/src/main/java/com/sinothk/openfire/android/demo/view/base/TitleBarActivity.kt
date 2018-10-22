@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.View
+import com.sinothk.openfire.android.demo.utils.ActivityUtil
 import kotlinx.android.synthetic.main.title_layout.*
 
 
@@ -12,6 +13,8 @@ abstract class TitleBarActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutResId())
+
+        ActivityUtil.addActivity(this)
     }
 
     abstract fun getLayoutResId(): Int

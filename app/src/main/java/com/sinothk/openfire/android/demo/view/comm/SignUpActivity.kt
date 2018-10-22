@@ -9,6 +9,7 @@ import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.demo.R
+import com.sinothk.openfire.android.demo.utils.ActivityUtil
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_register.*
 import java.text.SimpleDateFormat
@@ -25,6 +26,7 @@ class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+        ActivityUtil.addActivity(this)
     }
 
     fun registerBtn(view: View) {
@@ -33,7 +35,7 @@ class SignUpActivity : AppCompatActivity() {
         val userPwd = userPwdEt.text.toString()
 
         val loadingDialog = LoadingDialog.Builder(this@SignUpActivity)
-        loadingDialog.setTitle("正在加载ing...")
+        loadingDialog.setTitle("注册中...")
 
         IMHelper.signUp(this@SignUpActivity, userName, userPwd, object : IMCallback {
             override fun onStart() {

@@ -34,8 +34,9 @@ public class ActivityUtil {
                 activityStack.get(i).finish();
             }
         }
-        activityStack.clear();
-
+        if (activityStack != null) {
+            activityStack.clear();
+        }
     }
 
     // 高级部分=====================
@@ -44,10 +45,12 @@ public class ActivityUtil {
      * 获取当前Activity（堆栈中最后一个压入的）
      */
     public static Activity currentActivity() {
-
-        Activity activity = activityStack.lastElement();
-        return activity;
-
+        if (activityStack != null) {
+            Activity activity = activityStack.lastElement();
+            return activity;
+        } else {
+            return null;
+        }
     }
 
 
@@ -55,6 +58,10 @@ public class ActivityUtil {
      * Acitivty生命周期结束
      */
     public static void destroyActivity(Activity activity) {
+
+        if (activityStack == null) {
+            return;
+        }
 
         if (activity != null) {
             activityStack.remove(activity);
@@ -66,6 +73,9 @@ public class ActivityUtil {
      * 结束当前Activity（堆栈中最后一个压入的）
      */
     public static void finishActivity() {
+        if (activityStack == null) {
+            return;
+        }
 
         Activity activity = activityStack.lastElement();
         if (activity != null) {
@@ -79,6 +89,10 @@ public class ActivityUtil {
      */
     public static void finishActivity(Activity activity) {
 
+        if (activityStack == null) {
+            return;
+        }
+
         if (activity != null) {
             activityStack.remove(activity);
             activity.finish();
@@ -90,6 +104,9 @@ public class ActivityUtil {
      * 结束指定类名的Activity
      */
     public static void finishActivity(Class<?> cls) {
+        if (activityStack == null) {
+            return;
+        }
 
         Activity acti = null;
         for (Activity activity : activityStack) {

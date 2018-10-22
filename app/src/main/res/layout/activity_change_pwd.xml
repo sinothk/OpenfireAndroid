@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/win_bg"
@@ -37,7 +38,7 @@
             android:paddingStart="@dimen/dp_16"
             android:paddingEnd="@dimen/dp_16"
             android:text=""
-            android:textColor="@color/list_title"
+            android:textColor="@color/theme"
             android:textColorHint="@color/list_title_sub"
             android:textSize="@dimen/sp_16" />
     </RelativeLayout>
@@ -71,7 +72,7 @@
             android:paddingStart="@dimen/dp_16"
             android:paddingEnd="@dimen/dp_16"
             android:text=""
-            android:textColor="@color/list_title"
+            android:textColor="@color/theme"
             android:textColorHint="@color/list_title_sub"
             android:textSize="@dimen/sp_16" />
 
@@ -106,11 +107,23 @@
             android:paddingStart="@dimen/dp_16"
             android:paddingEnd="@dimen/dp_16"
             android:text=""
-            android:textColor="@color/list_title"
+            android:textColor="@color/theme"
             android:textColorHint="@color/list_title_sub"
             android:textSize="@dimen/sp_16" />
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/changePwdBtn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_42"
+        android:layout_margin="@dimen/dp_30"
+        android:background="@color/theme"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="立即修改"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16" />
 </LinearLayout>
 

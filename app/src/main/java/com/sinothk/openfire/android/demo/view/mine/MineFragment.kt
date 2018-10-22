@@ -17,7 +17,7 @@ import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.utils.ActivityUtil
 import com.sinothk.openfire.android.demo.view.comm.SignInActivity
-import com.sinothk.openfire.android.demo.view.comm.UpdatePwdActivity
+import com.sinothk.openfire.android.demo.view.comm.ChangePwdActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.fragment_mine.*
 
@@ -46,12 +46,12 @@ class MineFragment : Fragment(), View.OnClickListener {
         when (v) {
 
             updatePwdItem -> {// 修改密码
-                IntentUtil.openActivity(activity, UpdatePwdActivity::class.java).start()
+                IntentUtil.openActivity(activity, ChangePwdActivity::class.java).start()
             }
 
             logout -> {
                 val loadingDialog = LoadingDialog.Builder(activity)
-                loadingDialog.setTitle("正在加载ing...")
+                loadingDialog.setTitle("修改中...")
 
                 IMHelper.logout(activity, object : IMCallback {
                     override fun onStart() {

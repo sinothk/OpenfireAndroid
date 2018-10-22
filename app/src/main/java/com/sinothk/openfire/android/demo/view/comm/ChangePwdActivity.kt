@@ -2,7 +2,6 @@ package com.sinothk.openfire.android.demo.view.comm
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.View
 import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.ToastUtil
@@ -15,7 +14,7 @@ import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_change_pwd.*
 
-class UpdatePwdActivity : TitleBarActivity() {
+class ChangePwdActivity : TitleBarActivity() {
 
     override fun getLayoutResId(): Int = R.layout.activity_change_pwd
 
@@ -23,9 +22,9 @@ class UpdatePwdActivity : TitleBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setTitleBar("修改密码", true, "保存", View.OnClickListener {
-            doUpdatePwd()
-        })
+        setTitleBar("修改密码", true)
+
+        changePwdBtn.setOnClickListener { doUpdatePwd() }
     }
 
     private fun doUpdatePwd() {
@@ -43,10 +42,10 @@ class UpdatePwdActivity : TitleBarActivity() {
             return
         }
 
-        val loadingDialog = LoadingDialog.Builder(this@UpdatePwdActivity)
+        val loadingDialog = LoadingDialog.Builder(this@ChangePwdActivity)
         loadingDialog.setTitle("正在加载ing...")
 
-        IMHelper.changePassword(this@UpdatePwdActivity, newPwd, object : IMCallback {
+        IMHelper.changePassword(this@ChangePwdActivity, newPwd, object : IMCallback {
             override fun onStart() {
                 loadingDialog.show()
             }
@@ -56,7 +55,7 @@ class UpdatePwdActivity : TitleBarActivity() {
 
                 if (result?.code == IMCode.SUCCESS) {
                     ActivityUtil.finishAllActivity()
-                    IntentUtil.openActivity(this@UpdatePwdActivity, SignInActivity::class.java).start()
+                    IntentUtil.openActivity(this@ChangePwdActivity, SignInActivity::class.java).start()
                 } else {
                     ToastUtil.show("修改密码失败")
                 }

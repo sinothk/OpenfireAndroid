@@ -36,7 +36,8 @@
             android:theme="@style/AppThemeFull" />
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".view.comm.UpdatePwdActivity" />
+        <activity android:name=".view.comm.ChangePwdActivity" />
+        <activity android:name=".view.comm.ConfigServerActivity" />
 
 
     </application>
