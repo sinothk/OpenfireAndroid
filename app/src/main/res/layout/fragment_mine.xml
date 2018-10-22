@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bg"
@@ -45,7 +46,7 @@
             <include layout="@layout/line_4_part" />
 
             <LinearLayout
-                android:id="@+id/updatePwdItem"
+                android:id="@+id/changePwdItem"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_46"
                 android:background="@color/white">
@@ -64,9 +65,12 @@
             <include layout="@layout/line_4_part" />
 
             <LinearLayout
+                android:id="@+id/setOnlineItem"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_46"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:clickable="true"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -82,9 +86,12 @@
             <include layout="@layout/line" />
 
             <LinearLayout
+                android:id="@+id/setActiveItem"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_46"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:clickable="true"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -100,9 +107,12 @@
             <include layout="@layout/line" />
 
             <LinearLayout
+                android:id="@+id/setLeaveItem"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_46"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:clickable="true"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -118,9 +128,12 @@
             <include layout="@layout/line" />
 
             <LinearLayout
+                android:id="@+id/setOffLineItem"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_46"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:clickable="true"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"

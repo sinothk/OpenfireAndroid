@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.sinothk.openfire.android.IMHelper;
+import com.sinothk.openfire.android.bean.IMStatus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -277,32 +278,33 @@ public class XmppConnection {
     /**
      * 更改用户状态
      */
-    public void setPresence(int code) {
+    public String setPresence(int code) {
         XMPPConnection con = getConnection();
         if (con == null)
-            return;
+            return "连接已断开";
 
-        Presence presence;
         try {
+            Presence presence;
+
             switch (code) {
-                case 0:
+                case IMStatus.USER_STATUS_ONLINE:// 0
                     presence = new Presence(Presence.Type.available);
                     con.sendStanza(presence);
                     Log.v("state", "设置在线");
                     break;
-                case 1:
+                case IMStatus.USER_STATUS_ACTIVE:// 1
                     presence = new Presence(Presence.Type.available);
                     presence.setMode(Presence.Mode.chat);
                     con.sendStanza(presence);
                     Log.v("state", "设置Q我吧");
                     break;
-                case 2:
+                case IMStatus.USER_STATUS_BUSY: // 2
                     presence = new Presence(Presence.Type.available);
                     presence.setMode(Presence.Mode.dnd);
                     con.sendStanza(presence);
                     Log.v("state", "设置忙碌");
                     break;
-                case 3:
+                case IMStatus.USER_STATUS_LEAVE:// 3
                     presence = new Presence(Presence.Type.available);
                     presence.setMode(Presence.Mode.away);
                     con.sendStanza(presence);
@@ -329,7 +331,7 @@ public class XmppConnection {
 //                    Log.v("state", "设置隐身");
 //                    break;
 
-                case 5:
+                case IMStatus.USER_STATUS_OFFLINE: // 5
                     presence = new Presence(Presence.Type.unavailable);
                     con.sendStanza(presence);
                     Log.v("state", "设置离线");
@@ -338,8 +340,53 @@ public class XmppConnection {
                 default:
                     break;
             }
+
+            return "";
         } catch (SmackException.NotConnectedException | InterruptedException e) {
             e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
+    /**
+     * 删除当前用户
+     *
+     * @return true成功
+     */
+    public boolean deleteAccount() {
+        if (getConnection() == null)
+            return false;
+        try {
+            AccountManager.getInstance(connection).deleteAccount();
+            return true;
+        } catch (XMPPException | SmackException | InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 修改密码
+     *
+     * @return true成功
+     */
+    public String changePassword(String pwd) {
+        if (getConnection() == null)
+            return "连接已断开";
+
+        try {
+            AccountManager accountManager = AccountManager.getInstance(connection);
+            if (accountManager.supportsAccountCreation()) {
+                accountManager.sensitiveOperationOverInsecureConnection(true);
+
+                accountManager.changePassword(pwd);
+                return "";
+            } else {
+                return "已关闭帐户创建功能";
+            }
+        } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+            return e.getMessage();
         }
     }
 
@@ -663,48 +710,6 @@ public class XmppConnection {
             if (bis != null) {
                 bis.close();
             }
-        }
-    }
-
-    /**
-     * 删除当前用户
-     *
-     * @return true成功
-     */
-    public boolean deleteAccount() {
-        if (getConnection() == null)
-            return false;
-        try {
-            AccountManager.getInstance(connection).deleteAccount();
-            return true;
-        } catch (XMPPException | SmackException | InterruptedException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * 修改密码
-     *
-     * @return true成功
-     */
-    public String changePassword(String pwd) {
-        if (getConnection() == null)
-            return "连接已断开";
-
-        try {
-            AccountManager accountManager = AccountManager.getInstance(connection);
-            if (accountManager.supportsAccountCreation()) {
-                accountManager.sensitiveOperationOverInsecureConnection(true);
-
-                accountManager.changePassword(pwd);
-                return "";
-            } else {
-                return "已关闭帐户创建功能";
-            }
-        } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
-            e.printStackTrace();
-            return e.getMessage();
         }
     }
 

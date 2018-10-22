@@ -13,6 +13,7 @@ import com.sinothk.comm.utils.ToastUtil
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
+import com.sinothk.openfire.android.bean.IMStatus
 import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.utils.ActivityUtil
@@ -38,15 +39,80 @@ class MineFragment : Fragment(), View.OnClickListener {
         val userInfo: IMUser = IMHelper.getCurrUser()
         userNameIv.text = StringUtil.getNotNullValue(userInfo.userName, "未知用户")
 
+        changePwdItem.setOnClickListener(this)
+
+        setOnlineItem.setOnClickListener(this)
+        setActiveItem.setOnClickListener(this)
+        setLeaveItem.setOnClickListener(this)
+        setOffLineItem.setOnClickListener(this)
+
         logout.setOnClickListener(this)
-        updatePwdItem.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
-
-            updatePwdItem -> {// 修改密码
+            changePwdItem -> {// 修改密码
                 IntentUtil.openActivity(activity, ChangePwdActivity::class.java).start()
+            }
+
+            setOnlineItem -> {// 设置在线
+                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_ONLINE, object : IMCallback {
+                    override fun onStart() {
+                    }
+
+                    override fun onEnd(result: IMResult) {
+                        if (result.code == IMCode.SUCCESS) {
+                            ToastUtil.show(result.tip)
+                        } else {
+                            ToastUtil.show(result.tip)
+                        }
+                    }
+                })
+            }
+
+            setActiveItem -> {// 设置活跃
+                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_ACTIVE, object : IMCallback {
+                    override fun onStart() {
+                    }
+
+                    override fun onEnd(result: IMResult) {
+                        if (result.code == IMCode.SUCCESS) {
+                            ToastUtil.show(result.tip)
+                        } else {
+                            ToastUtil.show(result.tip)
+                        }
+                    }
+                })
+            }
+
+            setLeaveItem -> {// 设置离开
+                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_LEAVE, object : IMCallback {
+                    override fun onStart() {
+                    }
+
+                    override fun onEnd(result: IMResult) {
+                        if (result.code == IMCode.SUCCESS) {
+                            ToastUtil.show(result.tip)
+                        } else {
+                            ToastUtil.show(result.tip)
+                        }
+                    }
+                })
+            }
+
+            setOffLineItem -> {// 设置离线
+                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_OFFLINE, object : IMCallback {
+                    override fun onStart() {
+                    }
+
+                    override fun onEnd(result: IMResult) {
+                        if (result.code == IMCode.SUCCESS) {
+                            ToastUtil.show(result.tip)
+                        } else {
+                            ToastUtil.show(result.tip)
+                        }
+                    }
+                })
             }
 
             logout -> {

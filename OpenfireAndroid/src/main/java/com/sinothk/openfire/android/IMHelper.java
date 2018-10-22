@@ -301,6 +301,13 @@ public class IMHelper {
         return imUser;
     }
 
+    /**
+     * 修改密码
+     *
+     * @param currActivity
+     * @param newPwd
+     * @param imCallback
+     */
     public static void changePassword(final Activity currActivity, final String newPwd, final IMCallback imCallback) {
         currActivity.runOnUiThread(new Runnable() {
             @Override
@@ -325,6 +332,12 @@ public class IMHelper {
         }).start();
     }
 
+    /**
+     * 修改密码
+     *
+     * @param newPwd
+     * @return
+     */
     private static IMResult changePassword(String newPwd) {
         if (!checkConnection()) {
             exeConnection();
@@ -336,15 +349,47 @@ public class IMHelper {
             return new IMResult(IMCode.SUCCESS, "修改密码成功");
         } else {
             return new IMResult(IMCode.ERROR, "修改密码失败", result);
-
-//            disconnect();
-//            if (result.contains("conflict")) {
-//                return new IMResult(IMCode.ERROR, "账号已存在", result);
-//            } else {
-//                return new IMResult(IMCode.ERROR, "注册失败", result);
-//            }
         }
     }
+
+    public static void setUserStatus(final Activity currActivity, final int status, final IMCallback imCallback) {
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                final IMResult result = setUserStatus(status);
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(result);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private static IMResult setUserStatus(int status) {
+        if (!checkConnection()) {
+            exeConnection();
+        }
+
+        String result = XmppConnection.getInstance().setPresence(status);
+
+        if (TextUtils.isEmpty(result)) {
+            return new IMResult(IMCode.SUCCESS, "设置成功");
+        } else {
+            return new IMResult(IMCode.ERROR, "设置失败", result);
+        }
+    }
+
 
     // ========================================== 其他账号 ================================================
 
