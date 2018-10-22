@@ -20,6 +20,9 @@ import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_login.*
 import java.text.SimpleDateFormat
 import java.util.*
+import com.jiangyy.easydialog.LoadingDialog
+
+
 
 
 /**
@@ -66,18 +69,22 @@ class SignInActivity : AppCompatActivity() {
             return
         }
 
+        val loadingDialog = LoadingDialog.Builder(this@SignInActivity)
+        loadingDialog.setTitle("正在加载ing...")
+
         IMHelper.login(this@SignInActivity, userName, userPwd, object : IMCallback {
             override fun onStart() {
-
+                loadingDialog.show()
             }
 
             override fun onEnd(result: IMResult) {
+                loadingDialog.dismiss()
+
                 if (result.code == IMCode.SUCCESS) {
                     PreferUtil.set("userName", userName)
                     PreferUtil.set("userPwd", userPwd)
 
                     IntentUtil.openActivity(this@SignInActivity, MainActivity::class.java).finish(true).start()
-//                    logPrint(result.tip)
                 } else {
                     show(result.tip)
                     logPrint(result.msg)
@@ -90,7 +97,7 @@ class SignInActivity : AppCompatActivity() {
         Toast.makeText(this@SignInActivity, tip, Toast.LENGTH_SHORT).show()
     }
 
-    fun gotoRegisterBtns(view: View) {
+    fun registerBtn(view: View) {
         IntentUtil.openActivity(this@SignInActivity, SignUpActivity::class.java).start()
     }
 

@@ -196,8 +196,9 @@ public class XmppConnection {
         if (connection != null) {
             // 移除连接监听
             connection.removeConnectionListener(connectionListener);
-            if (connection.isConnected())
-                connection.disconnect();
+
+            if (connection.isConnected()) connection.disconnect();
+
             connection = null;
         }
         Log.i("XmppConnection", "关闭连接");
@@ -268,6 +269,11 @@ public class XmppConnection {
         }
     }
 
+    public void logout() {
+        setPresence(5);
+        closeConnection();
+    }
+
     /**
      * 更改用户状态
      */
@@ -336,6 +342,8 @@ public class XmppConnection {
             e.printStackTrace();
         }
     }
+
+    //========================================================
 
     /**
      * 获取所有组
@@ -680,15 +688,23 @@ public class XmppConnection {
      *
      * @return true成功
      */
-    public boolean changePassword(String pwd) {
+    public String changePassword(String pwd) {
         if (getConnection() == null)
-            return false;
+            return "连接已断开";
+
         try {
-            AccountManager.getInstance(connection).changePassword(pwd);
-            return true;
+            AccountManager accountManager = AccountManager.getInstance(connection);
+            if (accountManager.supportsAccountCreation()) {
+                accountManager.sensitiveOperationOverInsecureConnection(true);
+
+                accountManager.changePassword(pwd);
+                return "";
+            } else {
+                return "已关闭帐户创建功能";
+            }
         } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
             e.printStackTrace();
-            return false;
+            return e.getMessage();
         }
     }
 

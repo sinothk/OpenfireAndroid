@@ -1,71 +1,157 @@
-<?xml version="1.0" encoding="utf-8"?><!-- TODO: Update blank fragment layout -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.mine.MineFragment">
+    android:background="@color/app_bg"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/win_bg"
-        android:orientation="vertical">
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_50"
-            android:layout_marginTop="@dimen/dp_20"
-            android:background="@color/white"
-            android:padding="@dimen/dp_7">
-
-            <ImageView
-                android:id="@+id/userAvatarIv"
-                android:layout_width="@dimen/dp_36"
-                android:layout_height="@dimen/dp_36"
-                android:scaleType="centerCrop"
-                android:src="@drawable/bg" />
-
-            <TextView
-                android:id="@+id/userNameIv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/dp_10"
-                android:layout_toEndOf="@id/userAvatarIv"
-                android:text="HenYun IM"
-                android:textSize="@dimen/sp_18" />
-
-        </RelativeLayout>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_46"
-            android:layout_marginTop="@dimen/dp_20"
-            android:background="@color/white">
+            android:layout_height="wrap_content"
+            android:background="@color/win_bg"
+            android:orientation="vertical">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_80"
+                android:layout_marginTop="@dimen/dp_20"
+                android:background="@color/white">
+
+                <ImageView
+                    android:id="@+id/userAvatarIv"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_50"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dp_20"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bg" />
+
+                <TextView
+                    android:id="@+id/userNameIv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_toEndOf="@+id/userAvatarIv"
+                    android:text="HenYun IM"
+                    android:textSize="@dimen/sp_18" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/line_4_part" />
+
+            <LinearLayout
+                android:id="@+id/updatePwdItem"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_46"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_20"
+                    android:text="修改密码"
+                    android:textColor="@color/list_title"
+                    android:textSize="@dimen/sp_16" />
+
+            </LinearLayout>
+
+            <include layout="@layout/line_4_part" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_46"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_20"
+                    android:text="设置在线"
+                    android:textColor="@color/list_title"
+                    android:textSize="@dimen/sp_16" />
+
+            </LinearLayout>
+
+            <include layout="@layout/line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_46"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_20"
+                    android:text="设置Q我吧"
+                    android:textColor="@color/list_title"
+                    android:textSize="@dimen/sp_16" />
+
+            </LinearLayout>
+
+            <include layout="@layout/line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_46"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_20"
+                    android:text="设置离开"
+                    android:textColor="@color/list_title"
+                    android:textSize="@dimen/sp_16" />
+
+            </LinearLayout>
+
+            <include layout="@layout/line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_46"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_20"
+                    android:text="设置离线"
+                    android:textColor="@color/list_title"
+                    android:textSize="@dimen/sp_16" />
+
+            </LinearLayout>
 
             <TextView
+                android:id="@+id/logout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/hello_blank_fragment" />
+                android:layout_height="@dimen/dp_42"
+                android:layout_margin="@dimen/dp_30"
+                android:background="@color/theme"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="退出登录"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
 
         </LinearLayout>
+    </ScrollView>
 
-        <TextView
-            android:id="@+id/logout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_46"
-            android:layout_marginTop="@dimen/dp_20"
-            android:background="@color/theme"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:text="退出登录"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_18" />
+</LinearLayout>
 
-    </LinearLayout>
-</ScrollView>
+
+
 
 

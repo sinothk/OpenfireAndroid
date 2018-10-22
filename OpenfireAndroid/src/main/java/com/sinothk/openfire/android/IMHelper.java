@@ -188,7 +188,9 @@ public class IMHelper {
 
     public static IMResult disconnect() {
         try {
-            XmppConnection.getInstance().closeConnection();
+
+            XmppConnection.getInstance().logout();
+
             return new IMResult(IMCode.SUCCESS, "退出成功");
 
         } catch (Exception e) {
@@ -202,7 +204,9 @@ public class IMHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 final IMResult result = disconnect();
+
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -297,10 +301,56 @@ public class IMHelper {
         return imUser;
     }
 
+    public static void changePassword(final Activity currActivity, final String newPwd, final IMCallback imCallback) {
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                final IMResult result = changePassword(newPwd);
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(result);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private static IMResult changePassword(String newPwd) {
+        if (!checkConnection()) {
+            exeConnection();
+        }
+
+        String result = XmppConnection.getInstance().changePassword(newPwd);
+
+        if (TextUtils.isEmpty(result)) {
+            return new IMResult(IMCode.SUCCESS, "修改密码成功");
+        } else {
+            return new IMResult(IMCode.ERROR, "修改密码失败", result);
+
+//            disconnect();
+//            if (result.contains("conflict")) {
+//                return new IMResult(IMCode.ERROR, "账号已存在", result);
+//            } else {
+//                return new IMResult(IMCode.ERROR, "注册失败", result);
+//            }
+        }
+    }
+
     // ========================================== 其他账号 ================================================
 
     public static VCard getUserVCard(String nameStr) {
         return XmppConnection.getInstance().getUserVCard(nameStr);
     }
+
 
 }

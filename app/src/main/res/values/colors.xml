@@ -4,8 +4,11 @@
     <color name="colorPrimaryDark">@color/theme</color>
     <color name="colorAccent">@color/theme</color>
 
+    <color name="white">#FFFFFF</color>
 
     <color name="win_bg">#F0F0F0</color>
-    <color name="white">#FFFFFF</color>
     <color name="theme">#04865d</color>
+
+    <color name="list_title">#333333</color>
+    <color name="list_title_sub">#999999</color>
 </resources>

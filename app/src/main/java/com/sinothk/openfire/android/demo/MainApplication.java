@@ -30,7 +30,8 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        IMHelper.init("127.0.0.1", "192.168.2.135", 5222);
+//        IMHelper.init("127.0.0.1", "192.168.2.135", 5222);
+        IMHelper.init("127.0.0.1", "192.168.124.19", 5222);
 
         PreferUtil.init(this);
         ToastUtil.init(this);

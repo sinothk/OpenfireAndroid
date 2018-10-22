@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/win_bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_layout" />
+
+    <include layout="@layout/line_4_part" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_old_password"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="end|center_vertical"
+            android:text="旧密码"
+            android:textColor="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+
+        <EditText
+            android:id="@+id/oldPwdEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/tv_old_password"
+            android:background="@null"
+            android:hint="填写原密码"
+            android:inputType="textPassword"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16"
+            android:text=""
+            android:textColor="@color/list_title"
+            android:textColorHint="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+    </RelativeLayout>
+
+    <include layout="@layout/line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_new_password"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="end|center_vertical"
+            android:text="新密码"
+            android:textColor="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+
+        <EditText
+            android:id="@+id/newPwdEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/tv_new_password"
+            android:background="@null"
+            android:hint="填写新密码"
+            android:inputType="textPassword"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16"
+            android:text=""
+            android:textColor="@color/list_title"
+            android:textColorHint="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_confirm_password"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="end|center_vertical"
+            android:text="确认密码"
+            android:textColor="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+
+        <EditText
+            android:id="@+id/confirmPwdEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/tv_confirm_password"
+            android:background="@null"
+            android:hint="确认输入密码"
+            android:inputType="textPassword"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16"
+            android:text=""
+            android:textColor="@color/list_title"
+            android:textColorHint="@color/list_title_sub"
+            android:textSize="@dimen/sp_16" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+

@@ -4,10 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/topLayout"
+        layout="@layout/title_layout" />
+
     <LinearLayout
-        android:id="@+id/refresh"
+        android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/topLayout"
         android:orientation="vertical">
 
         <android.support.v4.view.ViewPager

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
+import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
@@ -31,12 +32,17 @@ class SignUpActivity : AppCompatActivity() {
         val userName = userNameEt.text.toString()
         val userPwd = userPwdEt.text.toString()
 
+        val loadingDialog = LoadingDialog.Builder(this@SignUpActivity)
+        loadingDialog.setTitle("正在加载ing...")
+
         IMHelper.signUp(this@SignUpActivity, userName, userPwd, object : IMCallback {
             override fun onStart() {
-
+                loadingDialog.show()
             }
 
             override fun onEnd(result: IMResult) {
+                loadingDialog.dismiss()
+
                 if (result.code == IMCode.SUCCESS) {
                     show(result.tip)
                     finish()

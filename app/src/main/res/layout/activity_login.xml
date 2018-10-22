@@ -49,7 +49,7 @@
         android:layout_marginTop="20dp"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="gotoRegisterBtns"
+        android:onClick="registerBtn"
         android:text="注册新账号"
         android:textColor="@color/theme" />
 
