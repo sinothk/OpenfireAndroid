@@ -1,6 +1,7 @@
 package com.sinothk.openfire.android;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -188,8 +189,7 @@ public class IMHelper {
 
     public static IMResult disconnect() {
         try {
-
-            XmppConnection.getInstance().logout();
+            XmppConnection.getInstance().closeConnection();
 
             return new IMResult(IMCode.SUCCESS, "退出成功");
 
@@ -199,13 +199,18 @@ public class IMHelper {
         }
     }
 
-
+    /**
+     * 退出登录
+     *
+     * @param mActivity
+     * @param imCallback
+     */
     public static void logout(final Activity mActivity, final IMCallback imCallback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                final IMResult result = disconnect();
+                final IMResult result = logout();
 
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -215,6 +220,18 @@ public class IMHelper {
                 });
             }
         }).start();
+    }
+
+    private static IMResult logout() {
+        try {
+            XmppConnection.getInstance().logout();
+
+            return new IMResult(IMCode.SUCCESS, "退出成功");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new IMResult(IMCode.ERROR, "退出失败", e.getMessage());
+        }
     }
 
     /**
@@ -352,6 +369,13 @@ public class IMHelper {
         }
     }
 
+    /**
+     * 设置用户状态
+     *
+     * @param currActivity
+     * @param status
+     * @param imCallback
+     */
     public static void setUserStatus(final Activity currActivity, final int status, final IMCallback imCallback) {
         currActivity.runOnUiThread(new Runnable() {
             @Override
@@ -376,6 +400,12 @@ public class IMHelper {
         }).start();
     }
 
+    /**
+     * 设置用户状态
+     *
+     * @param status
+     * @return
+     */
     private static IMResult setUserStatus(int status) {
         if (!checkConnection()) {
             exeConnection();
@@ -390,6 +420,54 @@ public class IMHelper {
         }
     }
 
+    /**
+     * 删除账号
+     *
+     * @param currActivity
+     * @param imCallback
+     */
+    public static void deleteAccount(final Activity currActivity, final IMCallback imCallback) {
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                final IMResult result = deleteAccount();
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(result);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    /**
+     * 删除账号
+     *
+     * @return
+     */
+    private static IMResult deleteAccount() {
+        if (!checkConnection()) {
+            exeConnection();
+        }
+
+        String result = XmppConnection.getInstance().deleteAccount();
+
+        if (TextUtils.isEmpty(result)) {
+            return new IMResult(IMCode.SUCCESS, "删除成功");
+        } else {
+            return new IMResult(IMCode.ERROR, "删除失败", result);
+        }
+    }
 
     // ========================================== 其他账号 ================================================
 

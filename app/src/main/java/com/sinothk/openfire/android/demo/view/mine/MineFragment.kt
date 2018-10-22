@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.jiangyy.easydialog.CommonDialog
 import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.StringUtil
@@ -47,6 +48,7 @@ class MineFragment : Fragment(), View.OnClickListener {
         setOffLineItem.setOnClickListener(this)
 
         logout.setOnClickListener(this)
+        delCurrAccount.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -135,6 +137,30 @@ class MineFragment : Fragment(), View.OnClickListener {
                         }
                     }
                 })
+            }
+
+            delCurrAccount -> {
+                CommonDialog.Builder(activity)
+                        .setTitle("提示")
+                        .setMessage("确定要删除账号吗?")
+                        .setPositiveButton("注销账号") {
+
+                            IMHelper.deleteAccount(activity, object : IMCallback {
+                                override fun onStart() {
+                                }
+
+                                override fun onEnd(result: IMResult) {
+
+                                    if (result.code == IMCode.SUCCESS) {
+                                        ActivityUtil.finishAllActivity()
+                                        IntentUtil.openActivity(activity, SignInActivity::class.java).start()
+                                    } else {
+                                        ToastUtil.show(result.tip)
+                                    }
+                                }
+                            })
+                        }
+                        .setNegativeButton("取消", null).show()
             }
         }
     }

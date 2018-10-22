@@ -232,7 +232,7 @@ public class XmppConnection {
             getConnection().login(account, password);
 
             // 更改在线状态
-            setPresence(0);
+            setPresence(IMStatus.USER_STATUS_ONLINE);
 
             // 添加连接监听
             connectionListener = new XMConnectionListener(account, password);
@@ -242,6 +242,14 @@ public class XmppConnection {
             e.printStackTrace();
             return e.getMessage();
         }
+    }
+
+    /**
+     * 退出登录
+     */
+    public void logout() {
+        setPresence(IMStatus.USER_STATUS_OFFLINE);
+        closeConnection();
     }
 
     /**
@@ -268,11 +276,6 @@ public class XmppConnection {
             e.printStackTrace();
             return e.getMessage();
         }
-    }
-
-    public void logout() {
-        setPresence(5);
-        closeConnection();
     }
 
     /**
@@ -349,23 +352,6 @@ public class XmppConnection {
     }
 
     /**
-     * 删除当前用户
-     *
-     * @return true成功
-     */
-    public boolean deleteAccount() {
-        if (getConnection() == null)
-            return false;
-        try {
-            AccountManager.getInstance(connection).deleteAccount();
-            return true;
-        } catch (XMPPException | SmackException | InterruptedException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
      * 修改密码
      *
      * @return true成功
@@ -385,6 +371,24 @@ public class XmppConnection {
                 return "已关闭帐户创建功能";
             }
         } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
+    /**
+     * 删除当前用户
+     *
+     * @return true成功
+     */
+    public String deleteAccount() {
+        if (getConnection() == null)
+            return "连接已断开";
+
+        try {
+            AccountManager.getInstance(connection).deleteAccount();
+            return "";
+        } catch (XMPPException | SmackException | InterruptedException e) {
             e.printStackTrace();
             return e.getMessage();
         }
