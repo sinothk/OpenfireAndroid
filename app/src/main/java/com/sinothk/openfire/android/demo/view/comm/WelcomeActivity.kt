@@ -9,7 +9,6 @@ import com.sinothk.comm.utils.PreferUtil
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.model.StringValue
-import java.util.*
 
 /**
 
