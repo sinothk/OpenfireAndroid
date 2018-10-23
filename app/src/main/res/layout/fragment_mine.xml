@@ -165,6 +165,7 @@
                 android:layout_height="@dimen/dp_42"
                 android:layout_marginStart="@dimen/dp_30"
                 android:layout_marginEnd="@dimen/dp_30"
+                android:layout_marginBottom="@dimen/dp_30"
                 android:background="#f24444"
                 android:clickable="true"
                 android:focusable="true"

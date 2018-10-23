@@ -4,11 +4,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.sinothk.openfire.android.demo"
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -24,7 +24,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -36,7 +36,8 @@ dependencies {
     // 自己
     implementation 'com.github.sinothk:CommUnit:2.3.0926'
     implementation 'com.github.sinothk:TabView:1.0.1009'
-
+    implementation 'com.github.sinothk:LoadingRecyclerView:1.3.1013'
+    implementation 'com.github.sinothk:SideBar:1.0.1023'
     // 其他
     implementation 'com.jiangyy:dialog:1.0.4'
 }

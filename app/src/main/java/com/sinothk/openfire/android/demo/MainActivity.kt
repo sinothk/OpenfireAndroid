@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                         actionBarTitleTv.text = "通讯录"
                     }
                     2 -> {
-                        actionBarTitleTv.text = "我"
+                        actionBarTitleTv.text = "我的"
                     }
                 }
             }
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
         // 未读数据提示
         alphaIndicator!!.getTabView(0).showNumber(144)
-        alphaIndicator!!.getTabView(1).showNumber(100)
+        alphaIndicator!!.getTabView(1).showNumber(36)
         alphaIndicator!!.getTabView(2).showPoint()
     }
 

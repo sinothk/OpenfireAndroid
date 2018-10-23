@@ -2,46 +2,41 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/topLayout"
         layout="@layout/title_layout" />
 
     <LinearLayout
-        android:id="@+id/contentLayout"
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/topLayout"
+        android:layout_height="@dimen/dp_61"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/mViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:overScrollMode="never" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#888" />
+            android:layout_height="@dimen/dp_1"
+            android:background="#F0F0F0" />
 
         <com.sinothk.tab.weiXin.AlphaTabsIndicator
             android:id="@+id/alphaIndicator"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="@dimen/dp_60"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <com.sinothk.tab.weiXin.AlphaTabView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:padding="5dp"
+                android:padding="@dimen/dp_8"
                 app:tabIconNormal="@drawable/ic_nav_im_normal"
                 app:tabIconSelected="@drawable/ic_nav_im_active"
                 app:tabText="消息"
-                app:tabTextSize="13sp"
+                app:tabTextSize="@dimen/sp_12"
                 app:textColorNormal="#999999"
                 app:textColorSelected="@color/theme" />
 
@@ -49,11 +44,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:padding="5dp"
+                android:padding="@dimen/dp_8"
                 app:tabIconNormal="@drawable/ic_nav_contacts_normal"
                 app:tabIconSelected="@drawable/ic_nav_contacts_active"
                 app:tabText="通讯录"
-                app:tabTextSize="13sp"
+                app:tabTextSize="@dimen/sp_12"
                 app:textColorNormal="#999999"
                 app:textColorSelected="@color/theme" />
 
@@ -61,13 +56,22 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:padding="5dp"
+                android:padding="@dimen/dp_8"
                 app:tabIconNormal="@drawable/ic_nav_mine_normal"
                 app:tabIconSelected="@drawable/ic_nav_mine_active"
                 app:tabText="我的"
-                app:tabTextSize="13sp"
+                app:tabTextSize="@dimen/sp_12"
                 app:textColorNormal="#999999"
                 app:textColorSelected="@color/theme" />
         </com.sinothk.tab.weiXin.AlphaTabsIndicator>
     </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/mViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tabLayout"
+        android:layout_below="@+id/topLayout"
+        android:background="@color/win_bg"
+        android:overScrollMode="never" />
 </RelativeLayout>

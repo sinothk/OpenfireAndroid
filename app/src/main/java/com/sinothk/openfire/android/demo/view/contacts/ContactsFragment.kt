@@ -1,19 +1,17 @@
 package com.sinothk.openfire.android.demo.view.contacts
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import com.sinothk.openfire.android.xmpp.XmppConnection
-import org.jivesoftware.smack.SmackException
-import org.jivesoftware.smack.packet.Presence
-import org.jivesoftware.smack.roster.Roster
-import org.jivesoftware.smack.roster.RosterEntry
-import org.jivesoftware.smack.roster.RosterListener
-import org.jxmpp.jid.EntityFullJid
-import org.jxmpp.jid.Jid
+import com.sinothk.comm.utils.ToastUtil
+import com.sinothk.openfire.android.demo.R
+import com.sinothk.widget.loadingRecyclerView.CustomFooterViewCallBack
+import com.sinothk.widget.loadingRecyclerView.LoadingRecyclerView
+import kotlinx.android.synthetic.main.contacts_list_fragment.*
 import java.util.*
 
 
@@ -24,41 +22,84 @@ import java.util.*
  * @ Describe
  */
 class ContactsFragment : Fragment() {
+
+    private var rootView: View? = null
+    private val contacts = ArrayList<Contact>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return TextView(activity)
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.contacts_list_fragment, container, false)
+        }
+        return rootView
     }
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
+    @SuppressLint("InflateParams")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        recyclerView.addItemDecoration(recyclerView.getListViewLine(activity, R.drawable.divider_line))
+        recyclerView.setPullRefreshEnabled(false)
+        recyclerView.setLoadingMoreEnabled(false)
+
+        // 头部
+        setHeaderView(recyclerView)
+
+        contacts.addAll(Contact.getChineseContacts())
+
+        val adapter = ContactsAdapter(contacts, R.layout.contacts_list_item)
+        recyclerView.adapter = adapter
+
+        adapter.setOnItemClickListener { position: Int, any: Any ->
+            val value = any as Contact
+            ToastUtil.show("position = $position, val = ${value.name}")
+        }
+
+        // ==================================================================================
+        sideBar.setOnTouchingLetterChangedListener { index ->
+            for (i in contacts.indices) {
+                if (contacts[i].index == index) {
+                    (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(i, 0)
+                }
+            }
+        }
+
+
+//        val usm = UserSearchManager(XmppConnection.getInstance().connection)
+//        val searchForm = usm.getSearchForm(XmppConnection.getInstance().connection.serviceName)
+//
+//        val nickname = FormField("nickname")
+//        nickname.type = FormField.FORM_TYPE
+//        nickname.addValue(userName)
+//
+//        searchForm.addField(nickname)
 //
 //
-////        val usm = UserSearchManager(XmppConnection.getInstance().connection)
-////        val searchForm = usm.getSearchForm(XmppConnection.getInstance().connection.serviceName)
-////
-////        val nickname = FormField("nickname")
-////        nickname.type = FormField.FORM_TYPE
-////        nickname.addValue(userName)
-////
-////        searchForm.addField(nickname)
-////
-////
-////        val answerForm = searchForm.createAnswerForm()
-////        val data = usm.getSearchResults(answerForm,  XmppConnection.getInstance().connection.getServiceName())
-////
-////
-////        val userList: List<RosterEntry> = XmppConnection.getInstance().allEntries
-////        for (entry: RosterEntry in userList) {
-////            System.out.println("name: " + entry.name)
-////            System.out.println("Jid: " + entry.jid.toString())
-////        }
+//        val answerForm = searchForm.createAnswerForm()
+//        val data = usm.getSearchResults(answerForm,  XmppConnection.getInstance().connection.getServiceName())
 //
+//
+//        val userList: List<RosterEntry> = XmppConnection.getInstance().allEntries
+//        for (entry: RosterEntry in userList) {
+//            System.out.println("name: " + entry.name)
+//            System.out.println("Jid: " + entry.jid.toString())
+//        }
+
 //        Thread {
 //            var roster: Roster = Roster.getInstanceFor(XmppConnection.getInstance().connection)
 //
 ////            getAllEntries(roster)
 //            getAllRosters(roster)
 //        }.start()
-//    }
+    }
+
+    private fun setHeaderView(recyclerView: LoadingRecyclerView?) {
+        val headerView = LayoutInflater.from(activity).inflate(R.layout.contacts_header, null)
+        recyclerView?.addHeaderView(headerView)
+
+
+    }
+
 
 //    fun getAllRosters(roster: Roster) {
 //
