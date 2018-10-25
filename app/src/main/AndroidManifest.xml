@@ -14,7 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
         <activity
             android:name=".view.comm.WelcomeActivity"
             android:theme="@style/AppThemeFull">
@@ -24,22 +23,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".view.comm.SignInActivity"
             android:label="登录"
             android:theme="@style/AppThemeFull" />
-
         <activity
             android:name=".view.comm.SignUpActivity"
             android:label="注册"
             android:theme="@style/AppThemeFull" />
-
         <activity android:name=".MainActivity" />
         <activity android:name=".view.comm.ChangePwdActivity" />
         <activity android:name=".view.comm.ConfigServerActivity" />
-
-
+        <activity android:name=".view.contacts.activity.FriendAddActivity" />
+        <activity android:name=".view.contacts.activity.FriendInfoActivity" />
+        <activity android:name=".view.mine.UserInfoActivity" />
     </application>
 
 </manifest>

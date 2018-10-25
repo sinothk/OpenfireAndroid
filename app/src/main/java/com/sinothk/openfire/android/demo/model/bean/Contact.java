@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android.demo.view.contacts;
+package com.sinothk.openfire.android.demo.model.bean;
 
 import java.util.ArrayList;
 import java.util.List;

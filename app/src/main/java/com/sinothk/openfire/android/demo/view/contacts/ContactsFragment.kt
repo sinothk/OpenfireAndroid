@@ -7,12 +7,22 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
+import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.ToastUtil
+import com.sinothk.openfire.android.IMHelper
+import com.sinothk.openfire.android.bean.IMCode
+import com.sinothk.openfire.android.bean.IMResult
+import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.widget.loadingRecyclerView.CustomFooterViewCallBack
+import com.sinothk.openfire.android.demo.model.bean.UserBean
+import com.sinothk.openfire.android.demo.view.contacts.activity.FriendAddActivity
+import com.sinothk.openfire.android.demo.view.contacts.activity.FriendInfoActivity
+import com.sinothk.openfire.android.demo.view.contacts.adapter.ContactsAdapter
+import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.widget.loadingRecyclerView.LoadingRecyclerView
 import kotlinx.android.synthetic.main.contacts_list_fragment.*
-import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -22,9 +32,11 @@ import java.util.*
  * @ Describe
  */
 class ContactsFragment : Fragment() {
+    var adapter: ContactsAdapter? = null
+    private val mLetters = arrayOf("#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
 
     private var rootView: View? = null
-    private val contacts = ArrayList<Contact>()
+    private var contacts = ArrayList<UserBean>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (rootView == null) {
@@ -45,119 +57,90 @@ class ContactsFragment : Fragment() {
         // 头部
         setHeaderView(recyclerView)
 
-        contacts.addAll(Contact.getChineseContacts())
-
-        val adapter = ContactsAdapter(contacts, R.layout.contacts_list_item)
+        adapter = ContactsAdapter(R.layout.contacts_list_item)
         recyclerView.adapter = adapter
 
-        adapter.setOnItemClickListener { position: Int, any: Any ->
-            val value = any as Contact
-            ToastUtil.show("position = $position, val = ${value.name}")
+        adapter!!.setOnItemClickListener { position: Int, any: Any ->
+            val user: UserBean = any as UserBean
+            IntentUtil.openActivity(activity, FriendInfoActivity::class.java)
+                    .putSerializableExtra("user", user)
+                    .startInFragment(this@ContactsFragment)
         }
 
         // ==================================================================================
+        sideBar.setIndexItems(mLetters)
         sideBar.setOnTouchingLetterChangedListener { index ->
             for (i in contacts.indices) {
-                if (contacts[i].index == index) {
-                    (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(i, 0)
+
+                if ("#" == index) {
+                    (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0, 0)
+                    return@setOnTouchingLetterChangedListener
+                } else {
+                    if (contacts[i].index == index) {
+                        (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(i, 0)
+                    }
                 }
             }
         }
-
-
-//        val usm = UserSearchManager(XmppConnection.getInstance().connection)
-//        val searchForm = usm.getSearchForm(XmppConnection.getInstance().connection.serviceName)
-//
-//        val nickname = FormField("nickname")
-//        nickname.type = FormField.FORM_TYPE
-//        nickname.addValue(userName)
-//
-//        searchForm.addField(nickname)
-//
-//
-//        val answerForm = searchForm.createAnswerForm()
-//        val data = usm.getSearchResults(answerForm,  XmppConnection.getInstance().connection.getServiceName())
-//
-//
-//        val userList: List<RosterEntry> = XmppConnection.getInstance().allEntries
-//        for (entry: RosterEntry in userList) {
-//            System.out.println("name: " + entry.name)
-//            System.out.println("Jid: " + entry.jid.toString())
-//        }
-
-//        Thread {
-//            var roster: Roster = Roster.getInstanceFor(XmppConnection.getInstance().connection)
-//
-////            getAllEntries(roster)
-//            getAllRosters(roster)
-//        }.start()
+        getFriendsData()
     }
 
+
+    private fun getFriendsData() {
+        IMHelper.getFriends(activity, object : IMCallback {
+            override fun onStart() {
+            }
+
+            override fun onEnd(result: IMResult) {
+                var contacts = ArrayList<UserBean>()
+
+                if (result.code == IMCode.SUCCESS) {
+
+                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
+                    for (imUser in userList) {
+                        val user = UserBean()
+                        user.jid = imUser.jid.toString()
+                        user.name = imUser.name
+
+                        contacts.add(user)
+                    }
+
+                    UserBean.sort(contacts)
+                    adapter?.setData(contacts)
+                } else {
+
+                }
+            }
+        })
+    }
+
+//    private fun getFriendData(): ArrayList<UserBean> {
+//
+//        val users = ArrayList<UserBean>()
+//        users.add(UserBean("汕头", "女", 31))
+//        users.add(UserBean("北方", "男", 30))
+//        users.add(UserBean("安庆", "男", 23))
+//        users.add(UserBean("金继刀", "男", 45))
+//        users.add(UserBean("张京", "男", 35))
+//        users.add(UserBean("按理", "男", 55))
+//        users.add(UserBean("LiangYT", "男", 55))
+//        users.add(UserBean("111", "男", 55))
+//
+//        UserBean.sort(users)
+//
+//        return users
+//    }
+
+    /**
+     *  头部信息
+     */
     private fun setHeaderView(recyclerView: LoadingRecyclerView?) {
-        val headerView = LayoutInflater.from(activity).inflate(R.layout.contacts_header, null)
+        val headerView: View = LayoutInflater.from(activity).inflate(R.layout.contacts_header, null)
         recyclerView?.addHeaderView(headerView)
 
-
+        val addFriendLayout: RelativeLayout = headerView.findViewById(R.id.addFriendLayout)
+        addFriendLayout.setOnClickListener {
+            IntentUtil.openActivity(activity, FriendAddActivity::class.java).start()
+        }
     }
-
-
-//    fun getAllRosters(roster: Roster) {
-//
-//        val entityFullJid: EntityFullJid =XmppConnection.getInstance().connection.user
-//
-//
-//        if (!roster.isLoaded) {
-//            try {
-//                roster.reloadAndWait()
-//            } catch (e: SmackException.NotLoggedInException) {
-//                e.printStackTrace()
-//            } catch (e: SmackException.NotConnectedException) {
-//                e.printStackTrace()
-//            } catch (e: InterruptedException) {
-//                e.printStackTrace()
-//            }
-//
-//        }
-//        // 这里获取好友后会回调到 rosterEntires 方法，具体看上一篇文章
-//        roster.getEntriesAndAddListener(object : RosterListener {
-//            override fun entriesAdded(collection: Collection<Jid>) {
-//
-//            }
-//
-//            override fun entriesUpdated(collection: Collection<Jid>) {
-//
-//            }
-//
-//            override fun entriesDeleted(collection: Collection<Jid>) {
-//
-//            }
-//
-//            override fun presenceChanged(presence: Presence) {
-//
-//            }
-//        }) { collection ->
-//            if (collection == null) {
-//
-//            }
-//        }
-//    }
-//
-//
-//    @Throws(SmackException.NotLoggedInException::class, SmackException.NotConnectedException::class, InterruptedException::class)
-//    private fun getAllEntries(roster: Roster): List<RosterEntry> {
-//
-//        val entriesList = ArrayList<RosterEntry>()
-//
-//        if (!roster.isLoaded)
-//            roster.reloadAndWait()
-//        val entries = roster.entries
-//        for (entry in entries) {
-//            println("Here: " + entry.name)
-//            println("Here: " + entry.groups[0].entryCount)
-//            println("Here: " + entry.jid.toString())
-//            entriesList.add(entry)
-//
-//        }
-//        return entriesList
-//    }
 }

@@ -3,9 +3,11 @@ package com.sinothk.openfire.android.xmpp;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.sinothk.openfire.android.IMHelper;
 import com.sinothk.openfire.android.bean.IMStatus;
+import com.sinothk.openfire.android.bean.IMUser;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -46,6 +48,8 @@ import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.xdata.FormField;
+import org.jxmpp.jid.BareJid;
+import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Localpart;
@@ -65,8 +69,10 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @ author LiangYT
@@ -170,8 +176,8 @@ public class XmppConnection {
             // 关闭一些！
             config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
 
-            //需要经过同意才可以添加好友
-            Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.manual);
+            //不需要经过同意才可以添加好友
+            Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.accept_all);
 
 
             // 将相应机制隐掉
@@ -394,6 +400,92 @@ public class XmppConnection {
         }
     }
 
+    /**
+     * 获得当前用户信息
+     *
+     * @return
+     */
+    public IMUser getCurrUserInfo() {
+
+        IMUser imUser = new IMUser();
+
+        try {
+            AccountManager accountManager = AccountManager.getInstance(connection);
+
+            String username = accountManager.getAccountAttribute("username");
+            String jid = createJid(username);
+            String name = accountManager.getAccountAttribute("name");
+            String password = accountManager.getAccountAttribute("password");
+            String email = accountManager.getAccountAttribute("email");
+//            String registered = accountManager.getAccountAttribute("registered");
+
+            imUser.setJid(jid);
+            imUser.setUserName(username);
+            imUser.setName(name);
+            imUser.setPassword(password);
+            imUser.setEmail(email);
+
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+            Log.e("Account", "连接服务器失败");
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+            Log.e("Account", "该账户已存在");
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+            Log.e("Account", "服务器连接失败");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return imUser;
+    }
+
+    /**
+     * 查询用户
+     *
+     * @param userName userName
+     * @return List<HashMap>
+     */
+    public ArrayList<IMUser> searchUsers(String userName) {
+        if (getConnection() == null)
+            return null;
+
+        try {
+            DomainBareJid jid = JidCreate.domainBareFrom("search." + getConnection().getServiceName());
+
+            UserSearchManager usm = new UserSearchManager(getConnection());
+            Form searchForm = usm.getSearchForm(jid);
+            if (searchForm == null) {
+                return null;
+            }
+
+            Form answerForm = searchForm.createAnswerForm();
+            answerForm.setAnswer("Username", true);
+            answerForm.setAnswer("search", userName);
+
+            ReportedData data = usm.getSearchResults(answerForm, jid);
+
+            List<ReportedData.Row> rowList = data.getRows();
+
+            ArrayList<IMUser> results = new ArrayList<>();
+            for (ReportedData.Row row : rowList) {
+                IMUser imUser = new IMUser();
+                imUser.setJid(row.getValues("jid").toString().replace("[", "").replace("]", ""));
+                imUser.setUserName(row.getValues("Username").toString().replace("[", "").replace("]", ""));
+                imUser.setName(row.getValues("Name").toString().replace("[", "").replace("]", ""));
+                imUser.setEmail(row.getValues("Email").toString().replace("[", "").replace("]", ""));
+
+                results.add(imUser);
+                // 若存在，则有返回,UserName一定非空，其他两个若是有设，一定非空
+            }
+            return results;
+
+        } catch (SmackException | InterruptedException | XmppStringprepException | XMPPException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     //========================================================
 
     /**
@@ -437,27 +529,24 @@ public class XmppConnection {
      */
     public List<RosterEntry> getAllEntries() {
         if (!checkConnection())
-            return null;
-        List<RosterEntry> Enlist = new ArrayList<>();
+            return new ArrayList<>();
+
         Collection<RosterEntry> rosterEntry = Roster.getInstanceFor(connection).getEntries();
-        for (RosterEntry aRosterEntry : rosterEntry) {
-            Enlist.add(aRosterEntry);
-        }
-        return Enlist;
+        return new ArrayList<>(rosterEntry);
     }
 
     /**
      * 获取用户VCard信息
      *
-     * @param user user
+     * @param jid jid
      * @return VCard
      */
-    public VCard getUserVCard(String user) {
+    public VCard getUserVCard(String jid) {
         if (getConnection() == null)
             return null;
         VCard vcard = new VCard();
         try {
-            vcard = VCardManager.getInstanceFor(getConnection()).loadVCard(JidCreate.entityBareFrom(user));
+            vcard = VCardManager.getInstanceFor(getConnection()).loadVCard(JidCreate.entityBareFrom(jid));
         } catch (XmppStringprepException | SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
             e.printStackTrace();
         }
@@ -605,42 +694,6 @@ public class XmppConnection {
         }
     }
 
-    /**
-     * 查询用户
-     *
-     * @param userName userName
-     * @return List<HashMap>
-     */
-    public List<HashMap<String, String>> searchUsers(String userName) {
-        if (getConnection() == null)
-            return null;
-        HashMap<String, String> user;
-        List<HashMap<String, String>> results = new ArrayList<>();
-        try {
-            UserSearchManager usm = new UserSearchManager(getConnection());
-
-            Form searchForm = usm.getSearchForm(getConnection().getServiceName());
-            if (searchForm == null)
-                return null;
-
-            Form answerForm = searchForm.createAnswerForm();
-            answerForm.setAnswer("userAccount", true);
-            answerForm.setAnswer("userPhote", userName);
-            ReportedData data = usm.getSearchResults(answerForm, JidCreate.domainBareFrom("search" + getConnection().getServiceName()));
-
-            List<ReportedData.Row> rowList = data.getRows();
-            for (ReportedData.Row row : rowList) {
-                user = new HashMap<>();
-                user.put("userAccount", row.getValues("userAccount").toString());
-                user.put("userPhote", row.getValues("userPhote").toString());
-                results.add(user);
-                // 若存在，则有返回,UserName一定非空，其他两个若是有设，一定非空
-            }
-        } catch (SmackException | InterruptedException | XmppStringprepException | XMPPException e) {
-            e.printStackTrace();
-        }
-        return results;
-    }
 
     /**
      * 修改心情
@@ -871,8 +924,7 @@ public class XmppConnection {
      */
     public Chat getFriendChat(String JID) {
         try {
-            return ChatManager.getInstanceFor(XmppConnection.getInstance().getConnection())
-                    .chatWith(JidCreate.entityBareFrom(JID));
+            return ChatManager.getInstanceFor(XmppConnection.getInstance().getConnection()).chatWith(JidCreate.entityBareFrom(JID));
         } catch (XmppStringprepException e) {
             e.printStackTrace();
         }
@@ -1014,5 +1066,23 @@ public class XmppConnection {
         }
 
         return shOnLineState;
+    }
+
+    private String createJid(String username) {
+        return username + "@" + getConnection().getServiceName();
+    }
+
+    public RosterEntry getUserInfo(String jid) {
+        if (getConnection() == null)
+            return null;
+
+        try {
+            RosterEntry entry = Roster.getInstanceFor(connection).getEntry(JidCreate.entityBareFrom(jid));
+            return entry;
+        } catch (XmppStringprepException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.jiangyy.easydialog.CommonDialog
 import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.comm.utils.IntentUtil
@@ -25,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_mine.*
 
 class MineFragment : Fragment(), View.OnClickListener {
 
-    var rootView: View? = null
+    private var rootView: View? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (rootView == null) {
@@ -37,9 +38,13 @@ class MineFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userInfo: IMUser = IMHelper.getCurrUser()
-        userNameIv.text = StringUtil.getNotNullValue(userInfo.userName, "未知用户")
+        showUserInfo()
+        setListener()
+    }
 
+    private fun setListener() {
+        userQrCodeIv.setOnClickListener(this)
+        userInfoLayout.setOnClickListener(this)
         changePwdItem.setOnClickListener(this)
 
         setOnlineItem.setOnClickListener(this)
@@ -49,10 +54,31 @@ class MineFragment : Fragment(), View.OnClickListener {
 
         logout.setOnClickListener(this)
         delCurrAccount.setOnClickListener(this)
+
+
+    }
+
+    /**
+     * 显示用户信息
+     */
+    private fun showUserInfo() {
+        val userInfo: IMUser = IMHelper.getCurrUser()
+
+        val userName: String = StringUtil.getNotNullValue(userInfo.userName, "未知")
+        userNameIv.text = userName
+        nameIv.text = StringUtil.getNotNullValue(userInfo.name, userName)
     }
 
     override fun onClick(v: View?) {
         when (v) {
+            userInfoLayout -> {
+                IntentUtil.openActivity(activity, UserInfoActivity::class.java).start()
+            }
+
+            userQrCodeIv -> {
+                ToastUtil.show("开发中")
+            }
+
             changePwdItem -> {// 修改密码
                 IntentUtil.openActivity(activity, ChangePwdActivity::class.java).start()
             }

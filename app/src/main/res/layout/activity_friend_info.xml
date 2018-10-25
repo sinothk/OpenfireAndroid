@@ -1,0 +1,174 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.sinothk.widget.scrollActionbar.scrollView.ObservableScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/topView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_250">
+
+                <ImageView
+                    android:id="@+id/topImgBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/litter_black"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="@dimen/dp_80"
+                    android:layout_height="@dimen/dp_80"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dp_80"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_launcher" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_28"
+                android:background="@color/win_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:background="@color/theme" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:gravity="center_vertical"
+                    android:text="个人信息"
+                    android:textColor="@color/list_title_sub"
+                    android:textSize="@dimen/sp_13" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_46"
+                android:background="@color/white">
+
+                <TextView
+                    style="@style/user_info_left_style"
+                    android:text="账号" />
+
+                <TextView
+                    android:id="@+id/userNameTv"
+                    style="@style/user_info_right_style"
+                    tools:text="wuli" />
+            </RelativeLayout>
+
+            <include layout="@layout/line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_46"
+                android:background="@color/white">
+
+                <TextView
+                    style="@style/user_info_left_style"
+                    android:text="Email" />
+
+                <TextView
+                    android:id="@+id/emailTv"
+                    style="@style/user_info_right_style"
+                    tools:text="12306@163.com" />
+            </RelativeLayout>
+
+            <include layout="@layout/line_4_part" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_410"
+                android:background="@color/win_bg" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_410"
+                android:background="@color/win_bg" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_410"
+                android:background="@color/win_bg" />
+        </LinearLayout>
+    </com.sinothk.widget.scrollActionbar.scrollView.ObservableScrollView>
+
+    <LinearLayout
+        android:id="@+id/titleBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginTop="@dimen/dp_24">
+
+            <TextView
+                android:id="@+id/actionBarBackTv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp_10"
+                android:paddingEnd="@dimen/dp_10"
+                android:text="返回"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/actionBarMoreTv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp_10"
+                android:paddingEnd="@dimen/dp_10"
+                android:text="更多"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/actionBarTitleTv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_18"
+                tools:text="IM" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

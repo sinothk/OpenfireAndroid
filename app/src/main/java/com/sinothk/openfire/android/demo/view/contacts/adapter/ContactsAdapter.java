@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android.demo.view.contacts;
+package com.sinothk.openfire.android.demo.view.contacts.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sinothk.openfire.android.demo.R;
+import com.sinothk.openfire.android.demo.model.bean.UserBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,12 +20,11 @@ import java.util.List;
  */
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder> {
 
-    private List<Contact> contacts;
+    private List<UserBean> contacts = new ArrayList<>();
     private int layoutId;
     private OnItemClickListener onItemClickListener;
 
-    public ContactsAdapter(List<Contact> contacts, int layoutId) {
-        this.contacts = contacts;
+    public ContactsAdapter(int layoutId) {
         this.layoutId = layoutId;
     }
 
@@ -37,7 +38,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     @Override
     public void onBindViewHolder(ContactsViewHolder holder, final int position) {
-        final Contact contact = contacts.get(position);
+        final UserBean contact = contacts.get(position);
         if (position == 0 || !contacts.get(position - 1).getIndex().equals(contact.getIndex())) {
             holder.tvIndex.setVisibility(View.VISIBLE);
             holder.tvIndex.setText(contact.getIndex());
@@ -64,6 +65,12 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setData(ArrayList<UserBean> friendData) {
+        contacts.clear();
+        contacts.addAll(friendData == null ? new ArrayList<UserBean>() : friendData);
+        notifyDataSetChanged();
     }
 
     class ContactsViewHolder extends RecyclerView.ViewHolder {

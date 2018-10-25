@@ -9,6 +9,13 @@ import com.sinothk.openfire.android.IMHelper;
 import com.sinothk.openfire.android.demo.model.StringValue;
 import com.sinothk.openfire.android.xmpp.XmppConnection;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
+import org.jetbrains.annotations.Nullable;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
@@ -34,5 +41,7 @@ public class MainApplication extends Application {
 
         PreferUtil.init(this);
         ToastUtil.init(this);
+
+
     }
 }

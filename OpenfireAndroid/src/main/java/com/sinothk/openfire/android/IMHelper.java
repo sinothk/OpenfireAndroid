@@ -17,6 +17,7 @@ import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.iqregister.AccountManager;
@@ -26,6 +27,9 @@ import org.jxmpp.jid.parts.Domainpart;
 import org.jxmpp.jid.parts.Localpart;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -299,23 +303,25 @@ public class IMHelper {
     }
 
     public static IMUser getCurrUser() {
-        IMUser imUser = new IMUser();
         try {
-            // 账号
-            EntityFullJid entityFullJid = XmppConnection.getInstance().getConnection().getUser();
-            Localpart localpart = entityFullJid.getLocalpart();
-            imUser.setUserName(localpart.toString());
-            //
-            Domainpart domainpart = entityFullJid.getDomain();
-            if (domainpart == null) {
 
-            }
+            IMUser imUser = XmppConnection.getInstance().getCurrUserInfo();
 
 
+//            // 账号
+//            EntityFullJid entityFullJid = XmppConnection.getInstance().getConnection().getUser();
+//            Localpart localpart = entityFullJid.getLocalpart();
+//            imUser.setUserName(localpart.toString());
+//            //
+//            Domainpart domainpart = entityFullJid.getDomain();
+//            if (domainpart == null) {
+//
+//            }
+            return imUser;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return imUser;
+        return new IMUser();
     }
 
     /**
@@ -471,9 +477,123 @@ public class IMHelper {
 
     // ========================================== 其他账号 ================================================
 
-    public static VCard getUserVCard(String nameStr) {
-        return XmppConnection.getInstance().getUserVCard(nameStr);
+    public static void getUserInfo(final Activity currActivity, final String jid, final IMCallback imCallback) {
+
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                final RosterEntry rosterEntry = XmppConnection.getInstance().getUserInfo(jid);
+
+                final IMUser imUser = new IMUser();
+
+                imUser.setJid(rosterEntry.getJid().toString());
+                Localpart localpart = rosterEntry.getJid().getLocalpartOrNull();
+                imUser.setUserName(localpart.toString());
+
+                imUser.setName(rosterEntry.getName());
+                imUser.setGroupNames(rosterEntry.getGroups());
+
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(new IMResult(IMCode.SUCCESS, imUser));
+                    }
+                });
+            }
+        }).start();
     }
 
+    /**
+     * 获得好友信息
+     *
+     * @param currActivity
+     * @param imCallback
+     */
+    public static void getFriends(final Activity currActivity, final IMCallback imCallback) {
 
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IMResult result;
+                try {
+                    ArrayList<IMUser> userList = new ArrayList<>();
+
+                    List<RosterEntry> rosterEntry = XmppConnection.getInstance().getAllEntries();
+                    if (rosterEntry != null) {
+
+                        for (RosterEntry roster : rosterEntry) {
+                            IMUser imUser = new IMUser();
+                            imUser.setJid(roster.getJid().toString());
+                            imUser.setName(roster.getName());
+                            imUser.setItemType(roster.getType());
+
+                            userList.add(imUser);
+                        }
+                    }
+
+                    result = new IMResult(IMCode.SUCCESS, userList);
+                } catch (Exception e) {
+                    result = new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
+                }
+
+                final IMResult finalResult = result;
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(finalResult);
+                    }
+                });
+            }
+        }).start();
+
+
+    }
+
+    public static void searchUser(final Activity currActivity, final String userName, final IMCallback imCallback) {
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IMResult result;
+                try {
+                    ArrayList<IMUser> results = XmppConnection.getInstance().searchUsers(userName);
+                    result = new IMResult(IMCode.SUCCESS, results);
+                } catch (Exception e) {
+                    result = new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
+                }
+
+                final IMResult finalResult = result;
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(finalResult);
+                    }
+                });
+            }
+        }).start();
+    }
 }

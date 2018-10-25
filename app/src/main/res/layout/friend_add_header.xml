@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/addFriendLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_36"
+        android:layout_margin="@dimen/dp_10"
+        android:background="@color/theme"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dp_22"
+            android:layout_height="@dimen/dp_22"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:scaleType="centerCrop"
+            android:src="@drawable/comm_search_white" />
+
+        <TextView
+            android:id="@+id/searchBtn"
+            android:layout_width="@dimen/dp_42"
+            android:layout_height="@dimen/dp_28"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:background="#12986f"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="查找"
+            android:textColor="@color/white" />
+
+        <EditText
+            android:id="@+id/contentEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_toStartOf="@+id/searchBtn"
+            android:layout_toEndOf="@+id/iv_avatar"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="lisi"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/line" />
+
+
+</LinearLayout>

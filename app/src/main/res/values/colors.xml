@@ -12,4 +12,6 @@
     <color name="list_title">#333333</color>
     <color name="list_title_sub">#999999</color>
     <color name="list_selected">#E6E6E6</color>
+
+    <color name="litter_black">#353D40</color>
 </resources>

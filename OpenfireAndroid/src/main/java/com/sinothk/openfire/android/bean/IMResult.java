@@ -9,6 +9,7 @@ public class IMResult {
     private int code;
     private String tip;
     private String msg;
+    private Object data;
 
     public IMResult() {
     }
@@ -22,6 +23,11 @@ public class IMResult {
         this.code = code;
         this.tip = tip;
         this.msg = msg;
+    }
+
+    public IMResult(int code, Object data) {
+        this.code = code;
+        this.data = data;
     }
 
     public int getCode() {
@@ -46,5 +52,13 @@ public class IMResult {
 
     public void setTip(String tip) {
         this.tip = tip;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }

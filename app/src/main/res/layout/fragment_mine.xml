@@ -17,10 +17,13 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/userInfoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_80"
                 android:layout_marginTop="@dimen/dp_20"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:clickable="true"
+                android:focusable="true">
 
                 <ImageView
                     android:id="@+id/userAvatarIv"
@@ -31,15 +34,40 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/bg" />
 
-                <TextView
-                    android:id="@+id/userNameIv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/userQrCodeIv"
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginStart="@dimen/dp_20"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:padding="@dimen/dp_6"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/comm_tab_qrcode_yellow" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dp_16"
                     android:layout_toEndOf="@+id/userAvatarIv"
-                    android:text="HenYun IM"
-                    android:textSize="@dimen/sp_18" />
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/nameIv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_18"
+                        tools:text="HenYun IM" />
+
+                    <TextView
+                        android:id="@+id/userNameIv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_14"
+                        tools:text="HenYun IM" />
+                </LinearLayout>
 
             </RelativeLayout>
 

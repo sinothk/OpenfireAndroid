@@ -16,7 +16,7 @@
         android:paddingEnd="@dimen/dp_10"
         android:text="返回"
         android:textColor="@color/white"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_14"
         android:visibility="invisible" />
 
     <TextView
@@ -31,7 +31,7 @@
         android:paddingEnd="@dimen/dp_10"
         android:text="更多"
         android:textColor="@color/white"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_14"
         android:visibility="invisible" />
 
     <TextView

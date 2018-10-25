@@ -16,4 +16,26 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+
+    <!--信息条目-->
+    <style name="user_info_left_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginStart">@dimen/dp_16</item>
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/list_title_sub</item>
+    </style>
+
+    <style name="user_info_right_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginEnd">@dimen/dp_16</item>
+        <item name="android:maxEms">12</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/list_title</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+    </style>
 </resources>
