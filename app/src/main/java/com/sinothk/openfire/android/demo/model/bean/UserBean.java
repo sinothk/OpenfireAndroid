@@ -100,7 +100,33 @@ public class UserBean implements Serializable {
         });
     }
 
-//    public IMUser getIMUserBean() {
+    public IMUser getIMUser() {
+        IMUser imUser = new IMUser();
+        imUser.setJid(jid);
+        imUser.setUserName(userName);
+        imUser.setName(name);
+        imUser.setEmail(email);
+
+        return imUser;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    //    public IMUser getIMUserBean() {
 //        IMUser imUser = new IMUser();
 //        imUser.setJid(jid);
 //        imUser.setUserName(u);

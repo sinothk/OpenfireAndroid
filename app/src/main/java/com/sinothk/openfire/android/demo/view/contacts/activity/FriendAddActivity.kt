@@ -107,6 +107,7 @@ class FriendAddActivity : TitleBarActivity() {
                     for (imUser in userList) {
                         val user = UserBean()
                         user.jid = imUser.jid.toString()
+                        user.userName = imUser.userName
                         user.name = imUser.name
                         user.email = imUser.email
 

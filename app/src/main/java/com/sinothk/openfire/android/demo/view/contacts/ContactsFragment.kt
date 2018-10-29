@@ -82,6 +82,11 @@ class ContactsFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         getFriendsData()
     }
 

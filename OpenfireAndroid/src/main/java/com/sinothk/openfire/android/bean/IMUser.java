@@ -19,6 +19,11 @@ public class IMUser {
     private String password;
     // ===============================
 
+    /**
+     * 关系：0.非好友；1.关注；2.粉丝；3.好友；4.拉黑对方；5.被对方拉黑；
+     */
+    private int friendship;
+
     public String getPassword() {
         return password;
     }
@@ -89,5 +94,25 @@ public class IMUser {
 
     public void setGroupNames(List<RosterGroup> groupNames) {
         this.groupNames = groupNames;
+    }
+
+    public int getFriendship() {
+        return friendship;
+    }
+
+    public void setFriendship(int friendship) {
+        this.friendship = friendship;
+    }
+
+    public static class Friendship {
+        public static final int NONE = 0;
+        public static final int LIKED = 1;
+        public static final int FLOWN = 2;
+        public static final int FRIEND = 3;
+
+        //        NONE, LIKED(1), FLOWN(2);
+//
+//        Friendship() {
+//        NONE = 0;
     }
 }

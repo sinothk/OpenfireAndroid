@@ -630,15 +630,17 @@ public class XmppConnection {
      * @param name     name
      * @return boolean
      */
-    public boolean addUser(String userName, String name) {
+    public String addUser(String userName, String name) {
         if (getConnection() == null)
-            return false;
+            return "连接已断开";
+
         try {
-            Roster.getInstanceFor(connection).createEntry(JidCreate.entityBareFrom(userName), name, null);
-            return true;
+            String jidStr = createJid(userName);
+            Roster.getInstanceFor(connection).createEntry(JidCreate.entityBareFrom(jidStr), name, new String[]{"online"});
+            return "";
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return e.getMessage();
         }
     }
 
@@ -656,10 +658,12 @@ public class XmppConnection {
         try {
             Presence subscription = new Presence(Presence.Type.subscribed);
             subscription.setTo(JidCreate.entityBareFrom(userName));
+
             userName += "@" + getConnection().getServiceName();
+
             getConnection().sendStanza(subscription);
-            Roster.getInstanceFor(connection).createEntry(JidCreate.entityBareFrom(userName), name,
-                    new String[]{groupName});
+
+            Roster.getInstanceFor(connection).createEntry(JidCreate.entityBareFrom(userName), name, new String[]{groupName});
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -673,24 +677,27 @@ public class XmppConnection {
      * @param userName userName
      * @return boolean
      */
-    public boolean removeUser(String userName) {
+    public String removeUser(String userName) {
         if (getConnection() == null)
-            return false;
+            return "连接已断开";
+
         try {
-            RosterEntry entry = null;
+            RosterEntry entry;
             if (userName.contains("@"))
                 entry = Roster.getInstanceFor(connection).getEntry(JidCreate.entityBareFrom(userName));
             else
-                entry = Roster.getInstanceFor(connection).getEntry(JidCreate.entityBareFrom(
-                        userName + "@" + getConnection().getServiceName()));
-            if (entry == null)
+                entry = Roster.getInstanceFor(connection).getEntry(JidCreate.entityBareFrom(createJid(userName)));
+
+            if (entry == null) {
                 entry = Roster.getInstanceFor(connection).getEntry(JidCreate.entityBareFrom(userName));
+            }
+
             Roster.getInstanceFor(connection).removeEntry(entry);
 
-            return true;
+            return "";
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return e.getMessage();
         }
     }
 

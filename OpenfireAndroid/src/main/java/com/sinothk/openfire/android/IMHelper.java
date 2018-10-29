@@ -489,23 +489,93 @@ public class IMHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                IMResult imResult = new IMResult();
 
                 final RosterEntry rosterEntry = XmppConnection.getInstance().getUserInfo(jid);
+                if (rosterEntry != null) {
+                    IMUser imUser = new IMUser();
+                    imUser.setJid(rosterEntry.getJid().toString());
+                    Localpart localpart = rosterEntry.getJid().getLocalpartOrNull();
+                    imUser.setUserName(localpart.toString());
 
-                final IMUser imUser = new IMUser();
+                    imUser.setName(rosterEntry.getName());
+                    imUser.setGroupNames(rosterEntry.getGroups());
 
-                imUser.setJid(rosterEntry.getJid().toString());
-                Localpart localpart = rosterEntry.getJid().getLocalpartOrNull();
-                imUser.setUserName(localpart.toString());
+                    imResult = new IMResult(IMCode.SUCCESS, imUser);
+                } else {
+                    imResult = new IMResult(IMCode.ERROR, "查询信息为空");
+                }
 
-                imUser.setName(rosterEntry.getName());
-                imUser.setGroupNames(rosterEntry.getGroups());
-
+                final IMResult finalImResult = imResult;
 
                 currActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        imCallback.onEnd(new IMResult(IMCode.SUCCESS, imUser));
+                        imCallback.onEnd(finalImResult);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    public static void addFriend(final Activity currActivity, final String userName, final String name, final IMCallback imCallback) {
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IMResult result;
+
+                String resultVal = XmppConnection.getInstance().addUser(userName, name);
+                if (TextUtils.isEmpty(resultVal)) {
+                    result = new IMResult(IMCode.SUCCESS, "添加成功");
+                } else {
+                    result = new IMResult(IMCode.ERROR, "添加失败", resultVal);
+                }
+
+                final IMResult finalResult = result;
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(finalResult);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    public static void deleteFriend(final Activity currActivity, final String userName, final String name, final IMCallback imCallback) {
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IMResult result;
+
+                String resultVal = XmppConnection.getInstance().removeUser(userName);
+                if (TextUtils.isEmpty(resultVal)) {
+                    result = new IMResult(IMCode.SUCCESS, "删除成功");
+                } else {
+                    result = new IMResult(IMCode.ERROR, "删除失败", resultVal);
+                }
+
+                final IMResult finalResult = result;
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(finalResult);
                     }
                 });
             }
