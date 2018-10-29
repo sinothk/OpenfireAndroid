@@ -302,6 +302,68 @@ public class IMHelper {
         }).start();
     }
 
+    /**
+     * 注册
+     *
+     * @param currActivity
+     * @param newUser
+     * @param imCallback
+     */
+    public static void signUp(final Activity currActivity, final IMUser newUser, final IMCallback imCallback) {
+
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                final IMResult result = signUp(newUser);
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(result);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    /**
+     * 注册
+     *
+     * @param newUser
+     * @return
+     */
+    private static IMResult signUp(IMUser newUser) {
+        if (isAuthenticated()) {
+            disconnect();
+        }
+
+        if (!checkConnection()) {
+            exeConnection();
+        }
+
+        String result = XmppConnection.getInstance().register(newUser);
+
+        if (TextUtils.isEmpty(result)) {
+            return new IMResult(IMCode.SUCCESS, "注册成功");
+        } else {
+            disconnect();
+
+            if (result.contains("conflict")) {
+                return new IMResult(IMCode.ERROR, "账号已存在", result);
+            } else {
+                return new IMResult(IMCode.ERROR, "注册失败", result);
+            }
+        }
+    }
+
     public static IMUser getCurrUser() {
         try {
 
@@ -665,5 +727,9 @@ public class IMHelper {
                 });
             }
         }).start();
+    }
+
+    public static boolean isConfig() {
+        return XmppConnection.getInstance().isConfig();
     }
 }

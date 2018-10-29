@@ -9,14 +9,16 @@ import java.util.Set;
 
 public class IMUser {
     private String jid;
+    protected String name;
+    private String userName;
+    private String password;
+
+    private String email;
+
     private boolean subscriptionPending;
     private RosterPacket.ItemType itemType;
     private boolean approved;
     private List<RosterGroup> groupNames;
-    protected String name;
-    private String userName;
-    private String email;
-    private String password;
     // ===============================
 
     /**

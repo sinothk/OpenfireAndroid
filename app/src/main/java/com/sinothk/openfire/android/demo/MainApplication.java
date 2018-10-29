@@ -1,5 +1,6 @@
 package com.sinothk.openfire.android.demo;
 
+import android.app.Activity;
 import android.app.Application;
 import android.text.TextUtils;
 

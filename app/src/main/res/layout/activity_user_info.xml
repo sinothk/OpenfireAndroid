@@ -72,6 +72,23 @@
 
                 <TextView
                     style="@style/user_info_left_style"
+                    android:text="账号" />
+
+                <TextView
+                    android:id="@+id/userNameTv"
+                    style="@style/user_info_right_style"
+                    tools:text="wuli" />
+            </RelativeLayout>
+
+            <include layout="@layout/line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_46"
+                android:background="@color/white">
+
+                <TextView
+                    style="@style/user_info_left_style"
                     android:text="Email" />
 
                 <TextView

@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import java.text.SimpleDateFormat
 import java.util.*
 import com.jiangyy.easydialog.LoadingDialog
+import com.sinothk.openfire.android.demo.model.StringValue
 
 
 /**
@@ -103,4 +104,20 @@ class SignInActivity : AppCompatActivity() {
         IntentUtil.openActivity(this@SignInActivity, SignUpActivity::class.java).start()
     }
 
+
+    override fun onResume() {
+        super.onResume()
+
+        if (!IMHelper.isConfig()) {
+            val serverName = PreferUtil.get(StringValue.SERVER_NAME, "") as String
+            val serverIp = PreferUtil.get(StringValue.SERVER_IP, "") as String
+            val serverPort = PreferUtil.get(StringValue.SERVER_PORT, "") as String
+
+            if (TextUtils.isEmpty(serverName) || TextUtils.isEmpty(serverIp) || TextUtils.isEmpty(serverPort)) {
+                IntentUtil.openActivity(this, ConfigServerActivity::class.java).finish(true).start()
+            }else{
+                IMHelper.init(serverName, serverIp, Integer.parseInt(serverPort))
+            }
+        }
+    }
 }

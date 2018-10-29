@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_friend_info.*
 
 class UserInfoActivity : TitleBarActivity() {
 
-    override fun getLayoutResId(): Int = R.layout.activity_friend_info
+    override fun getLayoutResId(): Int = R.layout.activity_user_info
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

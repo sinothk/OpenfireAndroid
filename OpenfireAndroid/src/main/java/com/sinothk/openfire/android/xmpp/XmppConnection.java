@@ -285,6 +285,35 @@ public class XmppConnection {
     }
 
     /**
+     * 注册
+     *
+     * @param newUser 实体
+     * @return 注册成功 /注册失败
+     */
+    public String register(IMUser newUser) {
+        if (getConnection() == null)
+            return "连接已断开";
+
+        try {
+            AccountManager accountManager = AccountManager.getInstance(connection);
+            if (accountManager.supportsAccountCreation()) {
+                accountManager.sensitiveOperationOverInsecureConnection(true);
+
+                Map<String, String> attributes = new HashMap<>();
+                attributes.put("name", newUser.getName());
+
+                accountManager.createAccount(Localpart.from(newUser.getUserName()), newUser.getPassword(), attributes);
+                return "";
+            } else {
+                return "已关闭帐户创建功能";
+            }
+        } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | SmackException.NotConnectedException | InterruptedException | XmppStringprepException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
+    /**
      * 更改用户状态
      */
     public String setPresence(int code) {
@@ -471,9 +500,20 @@ public class XmppConnection {
             ArrayList<IMUser> results = new ArrayList<>();
             for (ReportedData.Row row : rowList) {
                 IMUser imUser = new IMUser();
+
                 imUser.setJid(row.getValues("jid").toString().replace("[", "").replace("]", ""));
-                imUser.setUserName(row.getValues("Username").toString().replace("[", "").replace("]", ""));
-                imUser.setName(row.getValues("Name").toString().replace("[", "").replace("]", ""));
+
+                // userName部分
+                String userNameValue = row.getValues("Username").toString().replace("[", "").replace("]", "");
+                imUser.setUserName(userNameValue);
+
+                String name = row.getValues("Name").toString().replace("[", "").replace("]", "");
+                if (TextUtils.isEmpty(name)) {
+                    imUser.setName(userNameValue);
+                } else {
+                    imUser.setName(name);
+                }
+
                 imUser.setEmail(row.getValues("Email").toString().replace("[", "").replace("]", ""));
 
                 results.add(imUser);
@@ -1091,5 +1131,9 @@ public class XmppConnection {
         }
 
         return null;
+    }
+
+    public boolean isConfig() {
+        return !TextUtils.isEmpty(SERVER_NAME) && !TextUtils.isEmpty(SERVER_HOST) && SERVER_PORT != 0;
     }
 }

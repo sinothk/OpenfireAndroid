@@ -2,12 +2,15 @@ package com.sinothk.openfire.android.demo.view.comm
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import com.jiangyy.easydialog.LoadingDialog
+import com.sinothk.comm.utils.ToastUtil
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
+import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.utils.ActivityUtil
 import com.sinothk.openfire.android.inters.IMCallback
@@ -32,12 +35,49 @@ class SignUpActivity : AppCompatActivity() {
     fun registerBtn(view: View) {
 
         val userName = userNameEt.text.toString()
+        var name = nameEt.text.toString()
         val userPwd = userPwdEt.text.toString()
 
-        val loadingDialog = LoadingDialog.Builder(this@SignUpActivity)
+        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(userPwd)) {
+            ToastUtil.show("输入有误")
+            return
+        }
+
+        if (TextUtils.isEmpty(name)) {
+            name = userName
+        }
+
+//        val loadingDialog = LoadingDialog.Builder(this@SignUpActivity)
+//        loadingDialog.setTitle("注册中...")
+//        IMHelper.signUp(this@SignUpActivity, userName, name, userPwd, object : IMCallback {
+//
+//            override fun onStart() {
+//                loadingDialog.show()
+//            }
+//
+//            override fun onEnd(result: IMResult) {
+//                loadingDialog.dismiss()
+//
+//                if (result.code == IMCode.SUCCESS) {
+//                    show(result.tip)
+//                    finish()
+//                } else {
+//                    show(result.tip)
+//                    logPrint(result.msg)
+//                }
+//            }
+//        })
+
+        val newUser = IMUser()
+        newUser.userName = userName
+        newUser.name = name
+        newUser.password = userPwd
+
+        val loadingDialog: LoadingDialog.Builder = LoadingDialog.Builder(this@SignUpActivity)
         loadingDialog.setTitle("注册中...")
 
-        IMHelper.signUp(this@SignUpActivity, userName, userPwd, object : IMCallback {
+        IMHelper.signUp(this@SignUpActivity, newUser, object : IMCallback {
+
             override fun onStart() {
                 loadingDialog.show()
             }

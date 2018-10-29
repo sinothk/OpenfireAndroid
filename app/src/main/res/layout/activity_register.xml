@@ -20,8 +20,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_30"
         android:gravity="center"
-        android:hint="用户名"
+        android:hint="用户帐号"
         android:text="test1"
+        android:textColor="@color/theme" />
+
+    <EditText
+        android:id="@+id/nameEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_30"
+        android:gravity="center"
+        android:hint="用户昵称"
+        android:text="多米"
         android:textColor="@color/theme" />
 
     <EditText

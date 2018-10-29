@@ -16,6 +16,7 @@ import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.model.bean.UserBean
 import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
 import com.sinothk.openfire.android.demo.view.contacts.adapter.FriendAddAdapter
+import com.sinothk.openfire.android.demo.view.mine.UserInfoActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.widget.loadingRecyclerView.LoadingRecyclerView
 import kotlinx.android.synthetic.main.activity_friend_add.*
@@ -43,39 +44,17 @@ class FriendAddActivity : TitleBarActivity() {
 
         adapter!!.setOnItemClickListener { position: Int, any: Any ->
             val user: UserBean = any as UserBean
-            IntentUtil.openActivity(this@FriendAddActivity, FriendInfoActivity::class.java)
-                    .putSerializableExtra("user", user)
-                    .start()
+
+            val currUserName: String = IMHelper.getCurrUser().userName
+            if (currUserName == user.userName) {
+                IntentUtil.openActivity(this@FriendAddActivity, UserInfoActivity::class.java).start()
+
+            } else {
+                IntentUtil.openActivity(this@FriendAddActivity, FriendInfoActivity::class.java)
+                        .putSerializableExtra("user", user).start()
+            }
         }
     }
-
-//    private fun getFriendsData() {
-//        IMHelper.getFriends(this, object : IMCallback {
-//            override fun onStart() {
-//            }
-//
-//            override fun onEnd(result: IMResult) {
-//                var contacts = ArrayList<UserBean>()
-//
-//                if (result.code == IMCode.SUCCESS) {
-//
-//                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
-//                    for (imUser in userList) {
-//                        val user = UserBean()
-//                        user.code = imUser.jid.toString()
-//                        user.name = imUser.name
-//
-//                        contacts.add(user)
-//                    }
-//
-//                    UserBean.sort(contacts)
-//                    adapter?.setData(contacts)
-//                } else {
-//
-//                }
-//            }
-//        })
-//    }
 
     /**
      *  头部信息
