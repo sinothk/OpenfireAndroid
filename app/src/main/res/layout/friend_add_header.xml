@@ -48,7 +48,7 @@
             android:layout_toEndOf="@+id/iv_avatar"
             android:background="@null"
             android:gravity="center_vertical"
-            android:text="i"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="14sp" />
     </RelativeLayout>
