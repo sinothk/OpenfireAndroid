@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import com.sinothk.comm.utils.IntentUtil
-import com.sinothk.comm.utils.ToastUtil
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
@@ -16,7 +15,7 @@ import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.model.bean.UserBean
 import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
 import com.sinothk.openfire.android.demo.view.contacts.adapter.FriendAddAdapter
-import com.sinothk.openfire.android.demo.view.mine.UserInfoActivity
+import com.sinothk.openfire.android.demo.view.mine.activity.UserInfoActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.widget.loadingRecyclerView.LoadingRecyclerView
 import kotlinx.android.synthetic.main.activity_friend_add.*

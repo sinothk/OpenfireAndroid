@@ -3,6 +3,7 @@ package com.sinothk.openfire.android.demo.view.contacts.activity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.StringUtil
 import com.sinothk.comm.utils.ToastUtil
 import com.sinothk.openfire.android.IMHelper
@@ -12,6 +13,7 @@ import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.model.bean.UserBean
 import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
+import com.sinothk.openfire.android.demo.view.chat.activity.ChatActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.widget.scrollActionbar.scrollView.ObservableScrollView
 import com.sinothk.widget.scrollActionbar.uitls.StatusBarUtil
@@ -83,7 +85,10 @@ class FriendInfoActivity : TitleBarActivity() {
         // 开始聊天
         chatBtn.setOnClickListener {
 
+            ChatActivity.startSingle(this@FriendInfoActivity, userInfo)
+//            ChatActivity.startGroup()
         }
+
         // 删除好友
         delFriendBtn.setOnClickListener {
             IMHelper.deleteFriend(this@FriendInfoActivity, userName, name, object : IMCallback {
@@ -102,6 +107,7 @@ class FriendInfoActivity : TitleBarActivity() {
                 }
             })
         }
+
         // 添加好友
         addFriendBtn.setOnClickListener {
             IMHelper.addFriend(this@FriendInfoActivity, userName, name, object : IMCallback {

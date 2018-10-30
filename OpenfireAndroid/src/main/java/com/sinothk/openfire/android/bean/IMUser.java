@@ -4,10 +4,11 @@ import org.jivesoftware.smack.roster.RosterGroup;
 import org.jivesoftware.smack.roster.packet.RosterPacket;
 import org.jxmpp.jid.BareJid;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-public class IMUser {
+public class IMUser implements Serializable {
     private String jid;
     protected String name;
     private String userName;
@@ -43,7 +44,11 @@ public class IMUser {
     }
 
     public String getName() {
-        return name;
+        if (name == null || "".equals(name)) {
+            return userName;
+        } else {
+            return name;
+        }
     }
 
     public void setName(String name) {

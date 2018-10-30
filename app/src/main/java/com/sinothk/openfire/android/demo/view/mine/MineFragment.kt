@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.jiangyy.easydialog.CommonDialog
 import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.comm.utils.IntentUtil
@@ -21,6 +20,7 @@ import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.utils.ActivityUtil
 import com.sinothk.openfire.android.demo.view.comm.SignInActivity
 import com.sinothk.openfire.android.demo.view.comm.ChangePwdActivity
+import com.sinothk.openfire.android.demo.view.mine.activity.UserInfoActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.fragment_mine.*
 

@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android.demo.view.mine
+package com.sinothk.openfire.android.demo.view.mine.activity
 
 import android.graphics.Color
 import android.os.Bundle
