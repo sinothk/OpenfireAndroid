@@ -91,8 +91,10 @@
                     style="@style/user_info_left_style"
                     android:text="Email" />
 
-                <TextView
+                <EditText
                     android:id="@+id/emailTv"
+                    android:layout_marginStart="@dimen/dp_100"
+                    android:layout_width="match_parent"
                     style="@style/user_info_right_style"
                     tools:text="12306@163.com" />
             </RelativeLayout>

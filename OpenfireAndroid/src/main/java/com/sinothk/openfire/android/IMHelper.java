@@ -732,4 +732,37 @@ public class IMHelper {
     public static boolean isConfig() {
         return XmppConnection.getInstance().isConfig();
     }
+
+    public static void updateUser(final Activity currActivity, IMUser userInfo, final IMCallback imCallback) {
+//        currActivity.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                imCallback.onStart();
+//            }
+//        });
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                IMResult result;
+//                try {
+//
+//                    ArrayList<IMUser> results = XmppConnection.getInstance().searchUsers(userName);
+//
+//                    result = new IMResult(IMCode.SUCCESS, results);
+//                } catch (Exception e) {
+//                    result = new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
+//                }
+//
+//                final IMResult finalResult = result;
+//
+//                currActivity.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        imCallback.onEnd(finalResult);
+//                    }
+//                });
+//            }
+//        }).start();
+    }
 }
