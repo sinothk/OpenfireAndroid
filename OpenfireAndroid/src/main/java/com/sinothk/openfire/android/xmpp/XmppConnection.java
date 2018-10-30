@@ -435,6 +435,10 @@ public class XmppConnection {
             String email = accountManager.getAccountAttribute("email");
 //            String registered = accountManager.getAccountAttribute("registered");
 
+
+
+
+
             imUser.setJid(jid);
             imUser.setUserName(username);
             imUser.setName(name);

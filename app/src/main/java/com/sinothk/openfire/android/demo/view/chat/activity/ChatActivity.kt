@@ -13,8 +13,8 @@ import kotlinx.android.synthetic.main.activity_chat.*
 
 class ChatActivity : TitleBarActivity() {
 
-    var userInfo: IMUser? = null
-    var chatType = 1
+    private var userInfo: IMUser? = null
+    private var chatType = 1
 
     override fun getLayoutResId(): Int = R.layout.activity_chat
 
@@ -48,7 +48,6 @@ class ChatActivity : TitleBarActivity() {
             ToastUtil.show(msg)
         }
     }
-
 
     companion object {
         fun startSingle(activity: Activity, userInfo: IMUser) {
