@@ -13,7 +13,8 @@ import kotlinx.android.synthetic.main.activity_chat.*
 
 class ChatActivity : TitleBarActivity() {
 
-    private var userInfo: IMUser? = null
+    private var chatTarget: String? = null
+    private var chatTitle: String? = null
     private var chatType = 1
 
     override fun getLayoutResId(): Int = R.layout.activity_chat
@@ -21,16 +22,20 @@ class ChatActivity : TitleBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        chatTarget = intent.getStringExtra(CHAT_TARGET)
+        chatTitle = intent.getStringExtra(CHAT_TITLE)
         chatType = intent.getIntExtra(CHAT_TYPE, CHAT_TYPE_SINGLE)
-        userInfo = intent.getSerializableExtra(CHAT_INFO) as IMUser?
 
-        if (chatType == CHAT_TYPE_SINGLE) {
-            // 单聊
-            setTitleBar(userInfo!!.name, true, "更多", View.OnClickListener { })
-        } else {
-            // 群聊
-            setTitleBar("", true, "更多", View.OnClickListener { })
-        }
+        // 设置标题
+        setTitleBar(chatTitle!!, true, "更多", View.OnClickListener { })
+
+//        if (chatType == CHAT_TYPE_SINGLE) {
+//            // 单聊
+//
+//        } else {
+//            // 群聊
+//            setTitleBar("", true, "更多", View.OnClickListener { })
+//        }
 
         initView()
     }
@@ -50,15 +55,18 @@ class ChatActivity : TitleBarActivity() {
     }
 
     companion object {
-        fun startSingle(activity: Activity, userInfo: IMUser) {
+        fun startSingle(activity: Activity, chatTarget: String, chatTitle: String) {
             IntentUtil.openActivity(activity, ChatActivity::class.java)
-                    .putSerializableExtra(CHAT_INFO, userInfo)
+                    .putStringExtra(CHAT_TARGET, chatTarget)
+                    .putStringExtra(CHAT_TITLE, chatTitle)
                     .putIntExtra(ChatActivity.CHAT_TYPE, ChatActivity.CHAT_TYPE_SINGLE)
                     .start()
         }
 
+        val CHAT_TARGET: String = "chatTarget"
+        val CHAT_TITLE: String = "chatTitle"
         val CHAT_TYPE: String = "CHAT_TYPE"
-        val CHAT_INFO: String = "CHAT_INFO"
+
         val CHAT_TYPE_SINGLE: Int = 1
         val CHAT_TYPE_GROUP: Int = 3
     }

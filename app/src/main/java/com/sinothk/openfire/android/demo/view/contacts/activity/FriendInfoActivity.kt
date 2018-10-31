@@ -84,9 +84,9 @@ class FriendInfoActivity : TitleBarActivity() {
         showFriendship(userInfo.friendship == IMUser.Friendship.FRIEND)
         // 开始聊天
         chatBtn.setOnClickListener {
-
-            ChatActivity.startSingle(this@FriendInfoActivity, userInfo)
-//            ChatActivity.startGroup()
+            val target: String = userInfo.userName
+            val title: String = StringUtil.getNotNullValue(userInfo.name, target)
+            ChatActivity.startSingle(this@FriendInfoActivity, target, title)
         }
 
         // 删除好友
