@@ -102,9 +102,10 @@
         android:background="@color/win_bg">
 
         <ListView
+            android:id="@+id/contentListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
     </LinearLayout>
-
-
 </RelativeLayout>

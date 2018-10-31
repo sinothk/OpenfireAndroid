@@ -119,23 +119,6 @@ class ContactsFragment : Fragment() {
         })
     }
 
-//    private fun getFriendData(): ArrayList<UserBean> {
-//
-//        val users = ArrayList<UserBean>()
-//        users.add(UserBean("汕头", "女", 31))
-//        users.add(UserBean("北方", "男", 30))
-//        users.add(UserBean("安庆", "男", 23))
-//        users.add(UserBean("金继刀", "男", 45))
-//        users.add(UserBean("张京", "男", 35))
-//        users.add(UserBean("按理", "男", 55))
-//        users.add(UserBean("LiangYT", "男", 55))
-//        users.add(UserBean("111", "男", 55))
-//
-//        UserBean.sort(users)
-//
-//        return users
-//    }
-
     /**
      *  头部信息
      */

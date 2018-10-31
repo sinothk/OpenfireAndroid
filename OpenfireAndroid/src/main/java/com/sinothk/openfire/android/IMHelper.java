@@ -1,34 +1,22 @@
 package com.sinothk.openfire.android;
 
 import android.app.Activity;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.sinothk.openfire.android.bean.Message;
 import com.sinothk.openfire.android.bean.IMCode;
+import com.sinothk.openfire.android.bean.IMConstant;
 import com.sinothk.openfire.android.bean.IMResult;
 import com.sinothk.openfire.android.bean.IMUser;
 import com.sinothk.openfire.android.inters.IMCallback;
 import com.sinothk.openfire.android.xmpp.XmppConnection;
 
-import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SmackConfiguration;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.chat2.Chat;
+import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.roster.RosterEntry;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jivesoftware.smackx.iqregister.AccountManager;
-import org.jivesoftware.smackx.vcardtemp.packet.VCard;
-import org.jxmpp.jid.EntityFullJid;
-import org.jxmpp.jid.parts.Domainpart;
 import org.jxmpp.jid.parts.Localpart;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -41,12 +29,22 @@ public class IMHelper {
 
     private static String TAG = IMHelper.class.getSimpleName();
 
+    // =================================连接部分==============================================
     public static void init(String server_name, String server_ip, int server_port) {
         XmppConnection.init(server_name, server_ip, server_port);
     }
 
     public static XmppConnection getConnection() {
         return XmppConnection.getInstance();
+    }
+
+    /**
+     * 判断服务器配置是否可用
+     *
+     * @return
+     */
+    public static boolean isConfig() {
+        return XmppConnection.getInstance().isConfig();
     }
 
     /**
@@ -124,7 +122,7 @@ public class IMHelper {
     }
 
 
-    // ===================================================================
+    // ===============================当前用户部分====================================
 
     /**
      * 用户登录
@@ -580,6 +578,14 @@ public class IMHelper {
         }).start();
     }
 
+    /**
+     * 添加好友
+     *
+     * @param currActivity
+     * @param userName
+     * @param name
+     * @param imCallback
+     */
     public static void addFriend(final Activity currActivity, final String userName, final String name, final IMCallback imCallback) {
         currActivity.runOnUiThread(new Runnable() {
             @Override
@@ -612,6 +618,14 @@ public class IMHelper {
         }).start();
     }
 
+    /**
+     * 删除好友关系
+     *
+     * @param currActivity
+     * @param userName
+     * @param name
+     * @param imCallback
+     */
     public static void deleteFriend(final Activity currActivity, final String userName, final String name, final IMCallback imCallback) {
         currActivity.runOnUiThread(new Runnable() {
             @Override
@@ -671,8 +685,21 @@ public class IMHelper {
 
                         for (RosterEntry roster : rosterEntry) {
                             IMUser imUser = new IMUser();
-                            imUser.setJid(roster.getJid().toString());
-                            imUser.setName(roster.getName());
+
+                            String jid = roster.getJid().toString();
+                            if (TextUtils.isEmpty(jid)) {
+                                continue;
+                            } else {
+                                imUser.setJid(jid);
+                            }
+
+                            String name = roster.getName();
+                            if (TextUtils.isEmpty(name)) {
+                                imUser.setName(jid.substring(0, jid.indexOf("@")));
+                            } else {
+                                imUser.setName(name);
+                            }
+
                             imUser.setItemType(roster.getType());
 
                             userList.add(imUser);
@@ -698,6 +725,13 @@ public class IMHelper {
 
     }
 
+    /**
+     * 搜索用户
+     *
+     * @param currActivity
+     * @param userName
+     * @param imCallback
+     */
     public static void searchUser(final Activity currActivity, final String userName, final IMCallback imCallback) {
         currActivity.runOnUiThread(new Runnable() {
             @Override
@@ -729,9 +763,6 @@ public class IMHelper {
         }).start();
     }
 
-    public static boolean isConfig() {
-        return XmppConnection.getInstance().isConfig();
-    }
 
     public static void updateUser(final Activity currActivity, IMUser userInfo, final IMCallback imCallback) {
 //        currActivity.runOnUiThread(new Runnable() {
@@ -764,5 +795,47 @@ public class IMHelper {
 //                });
 //            }
 //        }).start();
+    }
+
+    // ======================================消息发送部分==================================================
+    public static Chat createFriendChat(String chatTarget) {
+        return XmppConnection.getInstance().getFriendChat(chatTarget);
+    }
+
+    public static void sendTxtMsg(Chat chat, String msg) {
+        try {
+            XmppConnection.getInstance().sendSingleMessage(chat, msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static ChatManager getChatManager() {
+        return XmppConnection.getInstance().getChatManager();
+    }
+
+    public static ArrayList<Message> getChatList(ArrayList<Message> chatList) {
+        for (int i = 0; i < 20; i++) {
+            Message chatEntity = new Message();
+
+            if (i % 2 == 0) {
+                chatEntity.setFromType(IMConstant.FromType.SEND);
+            } else {
+                chatEntity.setFromType(IMConstant.FromType.RECEIVE);
+            }
+
+            chatEntity.setContentType(IMConstant.ContentType.CONTENT_TEXT);
+            chatEntity.setContent("聊天内容_" + i);
+
+            chatEntity.setFrom("");
+
+            chatList.add(chatEntity);
+        }
+
+
+        return chatList;
+
+//        return XmppConnection.getInstance().;
     }
 }

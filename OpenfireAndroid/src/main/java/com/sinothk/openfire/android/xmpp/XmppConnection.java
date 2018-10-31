@@ -10,6 +10,7 @@ import com.sinothk.openfire.android.bean.IMUser;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -55,6 +56,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -92,7 +94,7 @@ public class XmppConnection {
     }
 
     //  ==== 连接部分 =================================================================
-    private XMConnectionListener connectionListener;
+    private ConnectionListener connectionListener;
 
     private static String SERVER_HOST = null;
     private static String SERVER_NAME = null;
@@ -139,48 +141,112 @@ public class XmppConnection {
         try {
             SmackConfiguration.DEBUG = true;
 
-            XMPPTCPConnectionConfiguration.Builder config = XMPPTCPConnectionConfiguration.builder();
-
-            //设置openfire主机IP
-            config.setHostAddress(InetAddress.getByName(SERVER_HOST));
-//            config.setHost(serverIp);
-
-            //设置openfire服务器名称
-            config.setXmppDomain(SERVER_NAME);
-//            config.setServiceName(serverName);
-
-            //设置端口号：默认5222
-            config.setPort(SERVER_PORT);
-            //禁用SSL连接
-            config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled).setCompressionEnabled(false);
-            //设置Debug
-            config.setDebuggerEnabled(true);
-            //设置离线状态
-            config.setSendPresence(false);
-            //设置开启压缩，可以节省流量
-            config.setCompressionEnabled(true);
-
-            // 关闭一些！
-            config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-
-            //不需要经过同意才可以添加好友
-            Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.accept_all);
-
-
-            // 将相应机制隐掉
-            //SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
-            //SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
-
+            XMPPTCPConnectionConfiguration.Builder config = createBuilder();
             connection = new XMPPTCPConnection(config.build());
+            // 添加连接监听器
+            addConnectListener(connection);
 
-            connection.connect();// 连接到服务器
+            // 断网重连
+
+            // 连接到服务器
+            connection.connect();
             return connection;
-
         } catch (XMPPException | SmackException | IOException | InterruptedException e) {
             e.printStackTrace();
             connection = null;
             return null;
         }
+    }
+
+    /**
+     * 配置信息
+     *
+     * @return
+     * @throws UnknownHostException
+     * @throws XmppStringprepException
+     */
+    private XMPPTCPConnectionConfiguration.Builder createBuilder() throws UnknownHostException, XmppStringprepException {
+        XMPPTCPConnectionConfiguration.Builder config = XMPPTCPConnectionConfiguration.builder();
+
+        //设置openfire主机IP
+        config.setHostAddress(InetAddress.getByName(SERVER_HOST));
+//            config.setHost(serverIp);
+
+        //设置openfire服务器名称
+        config.setXmppDomain(SERVER_NAME);
+//            config.setServiceName(serverName);
+
+        //设置端口号：默认5222
+        config.setPort(SERVER_PORT);
+        //禁用SSL连接
+        config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled).setCompressionEnabled(false);
+        //设置Debug
+        config.setDebuggerEnabled(true);
+        //设置离线状态
+        config.setSendPresence(false);
+        //设置开启压缩，可以节省流量
+        config.setCompressionEnabled(true);
+
+        // 关闭一些！
+        config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+
+        //不需要经过同意才可以添加好友
+        Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.accept_all);
+
+
+        // 将相应机制隐掉
+        //SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
+        //SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
+
+        // 断网重连
+
+        return config;
+    }
+
+    /**
+     * 添加连接监听器
+     *
+     * @param connection
+     */
+    private void addConnectListener(AbstractXMPPConnection connection) {
+        connectionListener = new ConnectionListener() {
+            @Override
+            public void connected(XMPPConnection xmppConnection) {
+                Log.e(TAG, "addConnectListener -> connected");
+            }
+
+            @Override
+            public void authenticated(XMPPConnection xmppConnection, boolean b) {
+                Log.e(TAG, "addConnectListener -> authenticated");
+            }
+
+            @Override
+            public void connectionClosed() {
+                Log.e(TAG, "addConnectListener -> connectionClosed");
+            }
+
+            @Override
+            public void connectionClosedOnError(Exception e) {
+                Log.e(TAG, "addConnectListener -> connectionClosedOnError");
+            }
+
+            @Override
+            public void reconnectionSuccessful() {
+                Log.e(TAG, "addConnectListener -> reconnectionSuccessful");
+            }
+
+            @Override
+            public void reconnectingIn(int i) {
+                Log.e(TAG, "addConnectListener -> reconnectingIn");
+            }
+
+            @Override
+            public void reconnectionFailed(Exception e) {
+                Log.e(TAG, "addConnectListener -> reconnectionFailed");
+            }
+        };
+
+        connection.addConnectionListener(connectionListener);
     }
 
     /**
@@ -434,9 +500,6 @@ public class XmppConnection {
             String password = accountManager.getAccountAttribute("password");
             String email = accountManager.getAccountAttribute("email");
 //            String registered = accountManager.getAccountAttribute("registered");
-
-
-
 
 
             imUser.setJid(jid);
@@ -962,7 +1025,12 @@ public class XmppConnection {
      */
     public Chat getFriendChat(String JID) {
         try {
-            return ChatManager.getInstanceFor(XmppConnection.getInstance().getConnection()).chatWith(JidCreate.entityBareFrom(JID));
+
+            if (!JID.contains("@")) {
+                JID = createJid(JID);
+            }
+
+            return ChatManager.getInstanceFor(getConnection()).chatWith(JidCreate.entityBareFrom(JID));
         } catch (XmppStringprepException e) {
             e.printStackTrace();
         }
@@ -1033,8 +1101,10 @@ public class XmppConnection {
      * @return
      */
     public Map<String, List<HashMap<String, String>>> getHisMessage() {
-        if (getConnection() == null)
+        if (getConnection() == null) {
             return null;
+        }
+
         Map<String, List<HashMap<String, String>>> offlineMsgs = null;
 
         try {
@@ -1075,10 +1145,9 @@ public class XmppConnection {
      * 返回值 : 0 - 用户不存在; 1 - 用户在线; 2 - 用户离线
      * 说明 ：必须要求 OpenFire加载 presence 插件，同时设置任何人都可以访问
      */
-    public int IsUserOnLine(String user) {
+    public int isUserOnLine(String user) {
 
-        String url = "http://" + SERVER_HOST + ":9090/plugins/presence/status?" +
-                "jid=" + user + "@" + SERVER_NAME + "&type=xml";
+        String url = "http://" + SERVER_HOST + ":9090/plugins/presence/status?" + "jid=" + user + "@" + SERVER_NAME + "&type=xml";
 
         int shOnLineState = 0; // 不存在
         try {
@@ -1126,5 +1195,9 @@ public class XmppConnection {
 
     public boolean isConfig() {
         return !TextUtils.isEmpty(SERVER_NAME) && !TextUtils.isEmpty(SERVER_HOST) && SERVER_PORT != 0;
+    }
+
+    public ChatManager getChatManager() {
+        return ChatManager.getInstanceFor(getConnection());
     }
 }

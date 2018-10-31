@@ -49,6 +49,11 @@ class FriendInfoActivity : TitleBarActivity() {
         })
 
         getUserInf(upUser!!.jid)
+
+        initView()
+    }
+
+    private fun initView() {
     }
 
     private fun getUserInf(jid: String?) {
@@ -74,7 +79,9 @@ class FriendInfoActivity : TitleBarActivity() {
         val userName: String = StringUtil.getNotNullValue(userInfo.userName, "未知")
         val name: String = StringUtil.getNotNullValue(userInfo.name, userName)
 
-        setTitleBar(name, true)
+        setTitleBar(name, true, "更多", View.OnClickListener {
+
+        })
 
         userNameTv.text = userName
 
@@ -82,6 +89,7 @@ class FriendInfoActivity : TitleBarActivity() {
 
         // 处理好友关系操作
         showFriendship(userInfo.friendship == IMUser.Friendship.FRIEND)
+
         // 开始聊天
         chatBtn.setOnClickListener {
             val target: String = userInfo.userName
