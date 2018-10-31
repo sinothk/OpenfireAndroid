@@ -14,9 +14,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp">
 
-        <ImageView
+        <!--<ImageView-->
+        <!--android:id="@+id/jmui_avatar_iv"-->
+        <!--style="@style/jmui_chat_item_receiver_avatar_style" />-->
+
+        <com.sinothk.imageView.rounded.RoundedImageView
             android:id="@+id/jmui_avatar_iv"
-            style="@style/jmui_chat_item_receiver_avatar_style" />
+            style="@style/jmui_chat_item_receiver_avatar_style"
+            app:riv_border_color="@color/white"
+            app:riv_border_width="1dp"
+            app:riv_corner_radius="23.7dp"
+            app:riv_mutate_background="false"
+            app:riv_oval="true" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -32,21 +41,21 @@
                 android:layout_toRightOf="@id/jmui_avatar_iv" />
 
             <!--<jiguang.chat.utils.keyboard.emoji.EmoticonsTextView-->
-                <!--android:id="@+id/jmui_msg_content_new"-->
-                <!--style="@style/jmui_msg_text_style"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@id/jmui_display_name_tv"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginLeft="3dp"-->
-                <!--android:layout_toRightOf="@id/jmui_avatar_iv"-->
-                <!--android:autoLink="web"-->
-                <!--android:background="@drawable/jmui_msg_receive_bg"-->
-                <!--android:paddingLeft="15dp"-->
-                <!--android:paddingRight="10dp"-->
-                <!--android:textColor="#363333"-->
-                <!--android:textColorLink="#157BFB"-->
-                <!--android:visibility="gone" />-->
+            <!--android:id="@+id/jmui_msg_content_new"-->
+            <!--style="@style/jmui_msg_text_style"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/jmui_display_name_tv"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="3dp"-->
+            <!--android:layout_toRightOf="@id/jmui_avatar_iv"-->
+            <!--android:autoLink="web"-->
+            <!--android:background="@drawable/jmui_msg_receive_bg"-->
+            <!--android:paddingLeft="15dp"-->
+            <!--android:paddingRight="10dp"-->
+            <!--android:textColor="#363333"-->
+            <!--android:textColorLink="#157BFB"-->
+            <!--android:visibility="gone" />-->
 
             <TextView
                 android:id="@+id/jmui_msg_content"
@@ -58,7 +67,7 @@
                 android:layout_marginLeft="3dp"
                 android:layout_toRightOf="@id/jmui_avatar_iv"
                 android:autoLink="web"
-                android:background="@drawable/user_default"
+                android:background="@drawable/jmui_msg_receive_bg"
                 android:paddingLeft="15dp"
                 android:paddingRight="10dp"
                 android:textColor="#363333"

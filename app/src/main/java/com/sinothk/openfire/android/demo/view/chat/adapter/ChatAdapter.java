@@ -30,7 +30,9 @@ public class ChatAdapter extends ChatBaseAdapter {
     public void setData(ListView contentListView, ArrayList<Message> chatList) {
         list.clear();
         list.addAll(chatList);
+
         notifyDataSetChanged();
+
         contentListView.setSelection(list.size());
     }
 

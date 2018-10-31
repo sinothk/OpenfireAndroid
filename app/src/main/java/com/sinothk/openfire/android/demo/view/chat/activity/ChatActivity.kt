@@ -59,7 +59,6 @@ class ChatActivity : TitleBarActivity() {
 //        }
 
         initView()
-
         initData()
     }
 

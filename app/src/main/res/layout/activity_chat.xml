@@ -105,6 +105,8 @@
             android:id="@+id/contentListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/win_bg"
+            android:divider="@null"
             android:overScrollMode="never"
             android:scrollbars="none" />
     </LinearLayout>
