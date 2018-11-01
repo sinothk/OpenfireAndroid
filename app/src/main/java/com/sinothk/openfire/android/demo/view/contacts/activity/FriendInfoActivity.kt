@@ -21,7 +21,8 @@ import kotlinx.android.synthetic.main.activity_friend_info.*
 
 class FriendInfoActivity : TitleBarActivity() {
 
-    private var upUser: UserBean? = null
+    private var jid: String? = null
+    private var name: String? = null
 
     override fun getLayoutResId(): Int = R.layout.activity_friend_info
 
@@ -30,8 +31,10 @@ class FriendInfoActivity : TitleBarActivity() {
 
         StatusBarUtil.setImmersionStatusBar(this)
 
-        upUser = intent.getSerializableExtra("user") as UserBean
-        setTitleBar(upUser!!.name, true)
+        jid = intent.getStringExtra("jid")
+        name = intent.getStringExtra("name")
+
+        setTitleBar(name!!)
 
         // 设置滚动
         scrollView.setOnScrollChanging(topImgBg, object : ObservableScrollView.OnOperateListener {
@@ -48,7 +51,7 @@ class FriendInfoActivity : TitleBarActivity() {
             }
         })
 
-        getUserInf(upUser!!.jid)
+        getUserInf(jid)
 
         initView()
     }
@@ -57,6 +60,7 @@ class FriendInfoActivity : TitleBarActivity() {
     }
 
     private fun getUserInf(jid: String?) {
+
         IMHelper.getUserInfo(this, jid, object : IMCallback {
             override fun onStart() {
             }
@@ -67,16 +71,21 @@ class FriendInfoActivity : TitleBarActivity() {
                     val user: IMUser = result.data as IMUser
                     user.friendship = IMUser.Friendship.FRIEND
                     showUserInfo(user)
+
                 } else {
-                    upUser!!.imUser.friendship = IMUser.Friendship.NONE
-                    showUserInfo(upUser!!.imUser)
+                    val imUser = IMUser()
+                    imUser.friendship = IMUser.Friendship.NONE
+                    imUser.jid = jid
+                    imUser.name = name
+
+                    showUserInfo(imUser)
                 }
             }
         })
     }
 
     private fun showUserInfo(userInfo: IMUser) {
-        val userName: String = StringUtil.getNotNullValue(userInfo.userName, "未知")
+        val userName: String = StringUtil.getNotNullValue(userInfo.userName, userInfo.jid.substring(0, userInfo.jid.indexOf("@")))
         val name: String = StringUtil.getNotNullValue(userInfo.name, userName)
 
         setTitleBar(name, true, "更多", View.OnClickListener {

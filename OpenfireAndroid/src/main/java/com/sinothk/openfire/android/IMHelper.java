@@ -690,6 +690,9 @@ public class IMHelper {
 
                             imUser.setItemType(roster.getType());
 
+                            // 获取头像
+                            imUser.setUserAvatar(XmppConnection.getInstance().getUserImage(jid));
+
                             userList.add(imUser);
                         }
                     }

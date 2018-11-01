@@ -62,13 +62,15 @@ class ContactsFragment : Fragment() {
         recyclerView.adapter = adapter
 
         adapter!!.setOnItemClickListener { position: Int, any: Any ->
-            val user: UserBean = any as UserBean
+            val user: IMUser = any as IMUser
             IntentUtil.openActivity(activity, FriendInfoActivity::class.java)
-                    .putSerializableExtra("user", user)
+                    .putStringExtra("jid", user.jid)
+                    .putStringExtra("name", user.name)
                     .startInFragment(this@ContactsFragment)
         }
 
         // ==================================================================================
+        // 侧边栏部分
         sideBar.setIndexItems(mLetters)
         sideBar.setOnTouchingLetterChangedListener { index ->
             for (i in contacts.indices) {
@@ -103,16 +105,17 @@ class ContactsFragment : Fragment() {
                 if (result.code == IMCode.SUCCESS) {
 
                     val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
-                    for (imUser in userList) {
-                        val user = UserBean()
-                        user.jid = imUser.jid.toString()
-                        user.name = imUser.name
+//                    for (imUser in userList) {
+//                        val user = UserBean()
+//                        user.jid = imUser.jid.toString()
+//                        user.name = imUser.name
+//                        user.userAvatar = imUser.userAvatar
+//                        contacts.add(user)
+//                    }
 
-                        contacts.add(user)
-                    }
+                    IMUser.sort(userList)
 
-                    UserBean.sort(contacts)
-                    adapter?.setData(contacts)
+                    adapter?.setData(userList)
                 } else {
 
                 }

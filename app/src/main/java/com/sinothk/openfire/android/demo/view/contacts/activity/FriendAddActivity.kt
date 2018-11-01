@@ -42,15 +42,17 @@ class FriendAddActivity : TitleBarActivity() {
         recyclerView.adapter = adapter
 
         adapter!!.setOnItemClickListener { position: Int, any: Any ->
-            val user: UserBean = any as UserBean
+
+            val user: IMUser = any as IMUser
 
             val currUserName: String = IMHelper.getCurrUser().userName
             if (currUserName == user.userName) {
                 IntentUtil.openActivity(this@FriendAddActivity, UserInfoActivity::class.java).start()
-
             } else {
                 IntentUtil.openActivity(this@FriendAddActivity, FriendInfoActivity::class.java)
-                        .putSerializableExtra("user", user).start()
+                        .putStringExtra("jid", user.jid)
+                        .putStringExtra("name", user.name)
+                        .start()
             }
         }
     }
@@ -82,18 +84,18 @@ class FriendAddActivity : TitleBarActivity() {
                 if (result.code == IMCode.SUCCESS) {
 
                     val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
-                    for (imUser in userList) {
-                        val user = UserBean()
-                        user.jid = imUser.jid.toString()
-                        user.userName = imUser.userName
-                        user.name = imUser.name
-                        user.email = imUser.email
+//                    for (imUser in userList) {
+//                        val user = UserBean()
+//                        user.jid = imUser.jid.toString()
+//                        user.userName = imUser.userName
+//                        user.name = imUser.name
+//                        user.email = imUser.email
+//
+//                        contacts.add(user)
+//                    }
 
-                        contacts.add(user)
-                    }
-
-                    UserBean.sort(contacts)
-                    adapter?.setData(contacts)
+                    IMUser.sort(userList)
+                    adapter?.setData(userList)
                 } else {
 
                 }

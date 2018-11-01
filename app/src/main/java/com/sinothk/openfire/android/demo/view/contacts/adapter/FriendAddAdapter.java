@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sinothk.openfire.android.bean.IMUser;
 import com.sinothk.openfire.android.demo.R;
 import com.sinothk.openfire.android.demo.model.bean.UserBean;
 
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class FriendAddAdapter extends RecyclerView.Adapter<FriendAddAdapter.ContactsViewHolder> {
 
-    private List<UserBean> contacts = new ArrayList<>();
+    private List<IMUser> contacts = new ArrayList<>();
     private int layoutId;
     private OnItemClickListener onItemClickListener;
 
@@ -38,7 +39,7 @@ public class FriendAddAdapter extends RecyclerView.Adapter<FriendAddAdapter.Cont
 
     @Override
     public void onBindViewHolder(ContactsViewHolder holder, final int position) {
-        final UserBean contact = contacts.get(position);
+        final IMUser contact = contacts.get(position);
 //        if (position == 0 || !contacts.get(position - 1).getIndex().equals(contact.getIndex())) {
 //            holder.tvIndex.setVisibility(View.VISIBLE);
 //            holder.tvIndex.setText(contact.getIndex());
@@ -67,9 +68,9 @@ public class FriendAddAdapter extends RecyclerView.Adapter<FriendAddAdapter.Cont
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void setData(ArrayList<UserBean> friendData) {
+    public void setData(ArrayList<IMUser> friendData) {
         contacts.clear();
-        contacts.addAll(friendData == null ? new ArrayList<UserBean>() : friendData);
+        contacts.addAll(friendData == null ? new ArrayList<IMUser>() : friendData);
         notifyDataSetChanged();
     }
 

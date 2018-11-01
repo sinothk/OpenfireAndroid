@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sinothk.openfire.android.bean.IMUser;
 import com.sinothk.openfire.android.demo.R;
 import com.sinothk.openfire.android.demo.model.bean.UserBean;
 
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder> {
 
-    private List<UserBean> contacts = new ArrayList<>();
+    private List<IMUser> contacts = new ArrayList<>();
     private int layoutId;
     private OnItemClickListener onItemClickListener;
 
@@ -38,24 +39,30 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     @Override
     public void onBindViewHolder(ContactsViewHolder holder, final int position) {
-        final UserBean contact = contacts.get(position);
-        if (position == 0 || !contacts.get(position - 1).getIndex().equals(contact.getIndex())) {
+        final IMUser userBean = contacts.get(position);
+        if (position == 0 || !contacts.get(position - 1).getIndex().equals(userBean.getIndex())) {
             holder.tvIndex.setVisibility(View.VISIBLE);
-            holder.tvIndex.setText(contact.getIndex());
+            holder.tvIndex.setText(userBean.getIndex());
         } else {
             holder.tvIndex.setVisibility(View.GONE);
         }
 
-        holder.tvName.setText(contact.getName());
+        holder.tvName.setText(userBean.getName());
 
         holder.itemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(position, contact);
+                    onItemClickListener.onItemClick(position, userBean);
                 }
             }
         });
+
+
+        if (userBean.getUserAvatar() != null) {
+            holder.avatarIv.setImageDrawable(userBean.getUserAvatar());
+        }
+
     }
 
     @Override
@@ -67,9 +74,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void setData(ArrayList<UserBean> friendData) {
+    public void setData(ArrayList<IMUser> friendData) {
         contacts.clear();
-        contacts.addAll(friendData == null ? new ArrayList<UserBean>() : friendData);
+        contacts.addAll(friendData == null ? new ArrayList<IMUser>() : friendData);
         notifyDataSetChanged();
     }
 
@@ -77,14 +84,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         RelativeLayout itemLayout;
 
         TextView tvIndex;
-        ImageView ivAvatar;
+        ImageView avatarIv;
         TextView tvName;
 
         ContactsViewHolder(View itemView) {
             super(itemView);
             itemLayout = (RelativeLayout) itemView.findViewById(R.id.itemLayout);
             tvIndex = (TextView) itemView.findViewById(R.id.tv_index);
-            ivAvatar = (ImageView) itemView.findViewById(R.id.iv_avatar);
+            avatarIv = (ImageView) itemView.findViewById(R.id.avatarIv);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
         }
     }

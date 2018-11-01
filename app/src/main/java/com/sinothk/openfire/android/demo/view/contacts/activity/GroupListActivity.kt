@@ -66,19 +66,19 @@ class GroupListActivity : TitleBarActivity() {
 
                 if (result.code == IMCode.SUCCESS) {
 
-                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
-                    for (imUser in userList) {
-                        val user = UserBean()
-                        user.jid = imUser.jid.toString()
-                        user.userName = imUser.userName
-                        user.name = imUser.name
-                        user.email = imUser.email
-
-                        contacts.add(user)
-                    }
-
-                    UserBean.sort(contacts)
-                    adapter?.setData(contacts)
+//                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
+//                    for (imUser in userList) {
+//                        val user = UserBean()
+//                        user.jid = imUser.jid.toString()
+//                        user.userName = imUser.userName
+//                        user.name = imUser.name
+//                        user.email = imUser.email
+//
+//                        contacts.add(user)
+//                    }
+//
+//                    UserBean.sort(contacts)
+//                    adapter?.setData(contacts)
                 } else {
 
                 }

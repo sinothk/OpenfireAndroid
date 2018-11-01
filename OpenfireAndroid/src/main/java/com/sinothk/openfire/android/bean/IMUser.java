@@ -2,15 +2,22 @@ package com.sinothk.openfire.android.bean;
 
 import android.graphics.drawable.Drawable;
 
+import com.sinothk.openfire.android.util.PinYinUtil;
+
 import org.jivesoftware.smack.roster.RosterGroup;
 import org.jivesoftware.smack.roster.packet.RosterPacket;
 import org.jxmpp.jid.BareJid;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 public class IMUser implements Serializable {
+    private String index;
+
     private String jid;
     protected String name;
     private String userName;
@@ -132,5 +139,28 @@ public class IMUser implements Serializable {
 //
 //        Friendship() {
 //        NONE = 0;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public static void sort(ArrayList<IMUser> users) {
+
+        for (int i = 0; i < users.size(); i++) {
+            String nameIndex = PinYinUtil.getChineseFirstSpell(users.get(i).getName());
+            users.get(i).setIndex(nameIndex.substring(0, 1));
+        }
+
+        Collections.sort(users, new Comparator<IMUser>() {
+            @Override
+            public int compare(IMUser o1, IMUser o2) {
+                return o1.index.compareTo(o2.index);
+            }
+        });
     }
 }

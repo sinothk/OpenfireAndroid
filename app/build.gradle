@@ -42,5 +42,5 @@ dependencies {
     implementation 'com.github.sinothk:RoundedImageView:1.0.0613'
     // 其他
     implementation 'com.jiangyy:dialog:1.0.4'
-    implementation files('libs/pinyin4j-2.5.0.jar')
+//    implementation files('libs/pinyin4j-2.5.0.jar')
 }
