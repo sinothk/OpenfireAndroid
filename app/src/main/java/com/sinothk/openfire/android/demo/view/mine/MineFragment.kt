@@ -67,6 +67,10 @@ class MineFragment : Fragment(), View.OnClickListener {
         val userName: String = StringUtil.getNotNullValue(userInfo.userName, "未知")
         userNameIv.text = userName
         nameIv.text = StringUtil.getNotNullValue(userInfo.name, userName)
+
+        if (userInfo.userAvatar != null) {
+            userAvatarIv.setImageDrawable(userInfo.userAvatar)
+        }
     }
 
     override fun onClick(v: View?) {

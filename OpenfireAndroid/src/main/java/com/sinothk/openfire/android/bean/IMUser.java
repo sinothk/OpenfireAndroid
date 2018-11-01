@@ -1,5 +1,7 @@
 package com.sinothk.openfire.android.bean;
 
+import android.graphics.drawable.Drawable;
+
 import org.jivesoftware.smack.roster.RosterGroup;
 import org.jivesoftware.smack.roster.packet.RosterPacket;
 import org.jxmpp.jid.BareJid;
@@ -13,6 +15,7 @@ public class IMUser implements Serializable {
     protected String name;
     private String userName;
     private String password;
+    private Drawable userAvatar;
 
     private String email;
 
@@ -109,6 +112,14 @@ public class IMUser implements Serializable {
 
     public void setFriendship(int friendship) {
         this.friendship = friendship;
+    }
+
+    public Drawable getUserAvatar() {
+        return userAvatar;
+    }
+
+    public void setUserAvatar(Drawable userAvatar) {
+        this.userAvatar = userAvatar;
     }
 
     public static class Friendship {

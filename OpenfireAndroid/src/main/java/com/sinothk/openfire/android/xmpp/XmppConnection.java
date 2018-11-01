@@ -501,12 +501,14 @@ public class XmppConnection {
             String email = accountManager.getAccountAttribute("email");
 //            String registered = accountManager.getAccountAttribute("registered");
 
-
             imUser.setJid(jid);
             imUser.setUserName(username);
             imUser.setName(name);
             imUser.setPassword(password);
             imUser.setEmail(email);
+
+            // 获取头像
+            imUser.setUserAvatar(getUserImage(jid));
 
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
@@ -587,6 +589,7 @@ public class XmppConnection {
      *
      * @return 所有组集合
      */
+    @Deprecated
     public List<RosterGroup> getGroups() {
         if (getConnection() == null)
             return null;
@@ -638,6 +641,7 @@ public class XmppConnection {
     public VCard getUserVCard(String jid) {
         if (getConnection() == null)
             return null;
+
         VCard vcard = new VCard();
         try {
             vcard = VCardManager.getInstanceFor(getConnection()).loadVCard(JidCreate.entityBareFrom(jid));
@@ -655,29 +659,32 @@ public class XmppConnection {
      * @return Drawable
      */
     public Drawable getUserImage(String user) {
-        if (getConnection() == null)
+        if (user == null || user.equals("") || user.trim().length() <= 0) {
             return null;
+        }
+
+        if (getConnection() == null) return null;
 
         ByteArrayInputStream bais = null;
 
         try {
-            VCard vcard = new VCard();
+
             // 加入这句代码，解决No VCard for
             ProviderManager.addIQProvider("vCard", "vcard-temp", new org.jivesoftware.smackx.vcardtemp.provider.VCardProvider());
 
-            if (user == null || user.equals("") || user.trim().length() <= 0) {
-                return null;
-            }
 
+            VCard vcard = new VCard();
             try {
-                VCardManager.getInstanceFor(getConnection()).loadVCard(JidCreate.entityBareFrom(user + "@" + getConnection().getServiceName()));
-
+                String jid = user;
+                if (!jid.contains("@")) {
+                    jid = jid + "@" + getConnection().getServiceName();
+                }
+                vcard = VCardManager.getInstanceFor(getConnection()).loadVCard(JidCreate.entityBareFrom(jid));
             } catch (XmppStringprepException | SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
                 e.printStackTrace();
             }
 
-            if (vcard.getAvatar() == null)
-                return null;
+            if (vcard.getAvatar() == null) return null;
 
             bais = new ByteArrayInputStream(vcard.getAvatar());
 
@@ -1083,7 +1090,7 @@ public class XmppConnection {
 //        if (chat != null) {
 //            sendSingleMessage(chat, message);
 //        } else if (muc != null) {
-            sendGroupMessage(muc, message);
+        sendGroupMessage(muc, message);
 //        }
     }
 

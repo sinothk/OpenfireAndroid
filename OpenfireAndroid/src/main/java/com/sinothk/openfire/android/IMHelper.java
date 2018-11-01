@@ -364,19 +364,7 @@ public class IMHelper {
 
     public static IMUser getCurrUser() {
         try {
-
             IMUser imUser = XmppConnection.getInstance().getCurrUserInfo();
-
-
-//            // 账号
-//            EntityFullJid entityFullJid = XmppConnection.getInstance().getConnection().getUser();
-//            Localpart localpart = entityFullJid.getLocalpart();
-//            imUser.setUserName(localpart.toString());
-//            //
-//            Domainpart domainpart = entityFullJid.getDomain();
-//            if (domainpart == null) {
-//
-//            }
             return imUser;
         } catch (Exception e) {
             e.printStackTrace();
