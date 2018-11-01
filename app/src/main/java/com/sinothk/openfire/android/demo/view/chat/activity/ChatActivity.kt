@@ -6,14 +6,14 @@ import android.text.TextUtils
 import android.view.View
 import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.openfire.android.IMHelper
-import com.sinothk.openfire.android.bean.Message
 import com.sinothk.openfire.android.bean.IMConstant
+import com.sinothk.openfire.android.bean.IMMessage
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatAdapter
 import kotlinx.android.synthetic.main.activity_chat.*
-import org.jivesoftware.smack.chat2.Chat
 import org.jivesoftware.smack.chat2.ChatManager
+import org.jivesoftware.smack.packet.Message
 
 class ChatActivity : TitleBarActivity() {
     // 进入部分
@@ -22,8 +22,8 @@ class ChatActivity : TitleBarActivity() {
     private var chatType = 1
 
     // 展示
-    val chatList: ArrayList<Message> = ArrayList()
-    var cahtAdapter: ChatAdapter? = null
+    private val chatList: ArrayList<IMMessage> = ArrayList()
+    var chatAdapter: ChatAdapter? = null
 
     override fun getLayoutResId(): Int = R.layout.activity_chat
 
@@ -65,65 +65,61 @@ class ChatActivity : TitleBarActivity() {
     private fun initData() {
         IMHelper.getChatList(chatList)
 
-        cahtAdapter = ChatAdapter(this)
+        chatAdapter = ChatAdapter(this)
 
-        contentListView.adapter = cahtAdapter
-        cahtAdapter!!.setData(contentListView, chatList)
+        contentListView.adapter = chatAdapter
+        chatAdapter!!.setData(contentListView, chatList)
     }
 
     private fun initView() {
         val chatManager: ChatManager = IMHelper.getChatManager()//取得聊天管理器
         // 接收监听
-        chatManager.addIncomingListener { _, message, chat ->
+        chatManager.addIncomingListener { entityBareJid, message, chat ->
             if (message != null) {
-                System.out.println("来自 --> " + message.from)
-                System.out.println("发给 --> " + message.to)
-                System.out.println("内容 --> " + message.body)
+                pintLog(message)
 
-                val chatEntity = Message()
-                chatEntity.fromType = IMConstant.FromType.RECEIVE
-                chatEntity.contentType = IMConstant.ContentType.CONTENT_TEXT
-                chatEntity.content = message.body
-                chatEntity.from = ""
+                val receiveMsg = IMMessage()
 
-                chatList.add(chatEntity)
+                receiveMsg.jid = entityBareJid.toString()
 
-                cahtAdapter!!.setData(contentListView, chatList)
-            }
-        }
+                receiveMsg.fromType = IMConstant.FromType.RECEIVE
 
-        /**
-         * 发送监听
-         */
-        chatManager.addOutgoingListener { _, message, chat ->
-            if (message != null) {
-                System.out.println("来自 --> " + message.from)
-                System.out.println("发给 --> " + message.to)
-                System.out.println("内容 --> " + message.body)
+                receiveMsg.contentType = IMConstant.ContentType.CONTENT_TEXT
+                receiveMsg.msgTxt = message.body
+                receiveMsg.from = ""
 
-                val chatEntity = Message()
-                chatEntity.fromType = IMConstant.FromType.SEND
-                chatEntity.contentType = IMConstant.ContentType.CONTENT_TEXT
-                chatEntity.content = message.body
-                chatEntity.from = ""
-
-                chatList.add(chatEntity)
-
-                cahtAdapter!!.setData(contentListView, chatList)
+                chatList.add(receiveMsg)
+                chatAdapter!!.setData(contentListView, chatList)
             }
         }
 
         // 发送按钮
-        val chat: Chat = IMHelper.createFriendChat(chatTarget)
         sendBtn.setOnClickListener {
+            val msgTxt: String = inputMsg.text.toString()
+            if (TextUtils.isEmpty(msgTxt)) return@setOnClickListener
 
-            val msg: String = inputMsg.text.toString()
+            val msgBody: IMMessage = IMMessage.createSendMsg(chatTarget, msgTxt)
+            // 发送
+            IMHelper.send(msgBody)
 
-            if (TextUtils.isEmpty(msg)) {
-                return@setOnClickListener
-            }
+            // 更新
+            refreshView(msgBody)
 
-            IMHelper.sendTxtMsg(chat, msg)
+            inputMsg.setText("")
         }
+    }
+
+    /**
+     * 发送后更新界面
+     */
+    private fun refreshView(msgBody: IMMessage) {
+        chatList.add(msgBody)
+        chatAdapter!!.setData(contentListView, chatList)
+    }
+
+    private fun pintLog(message: Message) {
+        System.out.println("来自 --> " + message.from)
+        System.out.println("发给 --> " + message.to)
+        System.out.println("内容 --> " + message.body)
     }
 }

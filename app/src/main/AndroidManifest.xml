@@ -39,6 +39,7 @@
         <activity android:name=".view.mine.activity.UserInfoActivity" />
 
         <activity android:name=".view.chat.activity.ChatActivity" />
+        <activity android:name=".view.contacts.activity.GroupListActivity" />
 
     </application>
 

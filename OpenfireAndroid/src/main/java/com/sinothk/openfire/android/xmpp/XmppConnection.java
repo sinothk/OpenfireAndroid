@@ -1017,36 +1017,57 @@ public class XmppConnection {
         return listUser;
     }
 
-    /**
-     * 创建聊天窗口
-     *
-     * @param JID JID
-     * @return Chat
-     */
-    public Chat getFriendChat(String JID) {
-        try {
+//    /**
+//     * 创建聊天窗口
+//     *
+//     * @param JID JID
+//     * @return Chat
+//     */
+//    public Chat getFriendChat(String JID) {
+//        try {
+//
+//            if (!JID.contains("@")) {
+//                JID = createJid(JID);
+//            }
+//
+//            return ChatManager.getInstanceFor(getConnection()).chatWith(JidCreate.entityBareFrom(JID));
+//        } catch (XmppStringprepException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
-            if (!JID.contains("@")) {
-                JID = createJid(JID);
-            }
-
-            return ChatManager.getInstanceFor(getConnection()).chatWith(JidCreate.entityBareFrom(JID));
-        } catch (XmppStringprepException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    /**
+//     * 发送单人聊天消息
+//     *
+//     * @param chat    chat
+//     * @param message 消息文本
+//     */
+//    @Deprecated
+//    public void sendSingleMessage(Chat chat, String message) {
+//        try {
+//            chat.send(message);
+//        } catch (SmackException.NotConnectedException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * 发送单人聊天消息
      *
-     * @param chat    chat
-     * @param message 消息文本
+     * @param jid    jid
+     * @param msgTxt 消息文本
      */
-    public void sendSingleMessage(Chat chat, String message) {
+    public void sendTxtMessage(String jid, String msgTxt) {
         try {
-            chat.send(message);
-        } catch (SmackException.NotConnectedException | InterruptedException e) {
+            if (!jid.contains("@")) {
+                jid = createJid(jid);
+            }
+
+            Message newMessage = new Message(JidCreate.from(jid), Message.Type.chat);
+            newMessage.setBody(msgTxt);
+            getConnection().sendStanza(newMessage);
+        } catch (SmackException.NotConnectedException | InterruptedException | XmppStringprepException e) {
             e.printStackTrace();
         }
     }
@@ -1059,11 +1080,11 @@ public class XmppConnection {
      * @param message message
      */
     public void sendMessage(Chat chat, MultiUserChat muc, String message) {
-        if (chat != null) {
-            sendSingleMessage(chat, message);
-        } else if (muc != null) {
+//        if (chat != null) {
+//            sendSingleMessage(chat, message);
+//        } else if (muc != null) {
             sendGroupMessage(muc, message);
-        }
+//        }
     }
 
     /**

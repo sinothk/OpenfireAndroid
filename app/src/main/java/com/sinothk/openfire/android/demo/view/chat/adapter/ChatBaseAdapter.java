@@ -3,14 +3,14 @@ package com.sinothk.openfire.android.demo.view.chat.adapter;
 import android.content.Context;
 import android.widget.BaseAdapter;
 
-import com.sinothk.openfire.android.bean.Message;
+import com.sinothk.openfire.android.bean.IMMessage;
 
 import java.util.ArrayList;
 
 public abstract class ChatBaseAdapter extends BaseAdapter {
 
     protected Context mContext = null;
-    protected ArrayList<Message> list = new ArrayList<>();
+    protected ArrayList<IMMessage> list = new ArrayList<>();
 
     public ChatBaseAdapter(Context context) {
         this.mContext = context;
@@ -22,7 +22,7 @@ public abstract class ChatBaseAdapter extends BaseAdapter {
     }
 
     @Override
-    public Message getItem(int position) {
+    public IMMessage getItem(int position) {
         return list.get(position);
     }
 

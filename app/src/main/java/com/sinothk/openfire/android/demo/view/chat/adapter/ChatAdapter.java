@@ -11,10 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sinothk.openfire.android.bean.IMConstant;
-import com.sinothk.openfire.android.bean.Message;
+import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -27,7 +25,7 @@ public class ChatAdapter extends ChatBaseAdapter {
         mInflater = LayoutInflater.from(mContext);
     }
 
-    public void setData(ListView contentListView, ArrayList<Message> chatList) {
+    public void setData(ListView contentListView, ArrayList<IMMessage> chatList) {
         list.clear();
         list.addAll(chatList);
 
@@ -38,7 +36,7 @@ public class ChatAdapter extends ChatBaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        Message msg = list.get(position);
+        IMMessage msg = list.get(position);
 
         //是文字类型或者自定义类型（用来显示群成员变化消息）
         switch (msg.getContentType()) {
@@ -77,7 +75,7 @@ public class ChatAdapter extends ChatBaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final Message msg = list.get(position);
+        final IMMessage msg = list.get(position);
         final ViewHolder holder;
 
         if (convertView == null) {
@@ -146,13 +144,13 @@ public class ChatAdapter extends ChatBaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.txtContent.setText(msg.getContent());
+        holder.txtContent.setText(msg.getMsgTxt());
         holder.txtContent.setVisibility(View.VISIBLE);
 
         return convertView;
     }
 
-    private View createViewByType(Message msg, int position) {
+    private View createViewByType(IMMessage msg, int position) {
         // 会话类型
         switch (msg.getContentType()) {
             case IMConstant.ContentType.CONTENT_TEXT:

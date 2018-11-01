@@ -18,6 +18,7 @@ import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.model.bean.UserBean
 import com.sinothk.openfire.android.demo.view.contacts.activity.FriendAddActivity
 import com.sinothk.openfire.android.demo.view.contacts.activity.FriendInfoActivity
+import com.sinothk.openfire.android.demo.view.contacts.activity.GroupListActivity
 import com.sinothk.openfire.android.demo.view.contacts.adapter.ContactsAdapter
 import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.widget.loadingRecyclerView.LoadingRecyclerView
@@ -129,6 +130,11 @@ class ContactsFragment : Fragment() {
         val addFriendLayout: RelativeLayout = headerView.findViewById(R.id.addFriendLayout)
         addFriendLayout.setOnClickListener {
             IntentUtil.openActivity(activity, FriendAddActivity::class.java).start()
+        }
+
+        val myGroupsItem: RelativeLayout = headerView.findViewById(R.id.myGroupsItem)
+        myGroupsItem.setOnClickListener {
+            IntentUtil.openActivity(activity, GroupListActivity::class.java).start()
         }
     }
 }

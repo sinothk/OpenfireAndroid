@@ -3,7 +3,7 @@ package com.sinothk.openfire.android;
 import android.app.Activity;
 import android.text.TextUtils;
 
-import com.sinothk.openfire.android.bean.Message;
+import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.bean.IMCode;
 import com.sinothk.openfire.android.bean.IMConstant;
 import com.sinothk.openfire.android.bean.IMResult;
@@ -11,9 +11,9 @@ import com.sinothk.openfire.android.bean.IMUser;
 import com.sinothk.openfire.android.inters.IMCallback;
 import com.sinothk.openfire.android.xmpp.XmppConnection;
 
-import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.roster.RosterGroup;
 import org.jxmpp.jid.parts.Localpart;
 
 import java.util.ArrayList;
@@ -763,6 +763,44 @@ public class IMHelper {
         }).start();
     }
 
+    public static void findMyGroups(final Activity currActivity, final String userName, final IMCallback imCallback) {
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IMResult result;
+                try {
+                    result = findMyGroups();
+                } catch (Exception e) {
+                    result = new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
+                }
+
+                final IMResult finalResult = result;
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(finalResult);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private static IMResult findMyGroups() {
+        try {
+            List<RosterGroup> list = XmppConnection.getInstance().getGroups();
+            return new IMResult(IMCode.SUCCESS, list);
+        } catch (Exception e) {
+            return new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
+        }
+    }
 
     public static void updateUser(final Activity currActivity, IMUser userInfo, final IMCallback imCallback) {
 //        currActivity.runOnUiThread(new Runnable() {
@@ -798,44 +836,49 @@ public class IMHelper {
     }
 
     // ======================================消息发送部分==================================================
-    public static Chat createFriendChat(String chatTarget) {
-        return XmppConnection.getInstance().getFriendChat(chatTarget);
-    }
-
-    public static void sendTxtMsg(Chat chat, String msg) {
-        try {
-            XmppConnection.getInstance().sendSingleMessage(chat, msg);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+//    public static Chat createFriendChat(String chatTarget) {
+////        return XmppConnection.getInstance().getFriendChat(chatTarget);
+////    }
+////
+////    @Deprecated
+////    public static void sendTxtMsg(Chat chat, String msg) {
+////        try {
+////            XmppConnection.getInstance().sendSingleMessage(chat, msg);
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        }
+////    }
 
     public static ChatManager getChatManager() {
         return XmppConnection.getInstance().getChatManager();
     }
 
-    public static ArrayList<Message> getChatList(ArrayList<Message> chatList) {
-        for (int i = 0; i < 20; i++) {
-            Message chatEntity = new Message();
+    public static ArrayList<IMMessage> getChatList(ArrayList<IMMessage> chatList) {
+        for (int i = 0; i < 5; i++) {
+            IMMessage message = new IMMessage();
 
             if (i % 2 == 0) {
-                chatEntity.setFromType(IMConstant.FromType.SEND);
+                message.setFromType(IMConstant.FromType.SEND);
             } else {
-                chatEntity.setFromType(IMConstant.FromType.RECEIVE);
+                message.setFromType(IMConstant.FromType.RECEIVE);
             }
 
-            chatEntity.setContentType(IMConstant.ContentType.CONTENT_TEXT);
-            chatEntity.setContent("聊天内容_" + i);
+            message.setContentType(IMConstant.ContentType.CONTENT_TEXT);
+            message.setMsgTxt("聊天内容_" + i);
 
-            chatEntity.setFrom("");
+            message.setFrom("");
 
-            chatList.add(chatEntity);
+            chatList.add(message);
         }
 
-
         return chatList;
+    }
 
-//        return XmppConnection.getInstance().;
+    public static void send(IMMessage msgBody) {
+        try {
+            XmppConnection.getInstance().sendTxtMessage(msgBody.getJid(), msgBody.getMsgTxt());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

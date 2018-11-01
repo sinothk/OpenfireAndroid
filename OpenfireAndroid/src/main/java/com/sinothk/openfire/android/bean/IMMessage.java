@@ -1,7 +1,9 @@
 package com.sinothk.openfire.android.bean;
 
-public class Message {
+public class IMMessage {
+
     private String jid;
+    private int chatType;
 
     private String from;
     private String fromUserName;
@@ -11,10 +13,10 @@ public class Message {
     private String toUserName;
     private String toUserAvatar;
 
-    private String content;
+    private String fromType;
 
     private String contentType;
-    private String fromType;
+    private String msgTxt;
 
     public String getJid() {
         return jid;
@@ -22,6 +24,14 @@ public class Message {
 
     public void setJid(String jid) {
         this.jid = jid;
+    }
+
+    public int getChatType() {
+        return chatType;
+    }
+
+    public void setChatType(int chatType) {
+        this.chatType = chatType;
     }
 
     public String getFrom() {
@@ -72,14 +82,6 @@ public class Message {
         this.toUserAvatar = toUserAvatar;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getContentType() {
         return contentType;
     }
@@ -88,11 +90,33 @@ public class Message {
         this.contentType = contentType;
     }
 
+    public String getMsgTxt() {
+        return msgTxt;
+    }
+
+    public void setMsgTxt(String msgTxt) {
+        this.msgTxt = msgTxt;
+    }
+
     public String getFromType() {
         return fromType;
     }
 
     public void setFromType(String fromType) {
         this.fromType = fromType;
+    }
+
+    public static IMMessage createSendMsg(String chatTarget, String msgTxt) {
+        IMMessage msg = new IMMessage();
+
+        msg.setJid(chatTarget);
+        msg.setChatType(IMConstant.Chat.CHAT_TYPE_SINGLE);
+
+        msg.setContentType(IMConstant.ContentType.CONTENT_TEXT);
+        msg.setFromType(IMConstant.FromType.SEND);
+
+        msg.setMsgTxt(msgTxt);
+
+        return msg;
     }
 }
