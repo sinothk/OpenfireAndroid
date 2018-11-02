@@ -3,6 +3,7 @@ package com.sinothk.openfire.android;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import com.sinothk.openfire.android.bean.IMChatRoom;
 import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.bean.IMCode;
 import com.sinothk.openfire.android.bean.IMConstant;
@@ -15,6 +16,7 @@ import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterGroup;
 import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jxmpp.jid.parts.Localpart;
 
 import java.util.ArrayList;
@@ -874,13 +876,47 @@ public class IMHelper {
         }
     }
 
-    public static void createChartRoom() {
-        try {
-//            XmppConnection.getInstance().createRoom("聊天室1", "654321");
+    /**
+     * 创建房间
+     *
+     * @param currActivity
+     * @param imChatRoom
+     * @param imCallback
+     */
+    public static void createChartRoom(final Activity currActivity, final IMChatRoom imChatRoom, final IMCallback imCallback) {
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
 
-            XmppConnection.getInstance().createRoom("聊天室3");
-        } catch (Exception e) {
-            e.printStackTrace();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final IMResult result = createChartRoom(imChatRoom);
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(result);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    /**
+     * 创建房间
+     *
+     * @param imChatRoom
+     * @return
+     */
+    private static IMResult createChartRoom(IMChatRoom imChatRoom) {
+        MultiUserChat muc = XmppConnection.getInstance().createChatRoom(imChatRoom);
+        if (muc != null) {
+            return new IMResult(IMCode.SUCCESS, muc);
+        } else {
+            return new IMResult(IMCode.ERROR, "获取失败");
         }
     }
 

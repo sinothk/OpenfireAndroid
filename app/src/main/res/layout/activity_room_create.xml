@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/win_bg"
+    android:orientation="vertical"
     tools:context=".view.contacts.chatRoom.RoomCreateActivity">
 
     <include layout="@layout/title_layout" />
@@ -16,7 +18,147 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                android:background="@color/white"
+                android:padding="@dimen/dp_10">
 
+                <TextView
+                    android:id="@+id/roomNameTv"
+                    android:layout_width="@dimen/dp_100"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="房间名称"
+                    android:textColor="#666666" />
+
+                <EditText
+                    android:id="@+id/roomNameEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@+id/roomNameTv"
+                    android:background="@color/win_bg"
+                    android:hint="房间名称" />
+            </RelativeLayout>
+
+            <include layout="@layout/line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_120"
+                android:background="@color/white"
+                android:padding="@dimen/dp_10">
+
+                <TextView
+                    android:id="@+id/roomDescTv"
+                    android:layout_width="@dimen/dp_100"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="房间描述"
+                    android:textColor="#666666" />
+
+                <EditText
+                    android:id="@+id/roomDescEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@+id/roomDescTv"
+                    android:background="@color/win_bg"
+                    android:hint="请输入描述" />
+            </RelativeLayout>
+
+            <include layout="@layout/line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="@dimen/dp_10">
+
+                <RadioGroup
+                    android:id="@+id/isPersistentRoomRg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/isPersistentRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="永久房间" />
+
+                    <RadioButton
+                        android:id="@+id/notPersistentRoomBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_20"
+                        android:text="临时房间" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <include layout="@layout/line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_100"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:padding="@dimen/dp_10">
+
+                <RadioGroup
+                    android:id="@+id/needPwdRg"
+                    android:layout_width="@dimen/dp_100"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/notNeedPwdBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="不需要密码" />
+
+                    <RadioButton
+                        android:id="@+id/needPwdBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="需要密码" />
+                </RadioGroup>
+
+                <EditText
+                    android:id="@+id/roomPwdEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_60"
+                    android:background="@color/win_bg"
+                    android:gravity="center"
+                    android:hint="请输入房间密码" />
+
+            </LinearLayout>
+
+            <!--<include layout="@layout/line" />-->
+
+            <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/dp_60"-->
+            <!--android:background="@color/white"-->
+            <!--android:padding="@dimen/dp_10">-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/roomPwdTv"-->
+            <!--android:layout_width="@dimen/dp_100"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center"-->
+            <!--android:text="房间密码"-->
+            <!--android:textColor="#666666" />-->
+
+            <!--<EditText-->
+            <!--android:id="@+id/roomPwdEt"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_toEndOf="@+id/roomPwdTv"-->
+            <!--android:background="@color/win_bg" />-->
+            <!--</RelativeLayout>-->
 
         </LinearLayout>
     </ScrollView>
