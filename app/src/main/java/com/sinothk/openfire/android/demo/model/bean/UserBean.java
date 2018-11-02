@@ -1,135 +1,135 @@
-package com.sinothk.openfire.android.demo.model.bean;
-
-import android.graphics.drawable.Drawable;
-
-import com.sinothk.openfire.android.bean.IMUser;
-
-import java.io.Serializable;
-
-public class UserBean implements Serializable {
-
-    private String index;
-
-    private Drawable userAvatar;
-
-    private String jid;
-    private String name;
-    private String userName;
-    private String email;
-    private String password;
-
-    private String sex;
-    private int age;
-
-    public UserBean() {
-    }
-
-    public UserBean(String name, String sex, int age) {
-        this.name = name;
-        this.sex = sex;
-        this.age = age;
-    }
-
-    public UserBean(String name) {
-        this.name = name;
-    }
-
-    public String getIndex() {
-        return index;
-    }
-
-    public void setIndex(String index) {
-        this.index = index;
-    }
-
-    public String getJid() {
-        return jid;
-    }
-
-    public void setJid(String jid) {
-        this.jid = jid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-//    public static void sort(ArrayList<UserBean> users) {
+//package com.sinothk.openfire.android.demo.model.bean;
 //
-//        for (int i = 0; i < users.size(); i++) {
-//            String nameIndex = PinYinUtil.getChineseFirstSpell(users.get(i).getName());
-//            users.get(i).setIndex(nameIndex.substring(0, 1));
-//        }
+//import android.graphics.drawable.Drawable;
 //
-//        Collections.sort(users, new Comparator<UserBean>() {
-//            @Override
-//            public int compare(UserBean o1, UserBean o2) {
-//                return o1.index.compareTo(o2.index);
-//            }
-//        });
+//import com.sinothk.openfire.android.bean.IMUser;
+//
+//import java.io.Serializable;
+//
+//public class UserBean implements Serializable {
+//
+//    private String index;
+//
+//    private Drawable userAvatar;
+//
+//    private String jid;
+//    private String name;
+//    private String userName;
+//    private String email;
+//    private String password;
+//
+//    private String sex;
+//    private int age;
+//
+//    public UserBean() {
 //    }
-
-    public IMUser getIMUser() {
-        IMUser imUser = new IMUser();
-        imUser.setJid(jid);
-        imUser.setUserName(userName);
-        imUser.setName(name);
-        imUser.setEmail(email);
-
-        return imUser;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    //    public IMUser getIMUserBean() {
+//
+//    public UserBean(String name, String sex, int age) {
+//        this.name = name;
+//        this.sex = sex;
+//        this.age = age;
+//    }
+//
+//    public UserBean(String name) {
+//        this.name = name;
+//    }
+//
+//    public String getIndex() {
+//        return index;
+//    }
+//
+//    public void setIndex(String index) {
+//        this.index = index;
+//    }
+//
+//    public String getJid() {
+//        return jid;
+//    }
+//
+//    public void setJid(String jid) {
+//        this.jid = jid;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public String getSex() {
+//        return sex;
+//    }
+//
+//    public void setSex(String sex) {
+//        this.sex = sex;
+//    }
+//
+//    public int getAge() {
+//        return age;
+//    }
+//
+//    public void setAge(int age) {
+//        this.age = age;
+//    }
+//
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
+//
+////    public static void sort(ArrayList<UserBean> users) {
+////
+////        for (int i = 0; i < users.size(); i++) {
+////            String nameIndex = PinYinUtil.getChineseFirstSpell(users.get(i).getName());
+////            users.get(i).setIndex(nameIndex.substring(0, 1));
+////        }
+////
+////        Collections.sort(users, new Comparator<UserBean>() {
+////            @Override
+////            public int compare(UserBean o1, UserBean o2) {
+////                return o1.index.compareTo(o2.index);
+////            }
+////        });
+////    }
+//
+//    public IMUser getIMUser() {
 //        IMUser imUser = new IMUser();
 //        imUser.setJid(jid);
-//        imUser.setUserName(u);
-//        imUser.setName();
-//        imUser.setEmail();
+//        imUser.setUserName(userName);
+//        imUser.setName(name);
+//        imUser.setEmail(email);
 //
 //        return imUser;
 //    }
-}
+//
+//    public String getUserName() {
+//        return userName;
+//    }
+//
+//    public void setUserName(String userName) {
+//        this.userName = userName;
+//    }
+//
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
+//
+//    //    public IMUser getIMUserBean() {
+////        IMUser imUser = new IMUser();
+////        imUser.setJid(jid);
+////        imUser.setUserName(u);
+////        imUser.setName();
+////        imUser.setEmail();
+////
+////        return imUser;
+////    }
+//}

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.sinothk.openfire.android.bean.IMUser;
 import com.sinothk.openfire.android.demo.R;
-import com.sinothk.openfire.android.demo.model.bean.UserBean;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -37,10 +37,10 @@
         <activity android:name=".view.contacts.activity.FriendAddActivity" />
         <activity android:name=".view.contacts.activity.FriendInfoActivity" />
         <activity android:name=".view.mine.activity.UserInfoActivity" />
-
         <activity android:name=".view.chat.activity.ChatActivity" />
         <activity android:name=".view.contacts.activity.GroupListActivity" />
-
+        <activity android:name=".view.contacts.chatRoom.RoomListActivity" />
+        <activity android:name=".view.contacts.chatRoom.RoomCreateActivity"></activity>
     </application>
 
 </manifest>

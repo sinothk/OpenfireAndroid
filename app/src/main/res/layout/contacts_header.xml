@@ -72,6 +72,38 @@
     <include layout="@layout/line" />
 
     <RelativeLayout
+        android:id="@+id/chatRoomItem"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_58"
+        android:background="@drawable/selector_list_item_bg"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/chatRoomIv"
+            android:layout_width="@dimen/dp_42"
+            android:layout_height="@dimen/dp_42"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/chatRoomTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/chatRoomIv"
+            android:gravity="center_vertical"
+            android:text="聊天室"
+            android:textColor="#424242"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/line" />
+
+    <RelativeLayout
         android:id="@+id/myGroupsItem"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_58"

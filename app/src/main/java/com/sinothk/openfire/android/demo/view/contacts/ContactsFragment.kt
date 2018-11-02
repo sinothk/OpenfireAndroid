@@ -9,21 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.sinothk.comm.utils.IntentUtil
-import com.sinothk.comm.utils.ToastUtil
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.model.bean.UserBean
 import com.sinothk.openfire.android.demo.view.contacts.activity.FriendAddActivity
 import com.sinothk.openfire.android.demo.view.contacts.activity.FriendInfoActivity
 import com.sinothk.openfire.android.demo.view.contacts.activity.GroupListActivity
+import com.sinothk.openfire.android.demo.view.contacts.chatRoom.RoomListActivity
 import com.sinothk.openfire.android.demo.view.contacts.adapter.ContactsAdapter
 import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.widget.loadingRecyclerView.LoadingRecyclerView
 import kotlinx.android.synthetic.main.contacts_list_fragment.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -37,7 +35,7 @@ class ContactsFragment : Fragment() {
     private val mLetters = arrayOf("#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
 
     private var rootView: View? = null
-    private var contacts = ArrayList<UserBean>()
+    private var contacts = ArrayList<IMUser>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (rootView == null) {
@@ -100,7 +98,7 @@ class ContactsFragment : Fragment() {
             }
 
             override fun onEnd(result: IMResult) {
-                var contacts = ArrayList<UserBean>()
+                var contacts = ArrayList<IMUser>()
 
                 if (result.code == IMCode.SUCCESS) {
 
@@ -133,6 +131,11 @@ class ContactsFragment : Fragment() {
         val addFriendLayout: RelativeLayout = headerView.findViewById(R.id.addFriendLayout)
         addFriendLayout.setOnClickListener {
             IntentUtil.openActivity(activity, FriendAddActivity::class.java).start()
+        }
+
+        val chatRoomItem: RelativeLayout = headerView.findViewById(R.id.chatRoomItem)
+        chatRoomItem.setOnClickListener {
+            IntentUtil.openActivity(activity, RoomListActivity::class.java).start()
         }
 
         val myGroupsItem: RelativeLayout = headerView.findViewById(R.id.myGroupsItem)

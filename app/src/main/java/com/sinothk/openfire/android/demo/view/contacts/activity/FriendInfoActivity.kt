@@ -11,7 +11,6 @@ import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.model.bean.UserBean
 import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
 import com.sinothk.openfire.android.demo.view.chat.activity.ChatActivity
 import com.sinothk.openfire.android.inters.IMCallback

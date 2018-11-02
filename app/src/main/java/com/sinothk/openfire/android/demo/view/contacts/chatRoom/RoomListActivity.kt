@@ -1,8 +1,9 @@
-package com.sinothk.openfire.android.demo.view.contacts.activity
+package com.sinothk.openfire.android.demo.view.contacts.chatRoom
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
@@ -12,15 +13,16 @@ import com.sinothk.openfire.android.demo.view.contacts.adapter.GroupListAdapter
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_friend_add.*
 
-class GroupListActivity : TitleBarActivity() {
+class RoomListActivity : TitleBarActivity() {
     var adapter: GroupListAdapter? = null
 
-    override fun getLayoutResId(): Int = R.layout.activity_group_list
+    override fun getLayoutResId(): Int = R.layout.activity_chat_room_list
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setTitleBar("我的群组", true, "新增", View.OnClickListener { })
+        setTitleBar("聊天室", true, "新增", View.OnClickListener {
+            IntentUtil.openActivity(this@RoomListActivity, RoomCreateActivity::class.java).start() })
 
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(recyclerView.getListViewLine(this, R.drawable.divider_line))
@@ -31,7 +33,7 @@ class GroupListActivity : TitleBarActivity() {
         recyclerView.adapter = adapter
 
         adapter!!.setOnItemClickListener { position: Int, any: Any ->
-//            val user: UserBean = any as UserBean
+            //            val user: UserBean = any as UserBean
 //
 //            val currUserName: String = IMHelper.getCurrUser().userName
 //            if (currUserName == user.userName) {
@@ -48,7 +50,7 @@ class GroupListActivity : TitleBarActivity() {
 
     private fun findGroupList() {
 
-        IMHelper.findMyGroups(this, "", object : IMCallback {
+        IMHelper.findChatRoom(this, "", object : IMCallback {
             override fun onStart() {
             }
 

@@ -14,6 +14,7 @@ import com.sinothk.openfire.android.xmpp.XmppConnection;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterGroup;
+import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jxmpp.jid.parts.Localpart;
 
 import java.util.ArrayList;
@@ -870,6 +871,58 @@ public class IMHelper {
             XmppConnection.getInstance().sendTxtMessage(msgBody.getJid(), msgBody.getMsgTxt());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void createChartRoom() {
+        try {
+//            XmppConnection.getInstance().createRoom("聊天室1", "654321");
+
+            XmppConnection.getInstance().createRoom("聊天室3");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void findChatRoom(final Activity currActivity, String s, final IMCallback imCallback) {
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imCallback.onStart();
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IMResult result;
+                try {
+
+                    result = findChatRoom();
+
+                } catch (Exception e) {
+                    result = new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
+                }
+
+                final IMResult finalResult = result;
+
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imCallback.onEnd(finalResult);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private static IMResult findChatRoom() {
+        try {
+            List<HostedRoom> list = XmppConnection.getInstance().getHostRooms();
+
+            return new IMResult(IMCode.SUCCESS, list);
+        } catch (Exception e) {
+            return new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
         }
     }
 }
