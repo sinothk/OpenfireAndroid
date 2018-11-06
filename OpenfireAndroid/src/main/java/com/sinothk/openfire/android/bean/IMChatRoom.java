@@ -2,12 +2,11 @@ package com.sinothk.openfire.android.bean;
 
 public class IMChatRoom {
 
+    private String roomJid;
     private String roomId;
     private String roomName;
     private String roomDesc;
     private String roomPwd;
-
-//    private String roomCreatorName;
 
     private boolean isPersistentRoom;
 
@@ -33,13 +32,13 @@ public class IMChatRoom {
         this.roomId = roomId;
     }
 
-//    public String getRoomCreatorName() {
-//        return roomCreatorName;
-//    }
-//
-//    public void setRoomCreatorName(String roomCreatorName) {
-//        this.roomCreatorName = roomCreatorName;
-//    }
+    public String getRoomJid() {
+        return roomJid;
+    }
+
+    public void setRoomJid(String roomJid) {
+        this.roomJid = roomJid;
+    }
 
     public String getRoomName() {
         return roomName;

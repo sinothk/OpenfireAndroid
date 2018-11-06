@@ -5,16 +5,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.openfire.android.IMHelper
+import com.sinothk.openfire.android.bean.IMChatRoom
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
-import com.sinothk.openfire.android.demo.view.contacts.adapter.GroupListAdapter
+import com.sinothk.openfire.android.demo.view.contacts.adapter.RoomListAdapter
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_friend_add.*
 
 class RoomListActivity : TitleBarActivity() {
-    var adapter: GroupListAdapter? = null
+    var adapter: RoomListAdapter? = null
 
     override fun getLayoutResId(): Int = R.layout.activity_chat_room_list
 
@@ -30,7 +31,7 @@ class RoomListActivity : TitleBarActivity() {
         recyclerView.setPullRefreshEnabled(false)
         recyclerView.setLoadingMoreEnabled(false)
 
-        adapter = GroupListAdapter(R.layout.group_list_item)
+        adapter = RoomListAdapter(R.layout.group_list_item)
         recyclerView.adapter = adapter
 
         adapter!!.setOnItemClickListener { position: Int, any: Any ->
@@ -51,28 +52,18 @@ class RoomListActivity : TitleBarActivity() {
 
     private fun findGroupList() {
 
-        val imUser = IMHelper.getCurrUser();
-
-        IMHelper.findChatRoom(this, imUser.userName, object : IMCallback {
+        IMHelper.getHostAllRooms(this, object : IMCallback {
             override fun onStart() {
             }
 
             override fun onEnd(result: IMResult) {
                 if (result.code == IMCode.SUCCESS) {
 
-//                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
-//                    for (imUser in userList) {
-//                        val user = UserBean()
-//                        user.jid = imUser.jid.toString()
-//                        user.userName = imUser.userName
-//                        user.name = imUser.name
-//                        user.email = imUser.email
-//
-//                        contacts.add(user)
-//                    }
-//
+                    val roomList: ArrayList<IMChatRoom> = result.data as ArrayList<IMChatRoom>
+
 //                    UserBean.sort(contacts)
-//                    adapter?.setData(contacts)
+
+                    adapter?.setData(roomList)
                 } else {
 
                 }

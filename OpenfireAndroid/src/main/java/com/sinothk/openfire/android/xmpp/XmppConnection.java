@@ -1263,66 +1263,37 @@ public class XmppConnection {
     /**
      * 初始化会议室列表
      */
-    public List<HostedRoom> getHostRooms(String jid) {
+    public ArrayList<IMChatRoom> getHostAllRooms() {
+        if (getConnection() == null) return new ArrayList<>();
 
-        if (getConnection() == null) return null;
-
-//        MultiUserChatManager mMultiUserChatManager = MultiUserChatManager.getInstanceFor(connection);
-//
-//        mMultiUserChatManager.getHostedRooms(connection.getServiceName())
-////
-////        if (!jid.contains("@")) {
-////            jid = jid + "@" + getConnection().getServiceName();
-////        }
-////
-////
-////        try {
-////            DiscoverItems result = ServiceDiscoveryManager.getInstanceFor(connection).discoverItems(JidCreate.entityBareFrom(jid));
-////
-////            List<DiscoverItems.Item> items = result.getItems();
-////            List<String> answer = new ArrayList<>(items.size());
-////
-////            for (DiscoverItems.Item item : items) {
-////                answer.add(item.getEntityID().toString());
-////            }
-////
-////            if (answer.size() > 0) {
-////                return null;
-////            }
-////
-////
-////        } catch (SmackException.NoResponseException e) {
-////            e.printStackTrace();
-////        } catch (XMPPException.XMPPErrorException e) {
-////            e.printStackTrace();
-////        } catch (SmackException.NotConnectedException e) {
-////            e.printStackTrace();
-////        } catch (InterruptedException e) {
-////            e.printStackTrace();
-////        } catch (XmppStringprepException e) {
-////            e.printStackTrace();
-////        }
-//
-//        return null;
         try {
-            List<HostedRoom> roomInfo = new ArrayList<>();
 
-            Collection<HostedRoom> hostRooms = MultiUserChatManager.getInstanceFor(getConnection())
-                    .getHostedRooms(JidCreate.domainBareFrom("conference." + getConnection().getServiceName()));
+            MultiUserChatManager mucm = MultiUserChatManager.getInstanceFor(getConnection());
+            Collection<HostedRoom> hostRooms = mucm.getHostedRooms(JidCreate.domainBareFrom("conference." + getConnection().getServiceName()));
+
+            ArrayList<IMChatRoom> roomList = new ArrayList<>();
 
             for (HostedRoom entry : hostRooms) {
-                roomInfo.add(entry);
+                IMChatRoom imChatRoom = new IMChatRoom();
+                imChatRoom.setRoomJid(entry.getJid().toString());
+                imChatRoom.setRoomName(entry.getName());
+
+                // 房间信息
+                RoomInfo roomInfo = mucm.getRoomInfo(entry.getJid());
+                imChatRoom.setRoomDesc(roomInfo.getDescription());
+
+                roomList.add(imChatRoom);
+
                 Log.i("room", "名字：" + entry.getName() + " - ID:" + entry.getJid());
             }
 
-            Log.i("room", "服务会议数量:" + roomInfo.size());
+            Log.i("room", "服务会议数量:" + roomList.size());
 
-            return roomInfo;
+            return roomList;
         } catch (XMPPException | XmppStringprepException | InterruptedException | SmackException e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
-
 //        try {
 //
 //            System.out.println(connection.getXMPPServiceDomain());
@@ -1334,7 +1305,7 @@ public class XmppConnection {
 //                String service = (String) aCol;
 //
 ////                //查询服务器上的聊天室
-//                Collection<HostedRoom> rooms = mMultiUserChatManager.getHostedRooms(JidCreate.domainBareFrom(getConnection().getXMPPServiceDomain()));
+//                Collection<HostedRoom> rooms = mMultiUserChatManager.getHostedRooms(JidCreate.domainBareFrom("conference." + getConnection().getXMPPServiceDomain()));
 //
 //                for (HostedRoom room : rooms) {
 //                    //查看Room消息
@@ -1352,52 +1323,50 @@ public class XmppConnection {
 //        return null;
     }
 
-    public static List<String> getConferenceServices(DomainBareJid serverJid, XMPPConnection connection) throws Exception {
-        List<String> answer = new ArrayList<String>();
-
-        ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(connection);
-
-        DiscoverItems items = discoManager.discoverItems(serverJid);
-
-        List<DiscoverItems.Item> it = items.getItems();
-
-        for (DiscoverItems.Item item : it) {
-            if (item.getEntityID().toString().startsWith("conference") || item.getEntityID().toString().startsWith("private")) {
-
-                answer.add(item.getEntityID().toString());
-
-            } else {
-                try {
-                    DiscoverInfo info = discoManager.discoverInfo(item.getEntityID());
-                    if (info.containsFeature("http://jabber.org/protocol/muc")) {
-                        answer.add(item.getEntityID().toString());
-                    }
-                } catch (XMPPException e) {
-                }
-            }
-        }
-
-
-//        for (List<DiscoverItems.Item> it = items.getItems(); it.hasNext(); ) {
+//    public static List<String> getConferenceServices(DomainBareJid serverJid, XMPPConnection connection) throws Exception {
+//        List<String> answer = new ArrayList<String>();
 //
-//            DiscoverItems.Item item = (DiscoverItems.Item) it.next();
+//        ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(connection);
 //
-//            if (item.getEntityID().startsWith("conference") || item.getEntityID().startsWith("private")) {
+//        DiscoverItems items = discoManager.discoverItems(serverJid);
 //
-//                answer.add(item.getEntityID());
+//        List<DiscoverItems.Item> it = items.getItems();
+//
+//        for (DiscoverItems.Item item : it) {
+//            if (item.getEntityID().toString().startsWith("conference") || item.getEntityID().toString().startsWith("private")) {
+//
+//                answer.add(item.getEntityID().toString());
 //
 //            } else {
 //                try {
 //                    DiscoverInfo info = discoManager.discoverInfo(item.getEntityID());
 //                    if (info.containsFeature("http://jabber.org/protocol/muc")) {
-//                        answer.add(item.getEntityID());
+//                        answer.add(item.getEntityID().toString());
 //                    }
 //                } catch (XMPPException e) {
 //                }
 //            }
 //        }
-        return answer;
-    }
+////        for (List<DiscoverItems.Item> it = items.getItems(); it.hasNext(); ) {
+////
+////            DiscoverItems.Item item = (DiscoverItems.Item) it.next();
+////
+////            if (item.getEntityID().startsWith("conference") || item.getEntityID().startsWith("private")) {
+////
+////                answer.add(item.getEntityID());
+////
+////            } else {
+////                try {
+////                    DiscoverInfo info = discoManager.discoverInfo(item.getEntityID());
+////                    if (info.containsFeature("http://jabber.org/protocol/muc")) {
+////                        answer.add(item.getEntityID());
+////                    }
+////                } catch (XMPPException e) {
+////                }
+////            }
+////        }
+//        return answer;
+//    }
 
 
 //    /**

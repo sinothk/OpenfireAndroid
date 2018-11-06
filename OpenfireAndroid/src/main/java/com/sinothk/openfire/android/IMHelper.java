@@ -956,7 +956,13 @@ public class IMHelper {
         XmppConnection.getInstance().sendGroupMessage(roomName, msgBody.getMsgTxt());
     }
 
-    public static void findChatRoom(final Activity currActivity, final String userName, final IMCallback imCallback) {
+    /**
+     * 获得所有聊天室
+     *
+     * @param currActivity
+     * @param imCallback
+     */
+    public static void getHostAllRooms(final Activity currActivity, final IMCallback imCallback) {
         currActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -970,7 +976,7 @@ public class IMHelper {
                 IMResult result;
                 try {
 
-                    result = findChatRoom(userName);
+                    result = getHostAllRooms();
 
                 } catch (Exception e) {
                     result = new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
@@ -988,10 +994,9 @@ public class IMHelper {
         }).start();
     }
 
-    private static IMResult findChatRoom(String userName) {
+    private static IMResult getHostAllRooms() {
         try {
-            List<HostedRoom> list = XmppConnection.getInstance().getHostRooms(userName);
-
+            ArrayList<IMChatRoom> list = XmppConnection.getInstance().getHostAllRooms();
             return new IMResult(IMCode.SUCCESS, list);
         } catch (Exception e) {
             return new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
