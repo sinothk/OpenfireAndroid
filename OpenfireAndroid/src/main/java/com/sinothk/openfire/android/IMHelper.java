@@ -847,6 +847,12 @@ public class IMHelper {
         return XmppConnection.getInstance().getChatManager();
     }
 
+    /**
+     * 获得历史聊天记录
+     *
+     * @param chatList
+     * @return
+     */
     public static ArrayList<IMMessage> getChatList(ArrayList<IMMessage> chatList) {
         for (int i = 0; i < 5; i++) {
             IMMessage message = new IMMessage();
@@ -868,6 +874,11 @@ public class IMHelper {
         return chatList;
     }
 
+    /**
+     * 发送文本消息
+     *
+     * @param msgBody
+     */
     public static void send(IMMessage msgBody) {
         try {
             XmppConnection.getInstance().sendTxtMessage(msgBody.getJid(), msgBody.getMsgTxt());
@@ -876,6 +887,9 @@ public class IMHelper {
         }
     }
 
+    /**
+     * ========================================= 房间 ===============================================================
+     */
     /**
      * 创建房间
      *
@@ -912,7 +926,9 @@ public class IMHelper {
      * @return
      */
     private static IMResult createChartRoom(IMChatRoom imChatRoom) {
+
         MultiUserChat muc = XmppConnection.getInstance().createChatRoom(imChatRoom);
+
         if (muc != null) {
             return new IMResult(IMCode.SUCCESS, muc);
         } else {
@@ -920,7 +936,27 @@ public class IMHelper {
         }
     }
 
-    public static void findChatRoom(final Activity currActivity, String s, final IMCallback imCallback) {
+    /**
+     * 发布房间消息
+     *
+     * @param multiUserChat
+     * @param msgBody
+     */
+    public static void sendRoom(MultiUserChat multiUserChat, IMMessage msgBody) {
+        XmppConnection.getInstance().sendGroupMessage(multiUserChat, msgBody.getMsgTxt());
+    }
+
+    /**
+     * 发布房间消息
+     *
+     * @param roomName
+     * @param msgBody
+     */
+    public static void sendRoom(String roomName, IMMessage msgBody) {
+        XmppConnection.getInstance().sendGroupMessage(roomName, msgBody.getMsgTxt());
+    }
+
+    public static void findChatRoom(final Activity currActivity, final String userName, final IMCallback imCallback) {
         currActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -934,7 +970,7 @@ public class IMHelper {
                 IMResult result;
                 try {
 
-                    result = findChatRoom();
+                    result = findChatRoom(userName);
 
                 } catch (Exception e) {
                     result = new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
@@ -952,13 +988,31 @@ public class IMHelper {
         }).start();
     }
 
-    private static IMResult findChatRoom() {
+    private static IMResult findChatRoom(String userName) {
         try {
-            List<HostedRoom> list = XmppConnection.getInstance().getHostRooms();
+            List<HostedRoom> list = XmppConnection.getInstance().getHostRooms(userName);
 
             return new IMResult(IMCode.SUCCESS, list);
         } catch (Exception e) {
             return new IMResult(IMCode.ERROR, "获取失败", e.getMessage());
         }
+    }
+
+
+    public static void roomLeave(MultiUserChat multiUserChat) {
+        if (multiUserChat == null) {
+            return;
+        }
+
+        XmppConnection.getInstance().roomLeave(multiUserChat);
+    }
+
+    public static int getRoomMemberSize(MultiUserChat multiUserChat) {
+        try {
+            return multiUserChat.getMembers().size();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

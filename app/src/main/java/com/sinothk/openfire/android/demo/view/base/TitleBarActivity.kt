@@ -27,6 +27,12 @@ abstract class TitleBarActivity : AppCompatActivity() {
         }
     }
 
+    protected fun updateTitleBar(titleTxt: String) {
+        if (!TextUtils.isEmpty(titleTxt)) {
+            actionBarTitleTv.text = titleTxt
+        }
+    }
+
     protected fun setTitleBar(titleTxt: String, needBack: Boolean) {
         setTitleBar(titleTxt)
 

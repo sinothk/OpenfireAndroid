@@ -41,6 +41,7 @@
         <activity android:name=".view.contacts.activity.GroupListActivity" />
         <activity android:name=".view.contacts.chatRoom.RoomListActivity" />
         <activity android:name=".view.contacts.chatRoom.RoomCreateActivity"></activity>
+        <activity android:name=".view.contacts.chatRoom.RoomChatActivity" />
     </application>
 
 </manifest>

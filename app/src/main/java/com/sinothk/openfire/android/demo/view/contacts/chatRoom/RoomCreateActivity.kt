@@ -12,6 +12,7 @@ import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_room_create.*
+import org.jivesoftware.smackx.muc.MultiUserChat
 
 class RoomCreateActivity : TitleBarActivity() {
 
@@ -25,14 +26,19 @@ class RoomCreateActivity : TitleBarActivity() {
 
         setTitleBar("创建房间", true, "提交", View.OnClickListener {
 
+            val roomId: String = roomJidEt.text.toString()
             val roomName: String = roomNameEt.text.toString()
             val roomDesc: String = roomDescEt.text.toString()
 
+            val room = IMChatRoom()
 
-            val room = IMChatRoom(roomName, roomDesc)
+            if (TextUtils.isEmpty(roomId)) {
+                ToastUtil.show("请输入唯一的聊天室ID")
+                return@OnClickListener
+            }
 
             if (TextUtils.isEmpty(roomName)) {
-                ToastUtil.show("请输入唯一的聊天室")
+                ToastUtil.show("请输入聊天室名称")
                 return@OnClickListener
             }
 
@@ -41,9 +47,12 @@ class RoomCreateActivity : TitleBarActivity() {
                 return@OnClickListener
             }
 
+            room.roomId = roomId
+            room.roomName = roomName
+            room.roomDesc = roomDesc
+
             // 密码部分
             if (needPwd) {
-
                 val roomPwd: String = roomPwdEt.text.toString()
 
                 if (TextUtils.isEmpty(roomPwd)) {
@@ -64,6 +73,9 @@ class RoomCreateActivity : TitleBarActivity() {
                 override fun onEnd(result: IMResult) {
                     if (result.code == IMCode.SUCCESS) {
                         ToastUtil.show("创建成功！")
+
+                        val muc: MultiUserChat = result.data as MultiUserChat
+                        RoomChatActivity.startRoomChat(this@RoomCreateActivity, muc, roomName)
                     } else {
                         ToastUtil.show(result.tip)
                     }

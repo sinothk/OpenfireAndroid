@@ -8,7 +8,6 @@ import com.sinothk.openfire.android.IMHelper;
 import com.sinothk.openfire.android.bean.IMChatRoom;
 import com.sinothk.openfire.android.bean.IMStatus;
 import com.sinothk.openfire.android.bean.IMUser;
-import com.sinothk.openfire.android.inters.GroupMessageListener;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -29,6 +28,8 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
+import org.jivesoftware.smackx.disco.packet.DiscoverItems;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
 import org.jivesoftware.smackx.iqregister.AccountManager;
@@ -145,6 +146,13 @@ public class XmppConnection {
         }
 
         try {
+            // 其中ClientConnectionServer.class.getClassLoader() 用来获取当前类的类加载器，如果用ClassLoader.getSystemClassLoader(),我测试的没起作用
+            Class.forName("org.jivesoftware.smackx.ServiceDiscoveryManager", true, XmppConnection.class.getClassLoader());
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+        }
+
+        try {
             SmackConfiguration.DEBUG = true;
 
             XMPPTCPConnectionConfiguration.Builder config = createBuilder();
@@ -169,7 +177,6 @@ public class XmppConnection {
      *
      * @return
      * @throws UnknownHostException
-     * @throws XmppStringprepException
      */
     private XMPPTCPConnectionConfiguration.Builder createBuilder() throws UnknownHostException, XmppStringprepException {
         XMPPTCPConnectionConfiguration.Builder config = XMPPTCPConnectionConfiguration.builder();
@@ -187,7 +194,8 @@ public class XmppConnection {
         //禁用SSL连接
         config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled).setCompressionEnabled(false);
         //设置Debug
-        config.setDebuggerEnabled(true);
+//        config.setDebuggerEnabled(true);
+//        config.setDebuggerEnabled(true);
         //设置离线状态
         config.setSendPresence(false);
         //设置开启压缩，可以节省流量
@@ -215,44 +223,30 @@ public class XmppConnection {
      * @param connection
      */
     private void addConnectListener(AbstractXMPPConnection connection) {
-        connectionListener = new ConnectionListener() {
-            @Override
-            public void connected(XMPPConnection xmppConnection) {
-                Log.e(TAG, "addConnectListener -> connected");
-            }
 
-            @Override
-            public void authenticated(XMPPConnection xmppConnection, boolean b) {
-                Log.e(TAG, "addConnectListener -> authenticated");
-            }
-
-            @Override
-            public void connectionClosed() {
-                Log.e(TAG, "addConnectListener -> connectionClosed");
-            }
-
-            @Override
-            public void connectionClosedOnError(Exception e) {
-                Log.e(TAG, "addConnectListener -> connectionClosedOnError");
-            }
-
-            @Override
-            public void reconnectionSuccessful() {
-                Log.e(TAG, "addConnectListener -> reconnectionSuccessful");
-            }
-
-            @Override
-            public void reconnectingIn(int i) {
-                Log.e(TAG, "addConnectListener -> reconnectingIn");
-            }
-
-            @Override
-            public void reconnectionFailed(Exception e) {
-                Log.e(TAG, "addConnectListener -> reconnectionFailed");
-            }
-        };
-
-        connection.addConnectionListener(connectionListener);
+//        connectionListener = new XMConnectionListener() {
+//            @Override
+//            public void connected(XMPPConnection xmppConnection) {
+//                Log.e(TAG, "addConnectListener -> connected");
+//            }
+//
+//            @Override
+//            public void authenticated(XMPPConnection xmppConnection, boolean b) {
+//                Log.e(TAG, "addConnectListener -> authenticated");
+//            }
+//
+//            @Override
+//            public void connectionClosed() {
+//                Log.e(TAG, "addConnectListener -> connectionClosed");
+//            }
+//
+//            @Override
+//            public void connectionClosedOnError(Exception e) {
+//                Log.e(TAG, "addConnectListener -> connectionClosedOnError");
+//            }
+//        };
+//
+//        connection.addConnectionListener(connectionListener);
     }
 
     /**
@@ -543,7 +537,7 @@ public class XmppConnection {
             return null;
 
         try {
-            DomainBareJid jid = JidCreate.domainBareFrom("search." + getConnection().getServiceName());
+            DomainBareJid jid = JidCreate.domainBareFrom("search." + getConnection().getXMPPServiceDomain());//.getServiceName()
 
             UserSearchManager usm = new UserSearchManager(getConnection());
             Form searchForm = usm.getSearchForm(jid);
@@ -683,7 +677,7 @@ public class XmppConnection {
             try {
                 String jid = user;
                 if (!jid.contains("@")) {
-                    jid = jid + "@" + getConnection().getServiceName();
+                    jid = jid + "@" + getConnection().getXMPPServiceDomain();
                 }
                 vcard = VCardManager.getInstanceFor(getConnection()).loadVCard(JidCreate.entityBareFrom(jid));
             } catch (XmppStringprepException | SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
@@ -766,7 +760,7 @@ public class XmppConnection {
             Presence subscription = new Presence(Presence.Type.subscribed);
             subscription.setTo(JidCreate.entityBareFrom(userName));
 
-            userName += "@" + getConnection().getServiceName();
+            userName += "@" + getConnection().getXMPPServiceDomain();
 
             getConnection().sendStanza(subscription);
 
@@ -1064,7 +1058,7 @@ public class XmppConnection {
     }
 
     private String createJid(String username) {
-        return username + "@" + getConnection().getServiceName();
+        return username + "@" + getConnection().getXMPPServiceDomain();
     }
 
     public RosterEntry getUserInfo(String jid) {
@@ -1107,7 +1101,7 @@ public class XmppConnection {
 
         try {
             // 创建一个MultiUserChat
-            muc = MultiUserChatManager.getInstanceFor(getConnection()).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@conference." + getConnection().getServiceName()));
+            muc = MultiUserChatManager.getInstanceFor(getConnection()).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@conference." + getConnection().getXMPPServiceDomain()));
             // 创建聊天室
             muc.create(Resourcepart.from(roomName));
             // 获得聊天室的配置表单
@@ -1173,7 +1167,7 @@ public class XmppConnection {
 
         try {
             // 创建一个MultiUserChat
-            muc = MultiUserChatManager.getInstanceFor(getConnection()).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@conference." + getConnection().getServiceName()));
+            muc = MultiUserChatManager.getInstanceFor(getConnection()).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@conference." + getConnection().getXMPPServiceDomain()));
             // 创建聊天室
             muc.create(Resourcepart.from(roomName));
             // 获得聊天室的配置表单
@@ -1269,30 +1263,140 @@ public class XmppConnection {
     /**
      * 初始化会议室列表
      */
-    public List<HostedRoom> getHostRooms() {
+    public List<HostedRoom> getHostRooms(String jid) {
 
         if (getConnection() == null) return null;
 
-        Collection<HostedRoom> hostrooms;
-
-        List<HostedRoom> roominfos = new ArrayList<>();
-
+//        MultiUserChatManager mMultiUserChatManager = MultiUserChatManager.getInstanceFor(connection);
+//
+//        mMultiUserChatManager.getHostedRooms(connection.getServiceName())
+////
+////        if (!jid.contains("@")) {
+////            jid = jid + "@" + getConnection().getServiceName();
+////        }
+////
+////
+////        try {
+////            DiscoverItems result = ServiceDiscoveryManager.getInstanceFor(connection).discoverItems(JidCreate.entityBareFrom(jid));
+////
+////            List<DiscoverItems.Item> items = result.getItems();
+////            List<String> answer = new ArrayList<>(items.size());
+////
+////            for (DiscoverItems.Item item : items) {
+////                answer.add(item.getEntityID().toString());
+////            }
+////
+////            if (answer.size() > 0) {
+////                return null;
+////            }
+////
+////
+////        } catch (SmackException.NoResponseException e) {
+////            e.printStackTrace();
+////        } catch (XMPPException.XMPPErrorException e) {
+////            e.printStackTrace();
+////        } catch (SmackException.NotConnectedException e) {
+////            e.printStackTrace();
+////        } catch (InterruptedException e) {
+////            e.printStackTrace();
+////        } catch (XmppStringprepException e) {
+////            e.printStackTrace();
+////        }
+//
+//        return null;
         try {
-            hostrooms = MultiUserChatManager.getInstanceFor(getConnection())
-                    .getHostedRooms(JidCreate.domainBareFrom(getConnection().getServiceName()));
+            List<HostedRoom> roomInfo = new ArrayList<>();
 
-            for (HostedRoom entry : hostrooms) {
-                roominfos.add(entry);
+            Collection<HostedRoom> hostRooms = MultiUserChatManager.getInstanceFor(getConnection())
+                    .getHostedRooms(JidCreate.domainBareFrom("conference." + getConnection().getServiceName()));
+
+            for (HostedRoom entry : hostRooms) {
+                roomInfo.add(entry);
                 Log.i("room", "名字：" + entry.getName() + " - ID:" + entry.getJid());
             }
 
-            Log.i("room", "服务会议数量:" + roominfos.size());
+            Log.i("room", "服务会议数量:" + roomInfo.size());
 
+            return roomInfo;
         } catch (XMPPException | XmppStringprepException | InterruptedException | SmackException e) {
             e.printStackTrace();
             return null;
         }
-        return roominfos;
+
+//        try {
+//
+//            System.out.println(connection.getXMPPServiceDomain());
+//
+//            MultiUserChatManager mMultiUserChatManager = MultiUserChatManager.getInstanceFor(connection);
+//
+//            List<String> col = getConferenceServices(connection.getXMPPServiceDomain(), connection);
+//            for (Object aCol : col) {
+//                String service = (String) aCol;
+//
+////                //查询服务器上的聊天室
+//                Collection<HostedRoom> rooms = mMultiUserChatManager.getHostedRooms(JidCreate.domainBareFrom(getConnection().getXMPPServiceDomain()));
+//
+//                for (HostedRoom room : rooms) {
+//                    //查看Room消息
+//                    System.out.println(room.getName() + " - " + room.getJid());
+//                    RoomInfo roomInfo = mMultiUserChatManager.getRoomInfo(room.getJid());
+//                    if (roomInfo != null) {
+//                        System.out.println(roomInfo.getOccupantsCount() + " : " + roomInfo.getSubject());
+//                    }
+//                }
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+    }
+
+    public static List<String> getConferenceServices(DomainBareJid serverJid, XMPPConnection connection) throws Exception {
+        List<String> answer = new ArrayList<String>();
+
+        ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(connection);
+
+        DiscoverItems items = discoManager.discoverItems(serverJid);
+
+        List<DiscoverItems.Item> it = items.getItems();
+
+        for (DiscoverItems.Item item : it) {
+            if (item.getEntityID().toString().startsWith("conference") || item.getEntityID().toString().startsWith("private")) {
+
+                answer.add(item.getEntityID().toString());
+
+            } else {
+                try {
+                    DiscoverInfo info = discoManager.discoverInfo(item.getEntityID());
+                    if (info.containsFeature("http://jabber.org/protocol/muc")) {
+                        answer.add(item.getEntityID().toString());
+                    }
+                } catch (XMPPException e) {
+                }
+            }
+        }
+
+
+//        for (List<DiscoverItems.Item> it = items.getItems(); it.hasNext(); ) {
+//
+//            DiscoverItems.Item item = (DiscoverItems.Item) it.next();
+//
+//            if (item.getEntityID().startsWith("conference") || item.getEntityID().startsWith("private")) {
+//
+//                answer.add(item.getEntityID());
+//
+//            } else {
+//                try {
+//                    DiscoverInfo info = discoManager.discoverInfo(item.getEntityID());
+//                    if (info.containsFeature("http://jabber.org/protocol/muc")) {
+//                        answer.add(item.getEntityID());
+//                    }
+//                } catch (XMPPException e) {
+//                }
+//            }
+//        }
+        return answer;
     }
 
 
@@ -1323,20 +1427,6 @@ public class XmppConnection {
 //    }
 
     /**
-     * 发送群组聊天消息
-     *
-     * @param muc     muc
-     * @param message 消息文本
-     */
-    public void sendGroupMessage(MultiUserChat muc, String message) {
-        try {
-            muc.sendMessage(message);
-        } catch (SmackException.NotConnectedException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * 查询会议室成员名字
      *
      * @param muc
@@ -1355,82 +1445,9 @@ public class XmppConnection {
         return listUser;
     }
 
-/**
- * 聊天室部分 ========================================================================================
- */
-    /**
-     * 创建群聊房间
-     *
-     * @param groupName 群名称
-     * @param roomName  群昵称
-     * @param userNames 群的所有人
-     * @return
-     * @throws Exception
+    /*
+     * 聊天室部分 ========================================================================================
      */
-    public MultiUserChat createChatRoom(String usernmae, String passowrd, String groupName, String roomName, List<String> userNames) throws Exception {
-
-        String jid = groupName + "@conference." + getConnection().getServiceName();
-        EntityBareJid groupJid = JidCreate.entityBareFrom(jid);
-        MultiUserChat muc = MultiUserChatManager.getInstanceFor(getConnection()).getMultiUserChat(groupJid);
-
-        //设置群组名称
-        muc.create(Resourcepart.from(roomName));
-
-        // 设置聊天室的成员
-        List<String> owners = new ArrayList<String>();
-        owners.add(getConnection().getUser() + "");
-
-        /**XMPP会议室设置MUC*/
-        // 获得聊天室的配置表单 根据原始表单创建一个要提交的新表单。
-        Form form = muc.getConfigurationForm();
-        Form submitForm = form.createAnswerForm();
-        //房间名称
-        submitForm.setAnswer("muc#roomconfig_roomname", roomName);
-        //房间描述
-        submitForm.setAnswer("muc#roomconfig_roomdesc", "家庭圈");
-//        //房间拥有者
-        submitForm.setAnswer("muc#roomconfig_roomowners", owners);
-
-        //房间管理员
-        final List<String> admins = new ArrayList<String>();
-        admins.add(getConnection().getUser() + "");
-
-        submitForm.setAnswer("muc#roomconfig_roomadmins", admins);
-
-        //房间最大人数
-        final List<String> maxusers = new ArrayList<String>();
-        maxusers.add("50");
-        submitForm.setAnswer("muc#roomconfig_maxusers", maxusers);
-        //设置为公共房间
-        submitForm.setAnswer("muc#roomconfig_publicroom", true);
-        // 设置聊天室是持久聊天室
-        submitForm.setAnswer("muc#roomconfig_persistentroom", true);
-        //房间是适度的
-        submitForm.setAnswer("muc#roomconfig_moderatedroom", true);
-        // 房间仅对成员开放
-        submitForm.setAnswer("muc#roomconfig_membersonly", false);
-        // 允许占有者邀请其他人
-        submitForm.setAnswer("muc#roomconfig_allowinvites", true);
-        //允许占有者更改主题
-        submitForm.setAnswer("muc#roomconfig_changesubject", false);
-        // 登录房间对话
-        submitForm.setAnswer("muc#roomconfig_enablelogging", true);
-        //进入不需要密码
-        submitForm.setAnswer("muc#roomconfig_passwordprotectedroom", false);
-        // 仅允许注册的昵称登录
-        submitForm.setAnswer("x-muc#roomconfig_reservednick", true);
-        // 允许使用者修改昵称
-        submitForm.setAnswer("x-muc#roomconfig_canchangenick", false);
-        // 允许用户注册房间
-        submitForm.setAnswer("x-muc#roomconfig_registration", true);
-        // 发送已完成的表单（有默认值）到服务器来配置聊天室
-        muc.sendConfigurationForm(submitForm);
-        //添加群消息监听
-        muc.addMessageListener(new GroupMessageListener() {
-        });
-
-        return muc;
-    }
 
     /**
      * 加入群聊会议室
@@ -1441,13 +1458,14 @@ public class XmppConnection {
      */
     public MultiUserChat joinMultiUserChat(String groupName, String nickname) throws Exception {
         //群jid
-        String jid = groupName + "@conference." + getConnection().getServiceName();
+        String jid = groupName + "@conference." + getConnection().getXMPPServiceDomain();
         //jid实体创建
         EntityBareJid groupJid = JidCreate.entityBareFrom(jid);
         //获取群管理对象
         MultiUserChatManager multiUserChatManager = MultiUserChatManager.getInstanceFor(getConnection());
         //通过群管理对象获取该群房间对象
         MultiUserChat multiUserChat = multiUserChatManager.getMultiUserChat(groupJid);
+
         Resourcepart from = Resourcepart.from(nickname);
         MucEnterConfiguration.Builder builder = multiUserChat.getEnterConfigurationBuilder(from);
         builder.requestMaxCharsHistory(0);
@@ -1472,12 +1490,16 @@ public class XmppConnection {
 
         try {
             // 创建一个MultiUserChat
-            MultiUserChat muc = MultiUserChatManager.getInstanceFor(getConnection()).getMultiUserChat(JidCreate.entityBareFrom(imChatRoom.getRoomName() + "@conference." + getConnection().getServiceName()));
+            String jid = imChatRoom.getRoomId() + "@conference." + getConnection().getXMPPServiceDomain();
+            EntityBareJid roomJid = JidCreate.entityBareFrom(jid);
+            MultiUserChat muc = MultiUserChatManager.getInstanceFor(getConnection()).getMultiUserChat(roomJid);
 
-            // 创建聊天室
-            String roomName = imChatRoom.getRoomName();
-            roomName = (roomName == null || roomName.trim().length() == 0) ? "临时房间" : roomName;
-            muc.create(Resourcepart.from(roomName));
+            // 创建聊天室,并设置创建人群昵称
+            IMUser currUser = getCurrUserInfo();
+            String roomCreatorName = currUser.getName();
+
+            // 创建
+            muc.create(Resourcepart.from(roomCreatorName));
 
             // 获得聊天室的配置表单
             Form form = muc.getConfigurationForm();
@@ -1490,11 +1512,11 @@ public class XmppConnection {
                     submitForm.setDefaultAnswer(formField.getVariable());
                 }
             }
-            // 设置聊天室的新拥有者
-            List<String> owners = new ArrayList<>();
-            owners.add(getConnection().getUser().asEntityBareJidString());// 用户JID
-            //房间拥有者
-            submitForm.setAnswer("muc#roomconfig_roomowners", owners);
+
+            //房间名称
+            String roomName = imChatRoom.getRoomName();
+            roomName = roomName == null || roomName.length() == 0 ? imChatRoom.getRoomId() : roomName;
+            submitForm.setAnswer("muc#roomconfig_roomname", roomName);
 
             //房间描述
             if (TextUtils.isEmpty(imChatRoom.getRoomDesc())) {
@@ -1503,11 +1525,24 @@ public class XmppConnection {
                 submitForm.setAnswer("muc#roomconfig_roomdesc", imChatRoom.getRoomDesc());
             }
 
+//            //房间管理员
+//            final List<String> admins = new ArrayList<String>();
+//            admins.add(getConnection().getUser() + "");
+//            submitForm.setAnswer("muc#roomconfig_roomadmins", admins);
+
+            // 设置聊天室的拥有者
+            List<String> owners = new ArrayList<>();
+            owners.add(getConnection().getUser().asEntityBareJidString());// 用户JID
+
+            //房间拥有者
+            submitForm.setAnswer("muc#roomconfig_roomowners", owners);
+
             // 设置聊天室是持久聊天室，即将要被保存下来
             submitForm.setAnswer("muc#roomconfig_persistentroom", imChatRoom.isPersistentRoom());
 
             // 房间仅对成员开放
             submitForm.setAnswer("muc#roomconfig_membersonly", false);
+
             // 允许占有者邀请其他人
             submitForm.setAnswer("muc#roomconfig_allowinvites", true);
 
@@ -1538,6 +1573,192 @@ public class XmppConnection {
         } catch (XMPPException | XmppStringprepException | SmackException | InterruptedException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * 创建群聊房间
+     *
+     * @param groupName 群名称
+     * @param roomName  群昵称
+     *                  //     * @param userNames 群的所有人
+     * @return
+     * @throws Exception
+     */
+//    public MultiUserChat createChatRoom(String groupName, String roomName) {
+//        try {
+//            String jid = groupName + "@conference." + getConnection().getServiceName();
+//            EntityBareJid groupJid = JidCreate.entityBareFrom(jid);
+//
+//            MultiUserChat muc = MultiUserChatManager.getInstanceFor(getConnection()).getMultiUserChat(groupJid);
+//
+//            //设置群组名称
+//            muc.create(Resourcepart.from(roomName));
+//
+//            // 设置聊天室的成员
+//            List<String> owners = new ArrayList<String>();
+//            owners.add(getConnection().getUser() + "");
+//
+//            /**XMPP会议室设置MUC*/
+//            // 获得聊天室的配置表单 根据原始表单创建一个要提交的新表单。
+//            Form form = muc.getConfigurationForm();
+//            Form submitForm = form.createAnswerForm();
+//            //房间名称
+//            submitForm.setAnswer("muc#roomconfig_roomname", roomName);
+//            //房间描述
+//            submitForm.setAnswer("muc#roomconfig_roomdesc", "家庭圈");
+////        //房间拥有者
+//            submitForm.setAnswer("muc#roomconfig_roomowners", owners);
+//
+//            //房间管理员
+//            final List<String> admins = new ArrayList<String>();
+//            admins.add(getConnection().getUser() + "");
+//            submitForm.setAnswer("muc#roomconfig_roomadmins", admins);
+//
+//            //房间最大人数
+//            final List<String> maxusers = new ArrayList<String>();
+//            maxusers.add("50");
+//            submitForm.setAnswer("muc#roomconfig_maxusers", maxusers);
+//            //设置为公共房间
+//            submitForm.setAnswer("muc#roomconfig_publicroom", true);
+//            // 设置聊天室是持久聊天室
+//            submitForm.setAnswer("muc#roomconfig_persistentroom", true);
+//            //房间是适度的
+//            submitForm.setAnswer("muc#roomconfig_moderatedroom", true);
+//            // 房间仅对成员开放
+//            submitForm.setAnswer("muc#roomconfig_membersonly", false);
+//            // 允许占有者邀请其他人
+//            submitForm.setAnswer("muc#roomconfig_allowinvites", true);
+//            //允许占有者更改主题
+//            submitForm.setAnswer("muc#roomconfig_changesubject", false);
+//            // 登录房间对话
+//            submitForm.setAnswer("muc#roomconfig_enablelogging", true);
+//            //进入不需要密码
+//            submitForm.setAnswer("muc#roomconfig_passwordprotectedroom", false);
+//            // 仅允许注册的昵称登录
+//            submitForm.setAnswer("x-muc#roomconfig_reservednick", true);
+//            // 允许使用者修改昵称
+//            submitForm.setAnswer("x-muc#roomconfig_canchangenick", false);
+//            // 允许用户注册房间
+//            submitForm.setAnswer("x-muc#roomconfig_registration", true);
+//            // 发送已完成的表单（有默认值）到服务器来配置聊天室
+//            muc.sendConfigurationForm(submitForm);
+//            //添加群消息监听
+//            muc.addMessageListener(new GroupMessageListener() {
+//            });
+//
+//            return muc;
+//
+//        } catch (XMPPException | XmppStringprepException | SmackException | InterruptedException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+
+
+//    /**
+//     * 发送群组聊天消息
+//     *
+//     * @param muc     muc
+//     * @param message 消息文本
+//     */
+//    public void sendGroupMessage(MultiUserChat muc, String message) {
+//        try {
+//            muc.sendMessage(message);
+//        } catch (SmackException.NotConnectedException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    /**
+     * 发送群组聊天消息
+     *
+     * @param multiUserChat muc
+     * @param body          消息文本
+     */
+    public void sendGroupMessage(MultiUserChat multiUserChat, String body) {
+        try {
+//            MultiUserChat multiUserChat = createMultiUserChat(roomName);
+//
+//            if (multiUserChat == null) {
+//                return;
+//            }
+
+            Message message = new Message();
+            message.setBody(body);
+            message.setType(Message.Type.groupchat);
+            //发送信息
+            multiUserChat.sendMessage(message);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 发送群组聊天消息
+     *
+     * @param roomName muc
+     * @param body     消息文本
+     */
+    public void sendGroupMessage(String roomName, String body) {
+        try {
+            MultiUserChat multiUserChat = createMultiUserChat(roomName);
+
+            if (multiUserChat == null) {
+                return;
+            }
+
+            Message message = new Message();
+            message.setBody(body);
+            message.setType(Message.Type.groupchat);
+            //发送信息
+            multiUserChat.sendMessage(message);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 创建MultiUserChat对象
+     *
+     * @param roomName
+     * @return
+     */
+    private MultiUserChat createMultiUserChat(String roomName) {
+        try {
+            //群jid
+            String jid = roomName;
+            if (!roomName.contains("@")) {
+                jid = roomName + "@conference." + getConnection().getXMPPServiceDomain();
+            }
+
+            //jid实体创建
+            EntityBareJid groupJid = JidCreate.entityBareFrom(jid);
+
+            //获取群管理对象
+            MultiUserChatManager multiUserChatManager = MultiUserChatManager.getInstanceFor(getConnection());
+            //通过群管理对象获取该群房间对象
+            return multiUserChatManager.getMultiUserChat(groupJid);
+
+        } catch (XmppStringprepException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 离开房间
+     *
+     * @param multiUserChat
+     */
+    public void roomLeave(MultiUserChat multiUserChat) {
+        try {
+            multiUserChat.leave();
+        } catch (SmackException.NotConnectedException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

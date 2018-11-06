@@ -22,7 +22,8 @@ class RoomListActivity : TitleBarActivity() {
         super.onCreate(savedInstanceState)
 
         setTitleBar("聊天室", true, "新增", View.OnClickListener {
-            IntentUtil.openActivity(this@RoomListActivity, RoomCreateActivity::class.java).start() })
+            IntentUtil.openActivity(this@RoomListActivity, RoomCreateActivity::class.java).start()
+        })
 
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(recyclerView.getListViewLine(this, R.drawable.divider_line))
@@ -50,7 +51,9 @@ class RoomListActivity : TitleBarActivity() {
 
     private fun findGroupList() {
 
-        IMHelper.findChatRoom(this, "", object : IMCallback {
+        val imUser = IMHelper.getCurrUser();
+
+        IMHelper.findChatRoom(this, imUser.userName, object : IMCallback {
             override fun onStart() {
             }
 

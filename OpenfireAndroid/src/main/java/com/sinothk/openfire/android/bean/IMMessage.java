@@ -119,4 +119,18 @@ public class IMMessage {
 
         return msg;
     }
+
+    public static IMMessage createRoomSendMsg(String msgTxt) {
+
+        IMMessage msg = new IMMessage();
+
+        msg.setChatType(IMConstant.Chat.CHAT_TYPE_ROOM);
+
+        msg.setContentType(IMConstant.ContentType.CONTENT_TEXT);
+        msg.setFromType(IMConstant.FromType.SEND);
+
+        msg.setMsgTxt(msgTxt);
+
+        return msg;
+    }
 }

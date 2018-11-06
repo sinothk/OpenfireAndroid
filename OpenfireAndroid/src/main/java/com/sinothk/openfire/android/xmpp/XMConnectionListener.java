@@ -62,6 +62,21 @@ public class XMConnectionListener implements ConnectionListener {
         }
     }
 
+    @Override
+    public void reconnectionSuccessful() {
+
+    }
+
+    @Override
+    public void reconnectingIn(int seconds) {
+
+    }
+
+    @Override
+    public void reconnectionFailed(Exception e) {
+
+    }
+
     private class TimeTask extends TimerTask {
         @Override
         public void run() {
@@ -88,19 +103,19 @@ public class XMConnectionListener implements ConnectionListener {
         }
     }
 
-    @Override
-    public void reconnectingIn(int in) {
-        Log.i("XMConnectionListener", "reconnectingIn" + in);
-    }
-
-    @Override
-    public void reconnectionFailed(Exception e) {
-        Log.i("XMConnectionListener", "reconnectionFailed" + e.getMessage());
-    }
-
-    @Override
-    public void reconnectionSuccessful() {
-        Log.i("XMConnectionListener", "reconnectionSuccessful");
-    }
+//    @Override
+//    public void reconnectingIn(int in) {
+//        Log.i("XMConnectionListener", "reconnectingIn" + in);
+//    }
+//
+//    @Override
+//    public void reconnectionFailed(Exception e) {
+//        Log.i("XMConnectionListener", "reconnectionFailed" + e.getMessage());
+//    }
+//
+//    @Override
+//    public void reconnectionSuccessful() {
+//        Log.i("XMConnectionListener", "reconnectionSuccessful");
+//    }
 
 }

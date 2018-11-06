@@ -7,6 +7,7 @@ public class IMConstant {
         public static final String CHAT_TYPE = "CHAT_TYPE";
 
         public static final int CHAT_TYPE_SINGLE = 1;
+        public static final int CHAT_TYPE_ROOM = 2;
         public static final int CHAT_TYPE_GROUP = 3;
     }
 

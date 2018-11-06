@@ -33,10 +33,25 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     // smack依赖
+
+//    api 'xpp3:xpp3:1.1.4c'
+//    api "org.jxmpp:jxmpp-core:$jxmppVersion"
+//    api "org.jxmpp:jxmpp-jid:$jxmppVersion"
+//    api "org.minidns:minidns-core:$miniDnsVersion"
+
+
     api 'de.measite.minidns:minidns-hla:0.2.4'
 //    api 'org.igniterealtime.smack:smack-android:4.1.5'
 //    api 'org.igniterealtime.smack:smack-android-extensions:4.1.5'
 //    api 'org.igniterealtime.smack:smack-experimental:4.1.5'
 //    api 'org.igniterealtime.smack:smack-tcp:4.1.5'
 //    api 'org.igniterealtime.smack:smack-core:4.1.5'
+
+//    api "org.igniterealtime.smack:smack-java7:4.2.4"
+//    // Optional for XMPPTCPConnection
+//    api "org.igniterealtime.smack:smack-tcp:4.2.4"
+//    // Optional for XMPP-IM (RFC 6121) support (Roster, Threaded Chats, …)
+//    api "org.igniterealtime.smack:smack-im:4.2.4"
+//    // Optional for XMPP extensions support
+//    api "org.igniterealtime.smack:smack-extensions:4.2.4"
 }
