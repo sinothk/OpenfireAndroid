@@ -1020,4 +1020,8 @@ public class IMHelper {
         }
         return 0;
     }
+
+    public static MultiUserChat joinMultiUserChat(String roomJid, String nickname) {
+        return XmppConnection.getInstance().joinMultiUserChat(roomJid, nickname);
+    }
 }
