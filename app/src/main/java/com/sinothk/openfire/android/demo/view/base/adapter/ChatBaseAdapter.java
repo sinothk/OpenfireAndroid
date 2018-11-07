@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android.demo.view.chat.adapter;
+package com.sinothk.openfire.android.demo.view.base.adapter;
 
 import android.content.Context;
 import android.widget.BaseAdapter;

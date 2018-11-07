@@ -7,7 +7,7 @@ import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
+import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
 import com.sinothk.openfire.android.demo.view.contacts.adapter.RoomListAdapter
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_friend_add.*
@@ -27,7 +27,7 @@ class GroupListActivity : TitleBarActivity() {
         recyclerView.setPullRefreshEnabled(false)
         recyclerView.setLoadingMoreEnabled(false)
 
-        adapter = RoomListAdapter(R.layout.group_list_item)
+        adapter = RoomListAdapter(R.layout.room_list_item)
         recyclerView.adapter = adapter
 
         adapter!!.setOnItemClickListener { position: Int, any: Any ->

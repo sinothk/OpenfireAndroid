@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.sinothk.openfire.android.bean.IMConstant;
 import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
+import com.sinothk.openfire.android.demo.view.base.adapter.ChatBaseAdapter;
 
 import java.util.ArrayList;
 

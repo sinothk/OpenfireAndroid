@@ -8,8 +8,8 @@ import com.sinothk.comm.utils.ToastUtil
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.model.StringValue
-import com.sinothk.openfire.android.demo.utils.ActivityUtil
-import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
+import com.sinothk.openfire.android.util.ActivityUtil
+import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
 import kotlinx.android.synthetic.main.activity_config_server_ip.*
 import java.lang.Exception
 
@@ -75,6 +75,6 @@ class ConfigServerActivity : TitleBarActivity() {
         IMHelper.init(serverName, serverIp, Integer.parseInt(serverPort))
 
         ActivityUtil.finishAllActivity()
-        IntentUtil.openActivity(this@ConfigServerActivity, SignInActivity::class.java).start()
+        IntentUtil.openActivity(this@ConfigServerActivity, LoginActivity::class.java).start()
     }
 }

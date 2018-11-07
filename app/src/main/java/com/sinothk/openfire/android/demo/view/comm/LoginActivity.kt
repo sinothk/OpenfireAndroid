@@ -10,16 +10,13 @@ import com.sinothk.comm.utils.PreferUtil
 import com.sinothk.comm.utils.StringUtil
 import com.sinothk.comm.utils.ViewUtil
 import com.sinothk.openfire.android.IMHelper
-import com.sinothk.openfire.android.xmpp.XmppConnection
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.demo.MainActivity
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.utils.ActivityUtil
+import com.sinothk.openfire.android.util.ActivityUtil
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_login.*
-import java.text.SimpleDateFormat
-import java.util.*
 import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.openfire.android.demo.model.StringValue
 
@@ -30,7 +27,7 @@ import com.sinothk.openfire.android.demo.model.StringValue
  * @ create 2018/10/20 13:34
  * @ Describe
  */
-class SignInActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,65 +40,55 @@ class SignInActivity : AppCompatActivity() {
 
         userNameEt.setText(StringUtil.getNotNullValue(nameStr))
         userPwdEt.setText(StringUtil.getNotNullValue(pwdStr))
-
         ViewUtil.focusMoveToEnd(userNameEt)
         ViewUtil.focusMoveToEnd(userPwdEt)
 
-        avatarIv.setOnClickListener() {
-            IntentUtil.openActivity(this@SignInActivity, ConfigServerActivity::class.java).start()
+        avatarIv.setOnClickListener {
+            IntentUtil.openActivity(this@LoginActivity, ConfigServerActivity::class.java).start()
         }
-    }
-
-    private fun logPrint(msg: String) {
-
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-
-        var msgAll = logMsgTv.text.toString()
-        msgAll += "\n" + sdf.format(Date()) + "_" + msg
-
-        logMsgTv.text = msgAll
     }
 
     fun loginBtn(view: View) {
 
-        val userName = userNameEt.text.toString()
-        val userPwd = userPwdEt.text.toString()
+        val userName: String = userNameEt.text.toString()
+        val userPwd: String = userPwdEt.text.toString()
 
         if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(userPwd)) {
             Toast.makeText(this, "输入内容不正确", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val loadingDialog = LoadingDialog.Builder(this@SignInActivity)
+        val loadingDialog = LoadingDialog.Builder(this@LoginActivity)
         loadingDialog.setTitle("正在登录...")
 
-        IMHelper.login(this@SignInActivity, userName, userPwd, object : IMCallback {
+        IMHelper.login(this@LoginActivity, userName, userPwd, object : IMCallback {
+
             override fun onStart() {
                 loadingDialog.show()
             }
 
             override fun onEnd(result: IMResult) {
+
                 loadingDialog.dismiss()
 
                 if (result.code == IMCode.SUCCESS) {
                     PreferUtil.set("userName", userName)
                     PreferUtil.set("userPwd", userPwd)
 
-                    IntentUtil.openActivity(this@SignInActivity, MainActivity::class.java).finish(true).start()
+                    IntentUtil.openActivity(this@LoginActivity, MainActivity::class.java).finish(true).start()
                 } else {
                     show(result.tip)
-                    logPrint(result.msg)
                 }
             }
         })
     }
 
     private fun show(tip: String) {
-        Toast.makeText(this@SignInActivity, tip, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@LoginActivity, tip, Toast.LENGTH_SHORT).show()
     }
 
     fun registerBtn(view: View) {
-        IntentUtil.openActivity(this@SignInActivity, SignUpActivity::class.java).start()
+        IntentUtil.openActivity(this@LoginActivity, RegisterActivity::class.java).start()
     }
 
 
@@ -115,7 +102,7 @@ class SignInActivity : AppCompatActivity() {
 
             if (TextUtils.isEmpty(serverName) || TextUtils.isEmpty(serverIp) || TextUtils.isEmpty(serverPort)) {
                 IntentUtil.openActivity(this, ConfigServerActivity::class.java).finish(true).start()
-            }else{
+            } else {
                 IMHelper.init(serverName, serverIp, Integer.parseInt(serverPort))
             }
         }

@@ -3,7 +3,6 @@ package com.sinothk.openfire.android.demo.view.contacts.activity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.StringUtil
 import com.sinothk.comm.utils.ToastUtil
 import com.sinothk.openfire.android.IMHelper
@@ -11,7 +10,7 @@ import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
+import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
 import com.sinothk.openfire.android.demo.view.chat.activity.ChatActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.widget.scrollActionbar.scrollView.ObservableScrollView

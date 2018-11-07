@@ -9,7 +9,7 @@ import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMConstant
 import com.sinothk.openfire.android.bean.IMMessage
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
+import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatAdapter
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.jivesoftware.smack.chat2.ChatManager

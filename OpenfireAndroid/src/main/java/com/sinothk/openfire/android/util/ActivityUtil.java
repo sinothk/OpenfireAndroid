@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android.demo.utils;
+package com.sinothk.openfire.android.util;
 
 import android.app.Activity;
 import android.app.ActivityManager;

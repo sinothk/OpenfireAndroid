@@ -7,8 +7,11 @@ public class IMChatRoom {
     private String roomName;
     private String roomDesc;
     private String roomPwd;
-
-    private boolean isPersistentRoom;
+    /**
+     * 是否密码保护
+     */
+    private boolean passwordProtected;
+    private boolean persistent; // 密码保护
 
     public IMChatRoom() {
     }
@@ -64,20 +67,32 @@ public class IMChatRoom {
         this.roomPwd = roomPwd;
     }
 
-    public boolean isPersistentRoom() {
-        return isPersistentRoom;
+    public boolean isPasswordProtected() {
+        return passwordProtected;
     }
 
-    public void setPersistentRoom(boolean persistentRoom) {
-        isPersistentRoom = persistentRoom;
+    public void setPasswordProtected(boolean passwordProtected) {
+        this.passwordProtected = passwordProtected;
+    }
+
+    public boolean isPersistent() {
+        return persistent;
+    }
+
+    public void setPersistent(boolean persistent) {
+        this.persistent = persistent;
     }
 
     @Override
     public String toString() {
         return "IMChatRoom{" +
-                "roomName='" + roomName + '\'' +
+                "roomJid='" + roomJid + '\'' +
+                ", roomId='" + roomId + '\'' +
+                ", roomName='" + roomName + '\'' +
                 ", roomDesc='" + roomDesc + '\'' +
                 ", roomPwd='" + roomPwd + '\'' +
+                ", passwordProtected=" + passwordProtected +
+                ", persistent=" + persistent +
                 '}';
     }
 }

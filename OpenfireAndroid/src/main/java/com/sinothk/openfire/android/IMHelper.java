@@ -53,9 +53,16 @@ public class IMHelper {
     /**
      * 判断是否已连接
      */
-    public static boolean checkConnection() {
+    private static boolean checkConnection() {
         return XmppConnection.getInstance().checkConnection();
     }
+
+//    /**
+//     * 判断是否已连接
+//     */
+//    public static boolean isConnection() {
+//        return XmppConnection.getInstance().checkConnection();
+//    }
 
     /**
      * 判断连接是否通过了身份验证
@@ -67,45 +74,45 @@ public class IMHelper {
         return XmppConnection.getInstance().isAuthenticated();
     }
 
-    /**
-     * 打开连接
-     */
-    public static void exeConnection(final Activity currActivity, final IMCallback callback) {
-
-        currActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                callback.onStart();
-            }
-        });
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                if (XmppConnection.getInstance().checkConfig()) {
-
-                    final IMResult imResult = exeConnection();
-
-                    currActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // 执行连接
-                            callback.onEnd(imResult);
-                        }
-                    });
-
-                } else {
-                    currActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onEnd(new IMResult(IMCode.ERROR, "参数初始化有误", "连接参数异常：请检查IMHelper.init(*)是否已经调用！"));
-                        }
-                    });
-                }
-            }
-        }).start();
-    }
+//    /**
+//     * 打开连接
+//     */
+//    public static void exeConnection(final Activity currActivity, final IMCallback callback) {
+//
+//        currActivity.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                callback.onStart();
+//            }
+//        });
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                if (XmppConnection.getInstance().checkConfig()) {
+//
+//                    final IMResult imResult = exeConnection();
+//
+//                    currActivity.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            // 执行连接
+//                            callback.onEnd(imResult);
+//                        }
+//                    });
+//
+//                } else {
+//                    currActivity.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            callback.onEnd(new IMResult(IMCode.ERROR, "参数初始化有误", "连接参数异常：请检查IMHelper.init(*)是否已经调用！"));
+//                        }
+//                    });
+//                }
+//            }
+//        }).start();
+//    }
 
     /**
      * 连接
@@ -191,7 +198,11 @@ public class IMHelper {
         }).start();
     }
 
-
+    /**
+     * 退出
+     *
+     * @return
+     */
     public static IMResult disconnect() {
         try {
             XmppConnection.getInstance().closeConnection();
@@ -270,38 +281,38 @@ public class IMHelper {
         }
     }
 
-    /**
-     * 注册
-     *
-     * @param currActivity
-     * @param userName
-     * @param userPwd
-     * @param imCallback
-     */
-    public static void signUp(final Activity currActivity, final String userName, final String userPwd, final IMCallback imCallback) {
-
-        currActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                imCallback.onStart();
-            }
-        });
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                final IMResult result = signUp(userName, userPwd);
-
-                currActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        imCallback.onEnd(result);
-                    }
-                });
-            }
-        }).start();
-    }
+//    /**
+//     * 注册
+//     *
+//     * @param currActivity
+//     * @param userName
+//     * @param userPwd
+//     * @param imCallback
+//     */
+//    public static void signUp(final Activity currActivity, final String userName, final String userPwd, final IMCallback imCallback) {
+//
+//        currActivity.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                imCallback.onStart();
+//            }
+//        });
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                final IMResult result = signUp(userName, userPwd);
+//
+//                currActivity.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        imCallback.onEnd(result);
+//                    }
+//                });
+//            }
+//        }).start();
+//    }
 
     /**
      * 注册
@@ -1014,14 +1025,51 @@ public class IMHelper {
 
     public static int getRoomMemberSize(MultiUserChat multiUserChat) {
         try {
-            return multiUserChat.getMembers().size();
+            return multiUserChat.getOutcasts().size();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
     }
 
-    public static MultiUserChat joinMultiUserChat(String roomJid, String nickname) {
-        return XmppConnection.getInstance().joinMultiUserChat(roomJid, nickname);
+    /**
+     * 进入无密码聊天室
+     *
+     * @param roomJid
+     * @param myNickname
+     * @return
+     */
+    public static MultiUserChat joinMultiUserChat(String roomJid, String myNickname) {
+        return XmppConnection.getInstance().joinMultiUserChat(roomJid, myNickname);
+    }
+
+    /**
+     * 进入有密码聊天室
+     *
+     * @param roomJid
+     * @param myNickname
+     * @param roomPwd
+     * @return
+     */
+    public static MultiUserChat joinMultiUserChat(String roomJid, String myNickname, String roomPwd) {
+        return XmppConnection.getInstance().joinMultiUserChat(roomJid, myNickname, roomPwd);
+    }
+
+    /**
+     * 自动登录
+     *
+     * @return
+     */
+    public static boolean isAutoLogin() {
+        return false;
+    }
+
+    /**
+     * 打开连接
+     *
+     * @return
+     */
+    public static boolean openConnection() {
+        return XmppConnection.getInstance().getConnection() != null;
     }
 }

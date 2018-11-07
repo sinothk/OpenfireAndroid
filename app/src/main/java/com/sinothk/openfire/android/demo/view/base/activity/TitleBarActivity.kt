@@ -1,10 +1,10 @@
-package com.sinothk.openfire.android.demo.view.base
+package com.sinothk.openfire.android.demo.view.base.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.View
-import com.sinothk.openfire.android.demo.utils.ActivityUtil
+import com.sinothk.openfire.android.util.ActivityUtil
 import kotlinx.android.synthetic.main.title_layout.*
 
 

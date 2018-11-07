@@ -12,7 +12,7 @@ import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.utils.ActivityUtil
+import com.sinothk.openfire.android.util.ActivityUtil
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_register.*
 import java.text.SimpleDateFormat
@@ -24,7 +24,7 @@ import java.util.*
  * @ create 2018/10/20 13:35
  * @ Describe
  */
-class SignUpActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,10 +73,10 @@ class SignUpActivity : AppCompatActivity() {
         newUser.name = name
         newUser.password = userPwd
 
-        val loadingDialog: LoadingDialog.Builder = LoadingDialog.Builder(this@SignUpActivity)
+        val loadingDialog: LoadingDialog.Builder = LoadingDialog.Builder(this@RegisterActivity)
         loadingDialog.setTitle("注册中...")
 
-        IMHelper.signUp(this@SignUpActivity, newUser, object : IMCallback {
+        IMHelper.signUp(this@RegisterActivity, newUser, object : IMCallback {
 
             override fun onStart() {
                 loadingDialog.show()
@@ -97,7 +97,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun show(tip: String) {
-        Toast.makeText(this@SignUpActivity, tip, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@RegisterActivity, tip, Toast.LENGTH_SHORT).show()
     }
 
     private fun logPrint(msg: String) {

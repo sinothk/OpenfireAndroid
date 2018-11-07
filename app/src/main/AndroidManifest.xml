@@ -24,11 +24,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.comm.SignInActivity"
+            android:name=".view.comm.LoginActivity"
             android:label="登录"
             android:theme="@style/AppThemeFull" />
         <activity
-            android:name=".view.comm.SignUpActivity"
+            android:name=".view.comm.RegisterActivity"
             android:label="注册"
             android:theme="@style/AppThemeFull" />
         <activity android:name=".MainActivity" />

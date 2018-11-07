@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android.demo.view.contacts
+package com.sinothk.openfire.android.demo.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle

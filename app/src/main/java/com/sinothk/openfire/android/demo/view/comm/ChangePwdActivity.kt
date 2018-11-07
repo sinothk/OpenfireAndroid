@@ -9,8 +9,8 @@ import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.utils.ActivityUtil
-import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
+import com.sinothk.openfire.android.util.ActivityUtil
+import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_change_pwd.*
 
@@ -55,7 +55,7 @@ class ChangePwdActivity : TitleBarActivity() {
 
                 if (result?.code == IMCode.SUCCESS) {
                     ActivityUtil.finishAllActivity()
-                    IntentUtil.openActivity(this@ChangePwdActivity, SignInActivity::class.java).start()
+                    IntentUtil.openActivity(this@ChangePwdActivity, LoginActivity::class.java).start()
                 } else {
                     ToastUtil.show("修改密码失败")
                 }

@@ -5,10 +5,10 @@ import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
-import com.sinothk.openfire.android.demo.utils.ActivityUtil
-import com.sinothk.openfire.android.demo.view.chat.ChatFragment
-import com.sinothk.openfire.android.demo.view.contacts.ContactsFragment
-import com.sinothk.openfire.android.demo.view.mine.MineFragment
+import com.sinothk.openfire.android.util.ActivityUtil
+import com.sinothk.openfire.android.demo.view.ChatFragment
+import com.sinothk.openfire.android.demo.view.ContactsFragment
+import com.sinothk.openfire.android.demo.view.MineFragment
 import com.sinothk.tab.weiXin.WxTabMenuMainAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.title_layout.*

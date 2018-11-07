@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android.demo.view.chat
+package com.sinothk.openfire.android.demo.view
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android.demo.view.mine
+package com.sinothk.openfire.android.demo.view
 
 
 import android.os.Bundle
@@ -17,8 +17,8 @@ import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMStatus
 import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.utils.ActivityUtil
-import com.sinothk.openfire.android.demo.view.comm.SignInActivity
+import com.sinothk.openfire.android.util.ActivityUtil
+import com.sinothk.openfire.android.demo.view.comm.LoginActivity
 import com.sinothk.openfire.android.demo.view.comm.ChangePwdActivity
 import com.sinothk.openfire.android.demo.view.mine.activity.UserInfoActivity
 import com.sinothk.openfire.android.inters.IMCallback
@@ -161,7 +161,7 @@ class MineFragment : Fragment(), View.OnClickListener {
 
                         if (result.code == IMCode.SUCCESS) {
                             ActivityUtil.finishAllActivity()
-                            IntentUtil.openActivity(activity, SignInActivity::class.java).start()
+                            IntentUtil.openActivity(activity, LoginActivity::class.java).start()
                         } else {
                             ToastUtil.show(result.tip)
                         }
@@ -183,7 +183,7 @@ class MineFragment : Fragment(), View.OnClickListener {
 
                                     if (result.code == IMCode.SUCCESS) {
                                         ActivityUtil.finishAllActivity()
-                                        IntentUtil.openActivity(activity, SignInActivity::class.java).start()
+                                        IntentUtil.openActivity(activity, LoginActivity::class.java).start()
                                     } else {
                                         ToastUtil.show(result.tip)
                                     }

@@ -9,7 +9,7 @@ import com.sinothk.openfire.android.bean.IMChatRoom
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
+import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import kotlinx.android.synthetic.main.activity_room_create.*
 import org.jivesoftware.smackx.muc.MultiUserChat
@@ -63,7 +63,7 @@ class RoomCreateActivity : TitleBarActivity() {
             }
 
             // 是否是永久房间
-            room.isPersistentRoom = isPersistentRoom
+            room.isPersistent = isPersistentRoom
 
             IMHelper.createChartRoom(this@RoomCreateActivity, room, object : IMCallback {
                 override fun onStart() {

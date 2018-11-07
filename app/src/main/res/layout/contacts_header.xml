@@ -133,13 +133,14 @@
             android:textSize="16sp" />
     </RelativeLayout>
 
-    <include layout="@layout/line" />
+    <include layout="@layout/line" android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_58"
         android:background="@drawable/selector_list_item_bg"
         android:clickable="true"
+        android:visibility="gone"
         android:focusable="true">
 
         <ImageView

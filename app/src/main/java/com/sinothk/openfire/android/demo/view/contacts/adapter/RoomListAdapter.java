@@ -44,7 +44,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.Contac
 //            holder.tvIndex.setVisibility(View.VISIBLE);
 //            holder.tvIndex.setText(contact.getIndex());
 //        } else {
-            holder.tvIndex.setVisibility(View.GONE);
+        holder.tvIndex.setVisibility(View.GONE);
 //        }
 
         holder.tvName.setText(itemEntity.getRoomName());
@@ -57,6 +57,13 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.Contac
                 }
             }
         });
+
+        // 是否加密
+        if (itemEntity.isPasswordProtected()) {
+            holder.clockIv.setVisibility(View.VISIBLE);
+        } else {
+            holder.clockIv.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -78,8 +85,9 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.Contac
         RelativeLayout itemLayout;
 
         TextView tvIndex;
-        ImageView ivAvatar;
+        ImageView ivAvatar, clockIv;
         TextView tvName;
+
 
         ContactsViewHolder(View itemView) {
             super(itemView);
@@ -87,6 +95,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.Contac
             tvIndex = (TextView) itemView.findViewById(R.id.tv_index);
             ivAvatar = (ImageView) itemView.findViewById(R.id.iv_avatar);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
+            clockIv = (ImageView) itemView.findViewById(R.id.clockIv);
         }
     }
 

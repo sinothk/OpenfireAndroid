@@ -7,7 +7,7 @@ import com.sinothk.comm.utils.StringUtil
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.view.base.TitleBarActivity
+import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
 import com.sinothk.widget.scrollActionbar.scrollView.ObservableScrollView
 import com.sinothk.widget.scrollActionbar.uitls.StatusBarUtil
 import kotlinx.android.synthetic.main.activity_user_info.*
