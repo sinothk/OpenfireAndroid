@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.sinothk.comm.utils.PreferUtil;
 import com.sinothk.comm.utils.ToastUtil;
+import com.sinothk.openfire.android.demo.xmpp.database.DBManager;
 
 /**
  * @ author LiangYT
@@ -19,6 +20,9 @@ public class MainApplication extends Application {
         PreferUtil.init(this);
         ToastUtil.init(this);
 
-
+        //DB初始化
+        DBManager.init(this);//, "open_fire"
     }
+
+
 }

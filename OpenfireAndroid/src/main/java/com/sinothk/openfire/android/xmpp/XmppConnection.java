@@ -259,7 +259,9 @@ public class XmppConnection {
             // 移除连接监听
             connection.removeConnectionListener(connectionListener);
 
-            if (connection.isConnected()) connection.disconnect();
+            if (connection.isConnected()) {
+                connection.disconnect();
+            }
 
             connection = null;
         }
@@ -309,7 +311,9 @@ public class XmppConnection {
      * 退出登录
      */
     public void logout() {
+        // 更改用户状态为离线
         setPresence(IMStatus.USER_STATUS_OFFLINE);
+        // 关闭连接
         closeConnection();
     }
 

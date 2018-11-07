@@ -149,7 +149,7 @@ class MineFragment : Fragment(), View.OnClickListener {
 
             logout -> {
                 val loadingDialog = LoadingDialog.Builder(activity)
-                loadingDialog.setTitle("修改中...")
+                loadingDialog.setTitle("正在退出...")
 
                 IMHelper.logout(activity, object : IMCallback {
                     override fun onStart() {

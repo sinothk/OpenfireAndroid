@@ -3,8 +3,10 @@ package com.sinothk.openfire.android.demo.view.comm
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.PreferUtil
 import com.sinothk.comm.utils.StringUtil
@@ -14,11 +16,12 @@ import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.demo.MainActivity
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.util.ActivityUtil
-import com.sinothk.openfire.android.inters.IMCallback
-import kotlinx.android.synthetic.main.activity_login.*
-import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.openfire.android.demo.model.StringValue
+import com.sinothk.openfire.android.demo.model.bean.User
+import com.sinothk.openfire.android.demo.xmpp.database.DBManager
+import com.sinothk.openfire.android.inters.IMCallback
+import com.sinothk.openfire.android.util.ActivityUtil
+import kotlinx.android.synthetic.main.activity_login.*
 
 
 /**
@@ -45,6 +48,23 @@ class LoginActivity : AppCompatActivity() {
 
         avatarIv.setOnClickListener {
             IntentUtil.openActivity(this@LoginActivity, ConfigServerActivity::class.java).start()
+        }
+
+        val user = User()
+        user.name = "张三"
+        user.age = 23
+        user.sex = "女"
+        DBManager.getmInstance().session.userDao.insert(user)
+
+        val user1 = User()
+        user1.name = "张三11"
+        user1.age = 232
+        user1.sex = "男"
+        DBManager.getmInstance().session.userDao.insert(user1)
+
+        val users = DBManager.getmInstance().session.userDao.loadAll()
+        if (users.size > 0) {
+            Log.e("users.size", "" + users.size)
         }
     }
 

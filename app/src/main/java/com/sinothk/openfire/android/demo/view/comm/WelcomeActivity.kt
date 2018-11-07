@@ -29,7 +29,6 @@ class WelcomeActivity : AppCompatActivity() {
 
             if (TextUtils.isEmpty(serverName) || TextUtils.isEmpty(serverIp) || TextUtils.isEmpty(serverPort)) {
                 IntentUtil.openActivity(this, ConfigServerActivity::class.java).finish(true).start()
-
             } else {
                 val startTime: Long = Date().time
 

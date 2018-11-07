@@ -93,13 +93,13 @@ class RoomChatActivity : TitleBarActivity() {
         //
     }
 
-    /**
-     * 离开聊天室
-     */
-    override fun onDestroy() {
-        super.onDestroy()
-        IMHelper.roomLeave(multiUserChat)
-    }
+//    /**
+//     * 离开聊天室
+//     */
+//    override fun onDestroy() {
+//        super.onDestroy()
+////        IMHelper.roomLeave(multiUserChat)
+//    }
 
     private fun initListener() {
         //添加群消息监听器
