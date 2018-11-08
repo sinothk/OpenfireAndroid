@@ -34,4 +34,7 @@ dependencies {
 
     // smack依赖
     api 'de.measite.minidns:minidns-hla:0.2.4'
+
+    // 数据库
+    api 'com.github.sinothk:DBHelper:1.2.1108'
 }

@@ -5,8 +5,8 @@ import android.content.Context;
 import com.lidroid.xutils.db.sqlite.SqlInfo;
 import com.lidroid.xutils.db.table.DbModel;
 import com.lidroid.xutils.exception.DbException;
-import com.sinothk.dbHelper.DBHelper;
 import com.sinothk.openfire.android.demo.model.bean.LastMessage;
+import com.sinothk.storage.dbhelper.DBHelper;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,13 +1,12 @@
 package com.sinothk.openfire.android.demo.view.chat.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -50,7 +49,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
 
     private int PageNumber = 0;// 当前页数
     private SwipeRefreshLayout swipeView;// 下拉加载更多
-    private android.support.v7.widget.RecyclerView msgListView;
+    private RecyclerView msgListView;
     private ArrayList<YtecConsultMsgBean> list = new ArrayList<>();
     private ChatRecyclerListAdapter adapter;
 
@@ -132,7 +131,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         TextView chatNewPrescriptionTextView = (TextView) findViewById(R.id.chatNewPrescriptionTextView);
         chatNewPrescriptionTextView.setOnClickListener(this);
 
-        msgListView = (android.support.v7.widget.RecyclerView) findViewById(R.id.chatNewListView);
+        msgListView = (RecyclerView) findViewById(R.id.chatNewListView);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
