@@ -7,10 +7,10 @@ import com.sinothk.openfire.android.bean.IMMessage;
 
 import java.util.ArrayList;
 
-public abstract class ChatBaseAdapter extends BaseAdapter {
+public abstract class ChatBaseAdapter<T> extends BaseAdapter {
 
     protected Context mContext = null;
-    protected ArrayList<IMMessage> list = new ArrayList<>();
+    protected ArrayList<T> list = new ArrayList<>();
 
     public ChatBaseAdapter(Context context) {
         this.mContext = context;
@@ -22,7 +22,7 @@ public abstract class ChatBaseAdapter extends BaseAdapter {
     }
 
     @Override
-    public IMMessage getItem(int position) {
+    public T getItem(int position) {
         return list.get(position);
     }
 

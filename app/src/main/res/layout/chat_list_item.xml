@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_list_item_bg">
+
+    <com.sinothk.imageView.rounded.RoundedImageView
+        android:id="@+id/avatarIv"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="@dimen/dp_60"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/dp_10"
+        android:src="@drawable/user_default"
+        app:riv_border_color="@color/white"
+        app:riv_border_width="1dp"
+        app:riv_corner_radius="20dp"
+        app:riv_mutate_background="false"
+        app:riv_oval="true" />
+
+    <RelativeLayout
+        android:id="@+id/moreTv"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_40"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:minWidth="@dimen/dp_50"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/timeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:textColor="#A8A8A8"
+            android:textSize="@dimen/sp_12"
+            tools:text="8日" />
+
+        <com.sinothk.widget.tipView.style1.BadgeView
+            android:id="@+id/unreadNumTv"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/dp_5"
+            android:gravity="center"
+            android:minWidth="16dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            tools:text="8"
+            android:textColor="#FFF"
+            android:textSize="12sp"
+            app:lib_pub_badgev_color="#F00" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/moreTv"
+        android:layout_toEndOf="@+id/avatarIv"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/nameTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#888888"
+            android:textSize="@dimen/sp_14"
+            tools:text="SINOTHK" />
+
+        <TextView
+            android:id="@+id/contentTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="大苏打撒大所大多撒大所大所大所大奥大苏打撒大所大多撒大所大所大所大奥"
+            android:textColor="#888888"
+            android:textSize="@dimen/sp_13"
+            android:visibility="visible" />
+    </LinearLayout>
+</RelativeLayout>

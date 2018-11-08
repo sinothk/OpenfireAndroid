@@ -17,7 +17,7 @@ import com.sinothk.openfire.android.demo.view.base.adapter.ChatBaseAdapter;
 
 import java.util.ArrayList;
 
-public class ChatAdapter extends ChatBaseAdapter {
+public class ChatAdapter extends ChatBaseAdapter<IMMessage> {
 
     private LayoutInflater mInflater;
 
