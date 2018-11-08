@@ -101,7 +101,7 @@ class FriendInfoActivity : TitleBarActivity() {
         chatBtn.setOnClickListener {
             val target: String = userInfo.userName
             val title: String = StringUtil.getNotNullValue(userInfo.name, target)
-            ChatActivity.startSingle(this@FriendInfoActivity, target, title)
+//            ChatActivity.startSingle(this@FriendInfoActivity, target, title)
         }
 
         // 删除好友

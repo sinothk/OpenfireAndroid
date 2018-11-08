@@ -1,15 +1,16 @@
 package com.sinothk.openfire.android.demo.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.model.bean.LastMessage
+import com.sinothk.openfire.android.demo.view.chat.activity.ChatActivity
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatListAdapter
 import com.sinothk.openfire.android.demo.xmpp.Watch.Watcher
 import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener
@@ -40,12 +41,12 @@ class ChatFragment : Fragment(), Watcher {
         recyclerView.adapter = adapter
 
         adapter!!.setOnItemClickListener { _: Int, any: Any ->
-            val user: LastMessage = any as LastMessage
+            val lastMessage: LastMessage = any as LastMessage
 
-//            IntentUtil.openActivity(activity, FriendInfoActivity::class.java)
-//                    .putStringExtra("jid", user.jid)
-//                    .putStringExtra("name", user.name)
-//                    .startInFragment(this@ChatFragment)
+            val JID = lastMessage.jid
+            startActivity(Intent(activity, ChatActivity::class.java)
+                    .putExtra("SingleUserChatJID", JID)
+                    .putExtra("ChatType", false))
         }
 
         // 加载数据

@@ -3,4 +3,29 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- bmob  start -->
+    <string name="send">发送</string>
+    <string name="voice_up_tips">手指上滑,取消发送</string>
+    <string name="longclick_speak">长按说话</string>
+    <string name="picture">相册</string>
+    <string name="prescription">拍摄</string>
+    <string name="camera">位置</string>
+    <string name="location">名片</string>
+    <string name="add_avator">头像</string>
+    <string name="voice_cancel_tips">松开手指，取消发送</string>
+    <string name="voice_seconds_tips">还可以说%1$s秒</string>
+    <string name="voice_short_tips">录音时间太短</string>
+    <string name="tips">提示</string>
+    <string name="network_tips">当前网络不可用,请检查您的网络!</string>
+    <!-- end -->
+
+    <!-- 录制语音  start -->
+    <string name="str_recorder_normal">按下 说话</string>
+    <string name="str_recorder">松开 结束</string>
+    <string name="str_recorder_want_cancel">松开手指,取消发送</string>
+    <string name="str_recorder_up_touch_cancel">手指上滑,取消发送</string>
+    <string name="str_recorder_too_short">录音时间过短</string>
+    <!-- end -->
 </resources>

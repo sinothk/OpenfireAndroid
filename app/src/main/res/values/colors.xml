@@ -14,4 +14,15 @@
     <color name="list_selected">#E6E6E6</color>
 
     <color name="litter_black">#353D40</color>
+
+    <color name="base_color">#21b8ce</color>
+    <color name="base_bg_color">#d3f1f5</color>
+    <color name="base_line_bg_color">#CCCCCC</color>
+
+    <color name="black_overlay">#66000000</color>
+
+    <color name="base_text_color">#9A9B9F</color>
+
+    <color name="black">#000000</color>
+    <color name="base_color_text_black">#3e3e39</color>
 </resources>

@@ -12,7 +12,7 @@ import com.sinothk.openfire.android.bean.IMMessage
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatAdapter
-import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.activity_chat_room.*
 import org.jivesoftware.smack.packet.Message
 import org.jivesoftware.smackx.muc.MultiUserChat
 

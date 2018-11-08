@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/include_chat"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <include layout="@layout/listview_chat" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/include_chat_imge"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <include layout="@layout/listview_chat_imge" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/include_chat_article"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <include layout="@layout/listview_chat_article" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/include_chat_prescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <include layout="@layout/listview_chat_prescription" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/include_chat_finish"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <include layout="@layout/listview_chat_finish" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/include_chat_audio"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <include layout="@layout/listview_chat_audio" />
+    </RelativeLayout>
+
+</LinearLayout>
