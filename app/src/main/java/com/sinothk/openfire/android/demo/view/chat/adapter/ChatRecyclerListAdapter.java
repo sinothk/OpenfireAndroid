@@ -42,8 +42,10 @@ public class ChatRecyclerListAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public int getItemViewType(int position) {
 
-        if (list.get(position).getFromType().equals(IMConstant.FromType.SEND)) {// 发送者id等于本人id,那么显示右边布局
-            switch (list.get(position).getContentType()) {
+        IMMessage imMessage = list.get(position);
+
+        if (imMessage.getFromType().equals(IMConstant.FromType.SEND)) {// 发送者id等于本人id,那么显示右边布局
+            switch (imMessage.getContentType()) {
                 case IMConstant.ContentType.TEXT:
                     return 10;
 //                case 1:
@@ -57,8 +59,8 @@ public class ChatRecyclerListAdapter extends RecyclerView.Adapter<RecyclerView.V
 ////                case 5:
 ////                    return 15;
             }
-        } else if (list.get(position).getFromType().equals(IMConstant.FromType.RECEIVE)) {// 接受者id等于本人id,那么显示左边布局
-            switch (list.get(position).getContentType()) {
+        } else if (imMessage.getFromType().equals(IMConstant.FromType.RECEIVE)) {// 接受者id等于本人id,那么显示左边布局
+            switch (imMessage.getContentType()) {
                 case IMConstant.ContentType.TEXT:
                     return 20;
 //                case 1:
@@ -168,14 +170,17 @@ public class ChatRecyclerListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        switch (getItemViewType(position)) {
+        IMMessage imMessage = list.get(position);
+        int itemType = getItemViewType(position);
+
+        switch (itemType) {
             case 10:// 0:文本
                 TextHolder textHolder = (TextHolder) holder;
-                textHolder.doSomething(list.get(position), doctor_id, textHolder);
+                textHolder.doSomething(imMessage, doctor_id, textHolder);
                 break;
             case 20:// 0:文本
                 TextHolder textHolder_2 = (TextHolder) holder;
-                textHolder_2.doSomething(list.get(position), doctor_id, textHolder_2);
+                textHolder_2.doSomething(imMessage, doctor_id, textHolder_2);
                 break;
 //            case 11:// 1:图片
 //                ImageHolder imageHolder = (ImageHolder) holder;
