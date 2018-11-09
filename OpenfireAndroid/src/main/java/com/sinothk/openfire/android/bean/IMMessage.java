@@ -3,8 +3,11 @@ package com.sinothk.openfire.android.bean;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.lidroid.xutils.db.annotation.Id;
 import com.sinothk.openfire.android.BuildConfig;
 import com.sinothk.openfire.android.IMHelper;
+
+import org.jivesoftware.smack.packet.Message;
 
 import java.util.Date;
 
@@ -13,22 +16,40 @@ public class IMMessage {
     @Deprecated
     private String jid;
 
-    private String chatType;
+    @Id
+    private String msgId; // id
+
+    private String chatType; // 消息分类：单聊，群聊，通知等
 
     private String from;
     private String fromName;
     private String fromUserAvatar;
+
     private String to;
     private String toName;
     private String toUserAvatar;
 
-    private String fromType;
+    private String fromType; // 发送分类：发送，接收等
     private long msgTime;
 
-    private String contentType;
+    private String contentType;// 内容类型：文本，图片，文件，位置等。
     private String msgTxt;
+    private String msgImg;
+    private String msgLoc;
+    private String msgVoice;
+    private String msgVideo;
+
+    private int msgStatus; // 消息状态：发送失败:-2，正在发送:-1，已发送：0，已接收：1，未读:2等
 
     public IMMessage() {
+    }
+
+    public String getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
     }
 
     private String message;
@@ -137,6 +158,47 @@ public class IMMessage {
         this.msgTime = msgTime;
     }
 
+    public String getMsgImg() {
+        return msgImg;
+    }
+
+    public void setMsgImg(String msgImg) {
+        this.msgImg = msgImg;
+    }
+
+    public String getMsgLoc() {
+        return msgLoc;
+    }
+
+    public void setMsgLoc(String msgLoc) {
+        this.msgLoc = msgLoc;
+    }
+
+    public String getMsgVoice() {
+        return msgVoice;
+    }
+
+    public void setMsgVoice(String msgVoice) {
+        this.msgVoice = msgVoice;
+    }
+
+    public String getMsgVideo() {
+        return msgVideo;
+    }
+
+    public void setMsgVideo(String msgVideo) {
+        this.msgVideo = msgVideo;
+    }
+
+    public int getMsgStatus() {
+        return msgStatus;
+    }
+
+    public void setMsgStatus(int msgStatus) {
+        this.msgStatus = msgStatus;
+    }
+
+    @Deprecated
     public static IMMessage createSendMsg(String chatTarget, String msgTxt) {
         IMMessage msg = new IMMessage();
 
@@ -151,6 +213,7 @@ public class IMMessage {
         return msg;
     }
 
+    @Deprecated
     public static IMMessage createRoomSendMsg(String msgTxt) {
 
         IMMessage msg = new IMMessage();
@@ -169,6 +232,7 @@ public class IMMessage {
     public String toString() {
         return "IMMessage{" +
                 "jid='" + jid + '\'' +
+                ", msgId='" + msgId + '\'' +
                 ", chatType='" + chatType + '\'' +
                 ", from='" + from + '\'' +
                 ", fromName='" + fromName + '\'' +
@@ -180,6 +244,11 @@ public class IMMessage {
                 ", msgTime=" + msgTime +
                 ", contentType='" + contentType + '\'' +
                 ", msgTxt='" + msgTxt + '\'' +
+                ", msgImg='" + msgImg + '\'' +
+                ", msgLoc='" + msgLoc + '\'' +
+                ", msgVoice='" + msgVoice + '\'' +
+                ", msgVideo='" + msgVideo + '\'' +
+                ", msgStatus=" + msgStatus +
                 ", message='" + message + '\'' +
                 '}';
     }
@@ -200,10 +269,14 @@ public class IMMessage {
         IMMessage imMessage = new IMMessage();
 
         imMessage.setJid(singleJid);
+
         imMessage.setChatType(IMConstant.ChatType.SINGLE);
         imMessage.setContentType(IMConstant.ContentType.TEXT);
         imMessage.setMsgTxt(msg);
-        imMessage.setMsgTime(new Date().getTime());
+        // id和时间处理
+        long msgTime = new Date().getTime();
+        imMessage.setMsgTime(msgTime);
+        imMessage.setMsgId(String.valueOf(msgTime));
 
         imMessage.setTo(singleJid);
         imMessage.setToUserAvatar("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=2594910732,993782407&fm=58");

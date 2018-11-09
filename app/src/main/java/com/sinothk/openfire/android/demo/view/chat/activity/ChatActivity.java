@@ -28,6 +28,7 @@ import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity;
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatRecyclerListAdapter;
 import com.sinothk.openfire.android.demo.xmpp.Watch.Watcher;
 import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener;
+import com.sinothk.openfire.android.demo.xmpp.cache.IMCache;
 
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smackx.muc.MultiUserChat;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
  */
 public class ChatActivity extends TitleBarActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, Watcher {
 
-    private String singleJid;
+    private String chatJid;
     private String currJid;
     //    private Chat chat;// 单聊
     private MultiUserChat muc;// 群组
@@ -87,7 +88,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         if (isRoomChat) {
 //            muc = LoginActivity.multiUserChatList.get(getIntent().getIntExtra("MultiUserChatPosition", 0));
         } else {
-            singleJid = getIntent().getStringExtra("SingleUserChatJID");
+            chatJid = getIntent().getStringExtra("SingleUserChatJID");
 //            chat = XmppConnection.getInstance().getFriendChat(getIntent().getStringExtra("SingleUserChatJID"));
 //            chat = IMHelper.getFriendChat(singleJid);
         }
@@ -209,7 +210,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
                 String msg = chatNewEditText.getText().toString();
                 if (!TextUtils.isEmpty(CommonUtils.replaceStr(msg))) {
                     // 创建单聊文本发送信息
-                    sendMsg(IMMessage.createSingleTxtMsg(singleJid, msg));
+                    sendMsg(IMMessage.createSingleTxtMsg(chatJid, msg));
                 }
                 break;
             default:
@@ -295,7 +296,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
      * 从本地读取旧的信息并加载数据源
      */
     private void loadData(int PageNumber) {
-
+        list = IMCache.findChatMsg(this, chatJid, currJid);
     }
 
     @Override
@@ -339,7 +340,6 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
             audio_seconds = Math.round(seconds) + "";
             audio_file_path = filePath;
             // 上传语音文件,上传成功后,添加语音的网络地址到列表中去
-
         }
     }
 
