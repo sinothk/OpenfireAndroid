@@ -9,7 +9,11 @@ import android.widget.TextView;
 
 import com.huang.bean.YtecConsultMsgBean;
 import com.huang.utils.CommonUtils;
+import com.sinothk.comm.utils.DateUtil;
+import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
+
+import java.util.Date;
 
 /**
  * 图片
@@ -44,10 +48,10 @@ public class ImageHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void doSomething(final YtecConsultMsgBean bean, int doctor_id, ImageHolder holder, final Context context) {
-        if (bean.getSender_id() == doctor_id) {// 发送者id等于本人id,那么显示右边布局
-            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight_imge);// 设置头像
-            holder.chatTimeTextviewRight_imge.setText(bean.getSend_time());
+    public void doSomething(final IMMessage bean, String doctor_id, ImageHolder holder, final Context context) {
+        if (bean.getFrom().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
+//            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight_imge);// 设置头像
+            holder.chatTimeTextviewRight_imge.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutRight_imge.setVisibility(View.VISIBLE);
 
             // 图片点击放大
@@ -61,10 +65,11 @@ public class ImageHolder extends RecyclerView.ViewHolder {
             });
 
             // 设置图片
-            CommonUtils.setImage(bean.getImg_path(), holder.chatContentImageViewRight);
-        } else if (bean.getReceiver_id() == doctor_id) {// 接受者id等于本人id,那么显示左边布局
-            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft_imge);// 设置头像
-            holder.chatTimeTextviewLeft_imge.setText(bean.getSend_time());
+//            CommonUtils.setImage(bean.getImg_path(), holder.chatContentImageViewRight);
+
+        } else if (bean.getTo().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
+//            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft_imge);// 设置头像
+            holder.chatTimeTextviewLeft_imge.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutLeft_imge.setVisibility(View.VISIBLE);
 
             // 图片点击放大
@@ -78,7 +83,7 @@ public class ImageHolder extends RecyclerView.ViewHolder {
             });
 
             // 设置图片
-            CommonUtils.setImage(bean.getImg_path(), holder.chatContentImageViewRight);
+//            CommonUtils.setImage(bean.getImg_path(), holder.chatContentImageViewRight);
         }
     }
 }

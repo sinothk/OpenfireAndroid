@@ -4,6 +4,7 @@ import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Table;
 import com.sinothk.openfire.android.IMHelper;
 import com.sinothk.openfire.android.bean.IMConstant;
+import com.sinothk.openfire.android.bean.IMMessage;
 
 import org.jivesoftware.smack.packet.Message;
 
@@ -20,7 +21,7 @@ public class LastMessage {
     private String name; // 显示名字
     private long msgTime;
 
-    private int chatType; // 消息分类：单聊，群聊，通知等
+    private String chatType; // 消息分类：单聊，群聊，通知等
 
     private String msgType; // 内容类型：文本，图片，文件，位置等。
 
@@ -74,11 +75,11 @@ public class LastMessage {
         this.msgTime = msgTime;
     }
 
-    public int getChatType() {
+    public String getChatType() {
         return chatType;
     }
 
-    public void setChatType(int chatType) {
+    public void setChatType(String chatType) {
         this.chatType = chatType;
     }
 
@@ -173,52 +174,52 @@ public class LastMessage {
      * @return
      */
     public static LastMessage createLastMsg(Message message) {
-
         if (message != null) {
+            IMMessage imMessage = IMMessage.getIMMessageByMessage(message.getBody());
+            if (imMessage == null) {
+                return null;
+            }
+
             // 当前用户
             String currUserJid = IMHelper.getCurrUser().getJid();
-//            String currUserName = IMHelper.getCurrUser().getUserName();
-//            String currName = IMHelper.getCurrUser().getName();
 
-            // 发送方
-            String from = message.getFrom().toString();
-            String fromJid = from.substring(0, from.indexOf("/"));
-            String fromName = fromJid.substring(0, fromJid.indexOf("@"));
-
+//            // 发送方
+//            String from = message.getFrom().toString();
+//            String fromJid = from.substring(0, from.indexOf("/"));
             // 接收方
-            String toJid = message.getTo().toString();
-            String toName = toJid.substring(0, toJid.indexOf("@"));
+//            String toJid = message.getTo().toString();
 
             LastMessage lastMsg = new LastMessage();
-
-            if (currUserJid.equals(toJid)) {
+            if (currUserJid.equals(imMessage.getTo())) {
                 // 当前用户收到,取发送方信息设置
-                lastMsg.setJid(fromJid);
-                lastMsg.setCurrJid(currUserJid);
+                lastMsg.setJid(imMessage.getFrom());
+                lastMsg.setName(imMessage.getFromName());
+                lastMsg.setAvatar(imMessage.getFromUserAvatar());
 
-                lastMsg.setName(fromName);
-
-            } else if (currUserJid.equals(fromJid)) {
+            } else if (currUserJid.equals(imMessage.getFrom())) {
                 // 当前用户发送,取接收方信息设置
-                lastMsg.setJid(toJid);
-                lastMsg.setCurrJid(currUserJid);
-
-                lastMsg.setName(toName);
+                lastMsg.setJid(imMessage.getTo());
+                lastMsg.setName(imMessage.getToName());
+                lastMsg.setAvatar(imMessage.getToUserAvatar());
             }
+
+            lastMsg.setCurrJid(currUserJid);
 
             // 消息内容
-            lastMsg.setMsgType(IMConstant.ContentType.CONTENT_TEXT);
-            lastMsg.setMsgTxt(message.getBody());
+            String msgType = imMessage.getContentType();
+            lastMsg.setMsgType(msgType);
+            if (IMConstant.ContentType.TEXT.equals(msgType)) {
+                // 文本信息
+                lastMsg.setMsgTxt(imMessage.getMsgTxt());
+            } else if (IMConstant.ContentType.IMAGE.equals(msgType)) {
+                // 图片
+                lastMsg.setMsgImg("");
+            }// ....
 
             // 聊天类型
-            int chatType = IMConstant.Chat.CHAT_TYPE_SINGLE;
-            if (!message.getType().name().equals("chat")) {
-                chatType = IMConstant.Chat.CHAT_TYPE_ROOM;
-            }
-            lastMsg.setChatType(chatType);
-
-            lastMsg.setMsgTime(new Date().getTime());
-            lastMsg.setMsgUnread(9);
+            lastMsg.setChatType(imMessage.getChatType());
+            lastMsg.setMsgTime(imMessage.getMsgTime());
+            lastMsg.setMsgUnread(1);
 
             return lastMsg;
         } else {

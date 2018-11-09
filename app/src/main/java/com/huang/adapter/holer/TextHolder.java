@@ -8,7 +8,11 @@ import android.widget.TextView;
 
 import com.huang.bean.YtecConsultMsgBean;
 import com.huang.utils.CommonUtils;
+import com.sinothk.comm.utils.DateUtil;
+import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
+
+import java.util.Date;
 
 /**
  * 文本
@@ -43,19 +47,20 @@ public class TextHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void doSomething(final YtecConsultMsgBean bean, int doctor_id , TextHolder holder){
-        if (bean.getSender_id() == doctor_id) {// 发送者id等于本人id,那么显示右边布局
-            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight);// 设置头像
-            holder.chatTimeTextviewRight.setText(bean.getSend_time());
+    public void doSomething(final IMMessage bean, String doctor_id , TextHolder holder){
+        if (bean.getFrom().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
+//            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight);// 设置头像
+            holder.chatTimeTextviewRight.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutRight.setVisibility(View.VISIBLE);
 
-            holder.chatContentTextviewRight.setText(bean.getContent());
-        }else if (bean.getReceiver_id() == doctor_id) {// 接受者id等于本人id,那么显示左边布局
-            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft);// 设置头像
-            holder.chatTimeTextviewLeft.setText(bean.getSend_time());
+            holder.chatContentTextviewRight.setText(bean.getMsgTxt());
+
+        }else if (bean.getTo().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
+//            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft);// 设置头像
+            holder.chatTimeTextviewLeft.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutLeft.setVisibility(View.VISIBLE);
 
-            holder.chatContentTextviewLeft.setText(bean.getContent());
+            holder.chatContentTextviewLeft.setText(bean.getMsgTxt());
         }
     }
 

@@ -37,7 +37,7 @@ class ChatFragment : Fragment(), Watcher {
 
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
-        adapter = ChatListAdapter()
+        adapter = ChatListAdapter(context)
         recyclerView.adapter = adapter
 
         adapter!!.setOnItemClickListener { _: Int, any: Any ->
@@ -78,6 +78,7 @@ class ChatFragment : Fragment(), Watcher {
     override fun update(message: Message?) {
         // 保存数据
         val lastMsg: LastMessage? = LastMessage.createLastMsg(message)
+
         IMCache.saveOrUpdateLastMsg(context, lastMsg)
 
         // 刷新界面

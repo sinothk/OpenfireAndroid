@@ -37,4 +37,6 @@ dependencies {
 
     // 数据库
     api 'com.github.sinothk:DBHelper:1.2.1108'
+    // json compile 'com.alibaba:fastjson:1.2.51'
+    api 'com.alibaba:fastjson:1.2.51'
 }

@@ -112,7 +112,7 @@ class RoomChatActivity : TitleBarActivity() {
 
                 val receiveMsg = IMMessage()
 
-                receiveMsg.chatType = IMConstant.Chat.CHAT_TYPE_GROUP //message.type.name
+                receiveMsg.chatType = IMConstant.ChatType.ROOM //message.type.name
 
                 receiveMsg.jid = message.from.toString()
 

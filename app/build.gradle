@@ -45,4 +45,6 @@ dependencies {
     implementation 'com.github.sinothk:RoundedImageView:1.0.0613'
     // 其他
     implementation 'com.jiangyy:dialog:1.0.4'   //https://github.com/jyygithub/dialog
+
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
 }

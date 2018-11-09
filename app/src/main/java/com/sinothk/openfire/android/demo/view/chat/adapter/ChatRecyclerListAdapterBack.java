@@ -20,14 +20,14 @@ import java.util.ArrayList;
  *
  * @author huang
  */
-public class ChatRecyclerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ChatRecyclerListAdapterBack extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // 数据源
     private ArrayList<IMMessage> list;
     private String doctor_id;
     private Context context;
 
-    public ChatRecyclerListAdapter(Context context, String doctor_id, ArrayList<IMMessage> list) {
+    public ChatRecyclerListAdapterBack(Context context, String doctor_id, ArrayList<IMMessage> list) {
         super();
         this.doctor_id = doctor_id;
         this.context = context;
@@ -41,8 +41,7 @@ public class ChatRecyclerListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemViewType(int position) {
-
-        if (list.get(position).getFromType().equals(IMConstant.FromType.SEND)) {// 发送者id等于本人id,那么显示右边布局
+        if (list.get(position).getFrom().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
             switch (list.get(position).getContentType()) {
                 case IMConstant.ContentType.TEXT:
                     return 10;
@@ -57,7 +56,7 @@ public class ChatRecyclerListAdapter extends RecyclerView.Adapter<RecyclerView.V
 ////                case 5:
 ////                    return 15;
             }
-        } else if (list.get(position).getFromType().equals(IMConstant.FromType.RECEIVE)) {// 接受者id等于本人id,那么显示左边布局
+        } else if (list.get(position).getTo().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
             switch (list.get(position).getContentType()) {
                 case IMConstant.ContentType.TEXT:
                     return 20;
@@ -74,39 +73,6 @@ public class ChatRecyclerListAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
         }
         return 0;
-
-//        if (list.get(position).getFrom().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
-//            switch (list.get(position).getContentType()) {
-//                case IMConstant.ContentType.TEXT:
-//                    return 10;
-////                case 1:
-//////                    return 11;
-//////                case 2:
-//////                    return 12;
-//////                case 3:
-//////                    return 13;
-//////                case 4:
-//////                    return 14;
-//////                case 5:
-//////                    return 15;
-//            }
-//        } else if (list.get(position).getTo().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
-//            switch (list.get(position).getContentType()) {
-//                case IMConstant.ContentType.TEXT:
-//                    return 20;
-////                case 1:
-////                    return 21;
-////                case 2:
-////                    return 22;
-////                case 3:
-////                    return 23;
-////                case 4:
-////                    return 24;
-////                case 5:
-////                    return 25;
-//            }
-//        }
-//        return 0;
     }
 
     @Override

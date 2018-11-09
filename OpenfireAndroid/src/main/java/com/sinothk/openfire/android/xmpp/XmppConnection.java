@@ -884,25 +884,23 @@ public class XmppConnection {
         }
     }
 
-//    /**
-//     * 创建聊天窗口
-//     *
-//     * @param JID JID
-//     * @return Chat
-//     */
-//    public Chat getFriendChat(String JID) {
-//        try {
-//
-//            if (!JID.contains("@")) {
-//                JID = createJid(JID);
-//            }
-//
-//            return ChatManager.getInstanceFor(getConnection()).chatWith(JidCreate.entityBareFrom(JID));
-//        } catch (XmppStringprepException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    /**
+     * 创建聊天窗口
+     *
+     * @param JID JID
+     * @return Chat
+     */
+    public Chat getFriendChat(String JID) {
+        try {
+            if (!JID.contains("@")) {
+                JID = createJid(JID);
+            }
+            return ChatManager.getInstanceFor(getConnection()).chatWith(JidCreate.entityBareFrom(JID));
+        } catch (XmppStringprepException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 //    /**
 //     * 发送单人聊天消息
@@ -925,7 +923,28 @@ public class XmppConnection {
      * @param jid    jid
      * @param msgTxt 消息文本
      */
+    @Deprecated
     public void sendTxtMessage(String jid, String msgTxt) {
+        try {
+            if (!jid.contains("@")) {
+                jid = createJid(jid);
+            }
+
+            Message newMessage = new Message(JidCreate.from(jid), Message.Type.chat);
+            newMessage.setBody(msgTxt);
+            getConnection().sendStanza(newMessage);
+        } catch (SmackException.NotConnectedException | InterruptedException | XmppStringprepException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 发送单人聊天消息
+     *
+     * @param jid    jid
+     * @param msgTxt 消息文本
+     */
+    public void sendSingleTxtMessage(String jid, String msgTxt) {
         try {
             if (!jid.contains("@")) {
                 jid = createJid(jid);
@@ -946,6 +965,7 @@ public class XmppConnection {
      * @param muc     muc
      * @param message message
      */
+    @Deprecated
     public void sendMessage(Chat chat, MultiUserChat muc, String message) {
 //        if (chat != null) {
 //            sendSingleMessage(chat, message);

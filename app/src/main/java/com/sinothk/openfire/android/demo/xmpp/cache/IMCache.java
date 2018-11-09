@@ -63,7 +63,7 @@ public class IMCache {
                     lastMsg.setName(dbModel.getString("name"));
                     lastMsg.setMsgTime(dbModel.getLong("msgTime"));
 
-                    lastMsg.setChatType(dbModel.getInt("chatType"));
+                    lastMsg.setChatType(dbModel.getString("chatType"));
 
                     lastMsg.setMsgType(dbModel.getString("msgType"));
                     lastMsg.setMsgTxt(dbModel.getString("msgTxt"));

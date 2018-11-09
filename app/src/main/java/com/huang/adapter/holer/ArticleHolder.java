@@ -9,7 +9,11 @@ import android.widget.TextView;
 
 import com.huang.bean.YtecConsultMsgBean;
 import com.huang.utils.CommonUtils;
+import com.sinothk.comm.utils.DateUtil;
+import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
+
+import java.util.Date;
 
 /**
  * 2:文章
@@ -52,10 +56,10 @@ public class ArticleHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void doSomething(final YtecConsultMsgBean bean, int doctor_id, ArticleHolder holder, final Context context) {
-        if (bean.getSender_id() == doctor_id) {// 发送者id等于本人id,那么显示右边布局
-            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight_article);// 设置头像
-            holder.chatTimeTextviewRight_article.setText(bean.getSend_time());
+    public void doSomething(final IMMessage bean, String doctor_id, ArticleHolder holder, final Context context) {
+        if (bean.getFrom().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
+//            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight_article);// 设置头像
+            holder.chatTimeTextviewRight_article.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutRight_article.setVisibility(View.VISIBLE);
 
             // 文章点击进入单个文章页面
@@ -69,11 +73,12 @@ public class ArticleHolder extends RecyclerView.ViewHolder {
                 }
             });
 
-            holder.chatArticleTextviewRight.setText(bean.getContent());
-            holder.title_textview_right.setText(bean.getArticle_title());
-        } else if (bean.getReceiver_id() == doctor_id) {// 接受者id等于本人id,那么显示左边布局
-            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft_article);// 设置头像
-            holder.chatTimeTextviewLeft_article.setText(bean.getSend_time());
+            holder.chatArticleTextviewRight.setText(bean.getMsgTxt());
+//            holder.title_textview_right.setText(bean.getArticle_title());
+
+        } else if (bean.getTo() == doctor_id) {// 接受者id等于本人id,那么显示左边布局
+//            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft_article);// 设置头像
+            holder.chatTimeTextviewLeft_article.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutLeft_article.setVisibility(View.VISIBLE);
 
             // 文章点击进入单个文章页面
@@ -86,8 +91,8 @@ public class ArticleHolder extends RecyclerView.ViewHolder {
 //                    context.startActivity(intent);
                 }
             });
-            holder.chatArticleTextviewLeft.setText(bean.getContent());
-            holder.title_textview_left.setText(bean.getArticle_title());
+            holder.chatArticleTextviewLeft.setText(bean.getMsgTxt());
+//            holder.title_textview_left.setText(bean.getArticle_title());
         }
     }
 }

@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sinothk.comm.utils.DateUtil;
 import com.sinothk.openfire.android.bean.IMConstant;
 import com.sinothk.openfire.android.bean.IMMessage;
@@ -26,10 +27,14 @@ import java.util.Date;
 import java.util.List;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ContactsViewHolder> {
-
+    private Context mContext;
 
     private List<LastMessage> dataList = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
+
+    public ChatListAdapter(Context context) {
+        mContext = context;
+    }
 
     @NonNull
     @Override
@@ -59,6 +64,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Contac
         holder.unreadNumTv.setText("" + lastMsg.getMsgUnread());
 
         if (lastMsg.getAvatar() != null) {
+            Glide.with(mContext).load(lastMsg.getAvatar()).into(holder.avatarIv);
 //            holder.avatarIv.setImageDrawable(lastMsg.getAvatar());
         }
     }

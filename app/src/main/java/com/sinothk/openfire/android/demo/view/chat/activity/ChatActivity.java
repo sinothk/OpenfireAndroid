@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,10 +17,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.huang.bean.YtecConsultMsgBean;
 import com.huang.utils.CommonUtils;
 import com.huang.utils.voice.MediaPlayManager;
 import com.huang.utils.voice.VoiceRecorderButton;
+import com.sinothk.openfire.android.IMHelper;
+import com.sinothk.openfire.android.bean.IMConstant;
+import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
 import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity;
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatRecyclerListAdapter;
@@ -40,7 +41,9 @@ import java.util.ArrayList;
  */
 public class ChatActivity extends TitleBarActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, Watcher {
 
-    private Chat chat;// 单聊
+    private String singleJid = "";
+
+//    private Chat chat;// 单聊
     private MultiUserChat muc;// 群组
 
     private Button chatNewSend;// 发信息
@@ -50,7 +53,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
     private int PageNumber = 0;// 当前页数
     private SwipeRefreshLayout swipeView;// 下拉加载更多
     private RecyclerView msgListView;
-    private ArrayList<YtecConsultMsgBean> list = new ArrayList<>();
+    private ArrayList<IMMessage> list = new ArrayList<>();
     private ChatRecyclerListAdapter adapter;
 
     // 发送语音新增的内容
@@ -68,7 +71,6 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-
             initData();
             initView();
             init();// 初始化
@@ -78,11 +80,16 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
     }
 
     private void initData() {
-//        if (getIntent().getBooleanExtra("ChatType", false)) {
+        boolean isRoomChat = getIntent().getBooleanExtra("ChatType", false);
+
+        if (isRoomChat) {
 //            muc = LoginActivity.multiUserChatList.get(getIntent().getIntExtra("MultiUserChatPosition", 0));
-//        } else {
+        } else {
 //            chat = XmppConnection.getInstance().getFriendChat(getIntent().getStringExtra("SingleUserChatJID"));
-//        }
+
+            singleJid = getIntent().getStringExtra("SingleUserChatJID");
+//            chat = IMHelper.getFriendChat(singleJid);
+        }
     }
 
     private void initView() {
@@ -135,7 +142,8 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        adapter = new ChatRecyclerListAdapter(this, 1, list);
+        String currJid = IMHelper.getCurrUser().getJid();
+        adapter = new ChatRecyclerListAdapter(this, currJid, list);
         msgListView.setLayoutManager(mLayoutManager);
         msgListView.setAdapter(adapter);
         loadData(0);// 从本地读取旧的信息并加载数据源
@@ -189,29 +197,24 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
                     // 从SD卡中读取图片,然后再发送
                 }
                 break;
+
             case R.id.chatNewArticleTextView:// 文章
                 chatNewLinearLayout_other.setVisibility(View.GONE);
                 break;
+
             case R.id.chatNewCollectTextView:// 收藏
                 chatNewLinearLayout_other.setVisibility(View.GONE);
                 break;
+
             case R.id.chatNewPrescriptionTextView:// 开方
                 chatNewLinearLayout_other.setVisibility(View.GONE);
                 break;
+
             case R.id.chatNewSend:
-
                 String msg = chatNewEditText.getText().toString();
-
                 if (!TextUtils.isEmpty(CommonUtils.replaceStr(msg))) {
-                    int receiver_id = 0;// 0 is test
-
-                    // 拼接JSON格式进行传输
-                    YtecConsultMsgBean msgBean = new YtecConsultMsgBean(0, msg, 1, 1, "1", "", "",
-                            receiver_id, 0, CommonUtils.getCurrentTime(), true, "");
-
-//                    String msgJson = (new Gson()).toJson(msgBean);
-//
-//                    sendMsg(msgJson);// 发送信息
+                    // 创建单聊文本发送信息
+                    sendMsg(IMMessage.createSingleTxtMsg(singleJid, msg));
                 }
                 break;
             default:
@@ -222,16 +225,17 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
     /*
      * open fire发送消息
      */
-    private void sendMsg(final String msg) {
+    private void sendMsg(final IMMessage msg) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                XmppConnection.getInstance().sendMessage(chat, muc, msg);
-//
-//                Message message = new Message();// 发送message
-//                message.what = 2;
-//                message.obj = msg;
-//                handler.sendMessage(message);
+                IMHelper.send(msg);
+
+                // 更新界面
+                Message message = new Message();// 发送message
+                message.what = 2;
+                message.obj = msg.toString();
+                handler.sendMessage(message);
             }
         }).start();
     }
@@ -261,12 +265,12 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             // 从线程那里接收到从后台返回来的数据
-            String queryStr = (String) msg.obj;
-            Log.e("log", "ChatActivity.queryStr=" + queryStr);
+//            String queryStr = (String) msg.obj;
+//            Log.e("log", "ChatActivity.queryStr=" + queryStr);
 
             switch (msg.what) {
                 case 1:// 收消息
-                    refreshMessage(queryStr);// 刷新界面
+//                    refreshMessage(queryStr);// 刷新界面
                     break;
                 case 2:// 发消息
 //                    String time = CommonUtils.getTime();// 拼装获得的消息
@@ -300,38 +304,56 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
     /*
      * 刷新界面
      */
-    private void refreshMessage(String message) {
-//        try {
-//            YtecConsultMsgBean bean = (new Gson()).fromJson(message, YtecConsultMsgBean.class);
-//
-//            list.add(bean);
-//            adapter.notifyDataSetChanged();
-//            msgListView.scrollToPosition(list.size() - 1);//刷新到底部
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+    private void refreshMessage(IMMessage imMessage) {
+        try {
+            if (imMessage == null) {
+                return;
+            }
+
+            list.add(imMessage);
+            adapter.notifyDataSetChanged();
+            msgListView.scrollToPosition(list.size() - 1);//刷新到底部
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void update(final org.jivesoftware.smack.packet.Message message) {
-        // 是当前聊天对象或者聊天群才显示这条消息
-        if (chat != null) {// 单聊
-            if (message.getFrom() != null && !message.getFrom().toString().contains(chat.getXmppAddressOfChatPartner())) {
-                return;
+        String currJid = IMHelper.getCurrUser().getJid();
+
+        final IMMessage imMessage = IMMessage.getIMMessageByMessage(message.getBody());
+
+        if (IMConstant.ChatType.SINGLE.equals(imMessage.getChatType())) {
+            if (imMessage.getTo().equals(currJid)) {
+                imMessage.setFromType(IMConstant.FromType.RECEIVE);
+            } else if (imMessage.getFrom().equals(currJid)) {
+                imMessage.setFromType(IMConstant.FromType.SEND);
             }
-        } else if (muc != null) {// 群聊
-            if (!message.getFrom().toString().contains(muc.getRoom().toString())) {
-                return;
-            }
+        } else if (IMConstant.ChatType.ROOM.equals(imMessage.getChatType())) {
+
         }
+
+//        // 是当前聊天对象或者聊天群才显示这条消息
+//        if (chat != null) {// 单聊
+//            if (message.getFrom() != null && !message.getFrom().toString().contains(chat.getXmppAddressOfChatPartner())) {
+//                return;
+//            }
+//        } else if (muc != null) {// 群聊
+//            if (!message.getFrom().toString().contains(muc.getRoom().toString())) {
+//                return;
+//            }
+//        }
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                refreshMessage(message.getBody());
+                // 更新界面
+                refreshMessage(imMessage);
             }
         });
-        Log.e("ChatActivityMessage", message.toString());
+//        Log.e("ChatActivityMessage", message.toString());
     }
 
     // 长按语音按钮的监听事件

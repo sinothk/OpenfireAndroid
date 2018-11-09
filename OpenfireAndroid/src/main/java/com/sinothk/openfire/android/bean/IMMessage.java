@@ -1,22 +1,37 @@
 package com.sinothk.openfire.android.bean;
 
+import android.util.Log;
+
+import com.alibaba.fastjson.JSON;
+import com.sinothk.openfire.android.BuildConfig;
+import com.sinothk.openfire.android.IMHelper;
+
+import java.util.Date;
+
 public class IMMessage {
 
+    @Deprecated
     private String jid;
-    private int chatType;
+
+    private String chatType;
 
     private String from;
-    private String fromUserName;
+    private String fromName;
     private String fromUserAvatar;
-
     private String to;
-    private String toUserName;
+    private String toName;
     private String toUserAvatar;
 
     private String fromType;
+    private long msgTime;
 
     private String contentType;
     private String msgTxt;
+
+    public IMMessage() {
+    }
+
+    private String message;
 
     public String getJid() {
         return jid;
@@ -26,11 +41,11 @@ public class IMMessage {
         this.jid = jid;
     }
 
-    public int getChatType() {
+    public String getChatType() {
         return chatType;
     }
 
-    public void setChatType(int chatType) {
+    public void setChatType(String chatType) {
         this.chatType = chatType;
     }
 
@@ -42,12 +57,12 @@ public class IMMessage {
         this.from = from;
     }
 
-    public String getFromUserName() {
-        return fromUserName;
+    public String getFromName() {
+        return fromName;
     }
 
-    public void setFromUserName(String fromUserName) {
-        this.fromUserName = fromUserName;
+    public void setFromName(String fromName) {
+        this.fromName = fromName;
     }
 
     public String getFromUserAvatar() {
@@ -66,12 +81,12 @@ public class IMMessage {
         this.to = to;
     }
 
-    public String getToUserName() {
-        return toUserName;
+    public String getToName() {
+        return toName;
     }
 
-    public void setToUserName(String toUserName) {
-        this.toUserName = toUserName;
+    public void setToName(String toName) {
+        this.toName = toName;
     }
 
     public String getToUserAvatar() {
@@ -106,13 +121,29 @@ public class IMMessage {
         this.fromType = fromType;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public long getMsgTime() {
+        return msgTime;
+    }
+
+    public void setMsgTime(long msgTime) {
+        this.msgTime = msgTime;
+    }
+
     public static IMMessage createSendMsg(String chatTarget, String msgTxt) {
         IMMessage msg = new IMMessage();
 
         msg.setJid(chatTarget);
-        msg.setChatType(IMConstant.Chat.CHAT_TYPE_SINGLE);
+        msg.setChatType(IMConstant.ChatType.SINGLE);
 
-        msg.setContentType(IMConstant.ContentType.CONTENT_TEXT);
+        msg.setContentType(IMConstant.ContentType.TEXT);
         msg.setFromType(IMConstant.FromType.SEND);
 
         msg.setMsgTxt(msgTxt);
@@ -124,13 +155,82 @@ public class IMMessage {
 
         IMMessage msg = new IMMessage();
 
-        msg.setChatType(IMConstant.Chat.CHAT_TYPE_ROOM);
+        msg.setChatType(IMConstant.ChatType.ROOM);
 
-        msg.setContentType(IMConstant.ContentType.CONTENT_TEXT);
+        msg.setContentType(IMConstant.ContentType.TEXT);
         msg.setFromType(IMConstant.FromType.SEND);
 
         msg.setMsgTxt(msgTxt);
 
         return msg;
+    }
+
+    @Override
+    public String toString() {
+        return "IMMessage{" +
+                "jid='" + jid + '\'' +
+                ", chatType='" + chatType + '\'' +
+                ", from='" + from + '\'' +
+                ", fromName='" + fromName + '\'' +
+                ", fromUserAvatar='" + fromUserAvatar + '\'' +
+                ", to='" + to + '\'' +
+                ", toName='" + toName + '\'' +
+                ", toUserAvatar='" + toUserAvatar + '\'' +
+                ", fromType='" + fromType + '\'' +
+                ", msgTime=" + msgTime +
+                ", contentType='" + contentType + '\'' +
+                ", msgTxt='" + msgTxt + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
+
+    /*
+      ========================== 构建消息 ======================================
+     */
+
+    /**
+     * 创建单聊文本消息
+     *
+     * @param singleJid
+     * @param msg
+     * @return
+     */
+    public static IMMessage createSingleTxtMsg(String singleJid, String msg) {
+
+        IMMessage imMessage = new IMMessage();
+
+        imMessage.setJid(singleJid);
+        imMessage.setChatType(IMConstant.ChatType.SINGLE);
+        imMessage.setContentType(IMConstant.ContentType.TEXT);
+        imMessage.setMsgTxt(msg);
+        imMessage.setMsgTime(new Date().getTime());
+
+        imMessage.setTo(singleJid);
+        imMessage.setToUserAvatar("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=2594910732,993782407&fm=58");
+        imMessage.setToName("迪丽热巴");
+
+        IMUser imUser = IMHelper.getCurrUser();
+        imMessage.setFrom(imUser.getJid());
+        imMessage.setFromUserAvatar("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3771747993,2777558986&fm=58");
+        imMessage.setFromName("薛之谦");
+
+        return imMessage;
+    }
+
+    /**
+     * 根据Message获得IMMessage
+     *
+     * @param messageBody
+     * @return
+     */
+    public static IMMessage getIMMessageByMessage(String messageBody) {
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.i("IMMessage", messageBody);
+            }
+            return JSON.parseObject(messageBody, IMMessage.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

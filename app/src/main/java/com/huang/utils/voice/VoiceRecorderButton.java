@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
-import com.huang.adapter.holer.AudioHolder;
+//import com.huang.adapter.holer.AudioHolder;
 import com.sinothk.openfire.android.demo.R;
 
 public class VoiceRecorderButton extends Button implements
@@ -264,10 +264,10 @@ public class VoiceRecorderButton extends Button implements
 
                 case STATE_RECORDING:
 
-                    // 如果正在播放语音,用户长按语音键时,应该先暂住播放
-                    if (MediaPlayManager.isPlaying()) {
-                        MediaPlayManager.stop(AudioHolder.flag, AudioHolder.view_recorder_anim);
-                    }
+//                    // 如果正在播放语音,用户长按语音键时,应该先暂住播放
+//                    if (MediaPlayManager.isPlaying()) {
+//                        MediaPlayManager.stop(AudioHolder.flag, AudioHolder.view_recorder_anim);
+//                    }
 
                     setText(R.string.str_recorder);
                     if (isRecording) {

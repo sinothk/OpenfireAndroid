@@ -8,7 +8,11 @@ import android.widget.TextView;
 
 import com.huang.bean.YtecConsultMsgBean;
 import com.huang.utils.CommonUtils;
+import com.sinothk.comm.utils.DateUtil;
+import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
+
+import java.util.Date;
 
 /**
  * 4:用户结束本次对话
@@ -43,16 +47,16 @@ public class FinishHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void doSomething(final YtecConsultMsgBean bean, int doctor_id, FinishHolder holder) {
-        if (bean.getSender_id() == doctor_id) {// 发送者id等于本人id,那么显示右边布局
-            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight_finish);// 设置头像
-            holder.chatTimeTextviewRight_finish.setText(bean.getSend_time());
+    public void doSomething(final IMMessage bean, String doctor_id, FinishHolder holder) {
+        if (bean.getFrom().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
+//            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight_finish);// 设置头像
+            holder.chatTimeTextviewRight_finish.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutRight_finish.setVisibility(View.VISIBLE);
 
             holder.chatContentTextviewRight_finish.setText("用户已退出咨询，对话结束。");
-        } else if (bean.getReceiver_id() == doctor_id) {// 接受者id等于本人id,那么显示左边布局
-            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft_finish);// 设置头像
-            holder.chatTimeTextviewLeft_finish.setText(bean.getSend_time());
+        } else if (bean.getTo().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
+//            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft_finish);// 设置头像
+            holder.chatTimeTextviewLeft_finish.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutLeft_finish.setVisibility(View.VISIBLE);
 
             holder.chatContentTextviewLeft_finish.setText("用户已退出咨询，对话结束。");

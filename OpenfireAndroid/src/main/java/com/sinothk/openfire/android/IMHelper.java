@@ -3,6 +3,7 @@ package com.sinothk.openfire.android;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.sinothk.openfire.android.bean.IMChatRoom;
 import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.bean.IMCode;
@@ -12,6 +13,7 @@ import com.sinothk.openfire.android.bean.IMUser;
 import com.sinothk.openfire.android.inters.IMCallback;
 import com.sinothk.openfire.android.xmpp.XmppConnection;
 
+import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterGroup;
@@ -890,7 +892,8 @@ public class IMHelper {
      *
      * @param msgBody
      */
-    public static void send(IMMessage msgBody) {
+    @Deprecated
+    public static void sendTxtMessage(IMMessage msgBody) {
         try {
             XmppConnection.getInstance().sendTxtMessage(msgBody.getJid(), msgBody.getMsgTxt());
         } catch (Exception e) {
@@ -1071,5 +1074,39 @@ public class IMHelper {
      */
     public static boolean openConnection() {
         return XmppConnection.getInstance().getConnection() != null;
+    }
+
+    public static Chat getFriendChat(String jid) {
+        return XmppConnection.getInstance().getFriendChat(jid);
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param imMessage
+     */
+    public static void send(IMMessage imMessage) {
+
+        if (IMConstant.ChatType.SINGLE.equals(imMessage.getChatType())) {
+
+            switch (imMessage.getContentType()) {
+                case IMConstant.ContentType.TEXT:
+                    XmppConnection.getInstance().sendSingleTxtMessage(imMessage.getJid(), JSON.toJSONString(imMessage));
+                    break;
+                case IMConstant.ContentType.IMAGE:
+
+                    break;
+                case IMConstant.ContentType.FILE:
+
+                    break;
+                case IMConstant.ContentType.LOCATION:
+
+                    break;
+            }
+        } else if (IMConstant.ChatType.ROOM.equals(imMessage.getChatType())) {
+
+        } else if (IMConstant.ChatType.GROUP.equals(imMessage.getChatType())) {
+
+        }
     }
 }
