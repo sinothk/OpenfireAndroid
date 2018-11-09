@@ -59,6 +59,7 @@
                         android:layout_alignParentLeft="true"
                         android:contentDescription="@string/app_name"
                         android:src="@mipmap/ic_launcher" />
+
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>

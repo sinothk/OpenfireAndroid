@@ -41,9 +41,9 @@ import java.util.ArrayList;
  */
 public class ChatActivity extends TitleBarActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, Watcher {
 
-    private String singleJid = "";
-
-//    private Chat chat;// 单聊
+    private String singleJid;
+    private String currJid;
+    //    private Chat chat;// 单聊
     private MultiUserChat muc;// 群组
 
     private Button chatNewSend;// 发信息
@@ -80,14 +80,15 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
     }
 
     private void initData() {
-        boolean isRoomChat = getIntent().getBooleanExtra("ChatType", false);
+        // 当前用户Jid
+        currJid = IMHelper.getCurrUser().getJid();
 
+        boolean isRoomChat = getIntent().getBooleanExtra("ChatType", false);
         if (isRoomChat) {
 //            muc = LoginActivity.multiUserChatList.get(getIntent().getIntExtra("MultiUserChatPosition", 0));
         } else {
-//            chat = XmppConnection.getInstance().getFriendChat(getIntent().getStringExtra("SingleUserChatJID"));
-
             singleJid = getIntent().getStringExtra("SingleUserChatJID");
+//            chat = XmppConnection.getInstance().getFriendChat(getIntent().getStringExtra("SingleUserChatJID"));
 //            chat = IMHelper.getFriendChat(singleJid);
         }
     }
@@ -142,17 +143,11 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        String currJid = IMHelper.getCurrUser().getJid();
         adapter = new ChatRecyclerListAdapter(this, currJid, list);
         msgListView.setLayoutManager(mLayoutManager);
         msgListView.setAdapter(adapter);
-        loadData(0);// 从本地读取旧的信息并加载数据源
-    }
 
-    /*
-     * 从本地读取旧的信息并加载数据源
-     */
-    private void loadData(int PageNumber) {
+        loadData(0);// 从本地读取旧的信息并加载数据源
     }
 
     @Override
@@ -232,10 +227,14 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
                 IMHelper.send(msg);
 
                 // 更新界面
-                Message message = new Message();// 发送message
-                message.what = 2;
-                message.obj = msg.toString();
-                handler.sendMessage(message);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        chatNewEditText.setText("");// 输入框内容设置为空
+                        chatAddButton.setVisibility(View.VISIBLE);// 显示“+”按钮
+                        chatNewSend.setVisibility(View.GONE);// 隐藏发送按钮
+                    }
+                });
             }
         }).start();
     }
@@ -264,34 +263,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            // 从线程那里接收到从后台返回来的数据
-//            String queryStr = (String) msg.obj;
-//            Log.e("log", "ChatActivity.queryStr=" + queryStr);
-
             switch (msg.what) {
-                case 1:// 收消息
-//                    refreshMessage(queryStr);// 刷新界面
-                    break;
-                case 2:// 发消息
-//                    String time = CommonUtils.getTime();// 拼装获得的消息
-//                    int read = 1;
-//                    int latest = 0;
-//                    String body = queryStr;
-//                    String to = "1";
-//                    String from = "JID";
-//                    MsgBean mybean = new MsgBean(0, 1, from, to, body, time, read, latest);
-//                    // 将消息存入数据库
-//
-//                    if (chat != null) {// 单聊
-//                        refreshMessage(queryStr);// 刷新界面
-//                    } else if (muc != null) {// 群聊
-//                        // do not need
-//                    }
-
-                    chatNewEditText.setText("");// 输入框内容设置为空
-                    chatAddButton.setVisibility(View.VISIBLE);// 显示“+”按钮
-                    chatNewSend.setVisibility(View.GONE);// 隐藏发送按钮
-                    break;
                 case 5:// 下拉加载更多
                     PageNumber++;
                     loadData(PageNumber);// 从本地读取旧的信息并加载数据源
@@ -304,7 +276,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
     /*
      * 刷新界面
      */
-    private void refreshMessage(IMMessage imMessage) {
+    private void updateMessage(IMMessage imMessage) {
         try {
             if (imMessage == null) {
                 return;
@@ -319,10 +291,15 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         }
     }
 
+    /*
+     * 从本地读取旧的信息并加载数据源
+     */
+    private void loadData(int PageNumber) {
+
+    }
+
     @Override
     public void update(final org.jivesoftware.smack.packet.Message message) {
-        String currJid = IMHelper.getCurrUser().getJid();
-
         final IMMessage imMessage = IMMessage.getIMMessageByMessage(message.getBody());
 
         if (IMConstant.ChatType.SINGLE.equals(imMessage.getChatType())) {
@@ -350,10 +327,9 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
             @Override
             public void run() {
                 // 更新界面
-                refreshMessage(imMessage);
+                updateMessage(imMessage);
             }
         });
-//        Log.e("ChatActivityMessage", message.toString());
     }
 
     // 长按语音按钮的监听事件

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.sinothk.openfire.android.demo.R;
 
 import java.io.File;
@@ -79,6 +80,31 @@ public class CommonUtils {
 //        ImageLoader.getInstance().displayImage(imageUri, iv,
 //                ImageLoaderUtils_circle.MyDisplayImageOptions());
     }
+
+    /**
+     * 设置图片
+     *
+     * @param mContext
+     * @param avatarUrl
+     * @param imageView
+     */
+    public static void setImage(Context mContext, String avatarUrl, ImageView imageView) {
+        Glide.with(mContext).load(avatarUrl).into(imageView);
+
+//        String imageUri = "";
+//        if (!TextUtils.isEmpty(sender_photo)) {
+//            if (sender_photo.contains("http://")) {// 说明用户是用新浪和微博登录的
+//                imageUri = sender_photo.trim();
+//            } else {
+//                imageUri = imageUrl + sender_photo.trim();
+//            }
+//        } else {
+//            imageUri = "drawable://" + R.drawable.no_head_image;
+//        }
+//        ImageLoader.getInstance().displayImage(imageUri, iv,
+//                ImageLoaderUtils_circle.MyDisplayImageOptions());
+    }
+
 
     /**
      * 检查sd卡是否插上
