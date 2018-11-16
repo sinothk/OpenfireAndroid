@@ -48,13 +48,13 @@ public class FinishHolder extends RecyclerView.ViewHolder {
     }
 
     public void doSomething(final IMMessage bean, String doctor_id, FinishHolder holder) {
-        if (bean.getFrom().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
+        if (bean.getFromJid().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
 //            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight_finish);// 设置头像
             holder.chatTimeTextviewRight_finish.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutRight_finish.setVisibility(View.VISIBLE);
 
             holder.chatContentTextviewRight_finish.setText("用户已退出咨询，对话结束。");
-        } else if (bean.getTo().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
+        } else if (bean.getToJid().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
 //            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft_finish);// 设置头像
             holder.chatTimeTextviewLeft_finish.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutLeft_finish.setVisibility(View.VISIBLE);

@@ -57,7 +57,7 @@ public class ArticleHolder extends RecyclerView.ViewHolder {
     }
 
     public void doSomething(final IMMessage bean, String doctor_id, ArticleHolder holder, final Context context) {
-        if (bean.getFrom().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
+        if (bean.getFromJid().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
 //            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight_article);// 设置头像
             holder.chatTimeTextviewRight_article.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutRight_article.setVisibility(View.VISIBLE);
@@ -76,7 +76,7 @@ public class ArticleHolder extends RecyclerView.ViewHolder {
             holder.chatArticleTextviewRight.setText(bean.getMsgTxt());
 //            holder.title_textview_right.setText(bean.getArticle_title());
 
-        } else if (bean.getTo() == doctor_id) {// 接受者id等于本人id,那么显示左边布局
+        } else if (bean.getToJid() == doctor_id) {// 接受者id等于本人id,那么显示左边布局
 //            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft_article);// 设置头像
             holder.chatTimeTextviewLeft_article.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutLeft_article.setVisibility(View.VISIBLE);

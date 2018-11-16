@@ -120,7 +120,7 @@ class RoomChatActivity : TitleBarActivity() {
 
                 receiveMsg.contentType = IMConstant.ContentType.CONTENT_TEXT
                 receiveMsg.msgTxt = message.body
-                receiveMsg.from = ""
+                receiveMsg.fromJid = ""
 
                 chatList.add(receiveMsg)
                 chatAdapter!!.setData(contentListView, chatList)

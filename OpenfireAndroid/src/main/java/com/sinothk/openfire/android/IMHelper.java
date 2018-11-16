@@ -558,7 +558,9 @@ public class IMHelper {
                 final RosterEntry rosterEntry = XmppConnection.getInstance().getUserInfo(jid);
                 if (rosterEntry != null) {
                     IMUser imUser = new IMUser();
+
                     imUser.setJid(rosterEntry.getJid().toString());
+
                     Localpart localpart = rosterEntry.getJid().getLocalpartOrNull();
                     imUser.setUserName(localpart.toString());
 
@@ -879,7 +881,7 @@ public class IMHelper {
             message.setContentType(IMConstant.ContentType.CONTENT_TEXT);
             message.setMsgTxt("聊天内容_" + i);
 
-            message.setFrom("");
+            message.setFromJid("");
 
             chatList.add(message);
         }
@@ -1091,7 +1093,7 @@ public class IMHelper {
 
             switch (imMessage.getContentType()) {
                 case IMConstant.ContentType.TEXT:
-                    XmppConnection.getInstance().sendSingleTxtMessage(imMessage.getJid(), JSON.toJSONString(imMessage));
+                    XmppConnection.getInstance().sendSingleTxtMessage(imMessage.getToJid(), JSON.toJSONString(imMessage));
                     break;
                 case IMConstant.ContentType.IMAGE:
 

@@ -19,9 +19,13 @@ public class IMUser implements Serializable {
     private String index;
 
     private String jid;
-    protected String name;
+    private String name;
     private String userName;
+    private String avatar;
+
     private String password;
+
+    @Deprecated
     private Drawable userAvatar;
 
     private String email;
@@ -87,6 +91,14 @@ public class IMUser implements Serializable {
 
     public void setSubscriptionPending(boolean subscriptionPending) {
         this.subscriptionPending = subscriptionPending;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public RosterPacket.ItemType getItemType() {

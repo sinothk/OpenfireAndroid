@@ -170,12 +170,12 @@ public class LastMessage {
     /**
      * 根据服务器消息，构建本地显示消息
      *
-     * @param message
+     * @param imMessage
      * @return
      */
-    public static LastMessage createLastMsg(Message message) {
-        if (message != null) {
-            IMMessage imMessage = IMMessage.getIMMessageByMessage(message.getBody());
+    public static LastMessage createLastMsg(IMMessage imMessage) {
+        if (imMessage != null) {
+
             if (imMessage == null) {
                 return null;
             }
@@ -183,22 +183,16 @@ public class LastMessage {
             // 当前用户
             String currUserJid = IMHelper.getCurrUser().getJid();
 
-//            // 发送方
-//            String from = message.getFrom().toString();
-//            String fromJid = from.substring(0, from.indexOf("/"));
-            // 接收方
-//            String toJid = message.getTo().toString();
-
             LastMessage lastMsg = new LastMessage();
-            if (currUserJid.equals(imMessage.getTo())) {
+            if (currUserJid.equals(imMessage.getToJid())) {
                 // 当前用户收到,取发送方信息设置
-                lastMsg.setJid(imMessage.getFrom());
+                lastMsg.setJid(imMessage.getFromJid());
                 lastMsg.setName(imMessage.getFromName());
                 lastMsg.setAvatar(imMessage.getFromUserAvatar());
 
-            } else if (currUserJid.equals(imMessage.getFrom())) {
+            } else if (currUserJid.equals(imMessage.getFromJid())) {
                 // 当前用户发送,取接收方信息设置
-                lastMsg.setJid(imMessage.getTo());
+                lastMsg.setJid(imMessage.getToJid());
                 lastMsg.setName(imMessage.getToName());
                 lastMsg.setAvatar(imMessage.getToUserAvatar());
             }

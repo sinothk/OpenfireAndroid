@@ -27,11 +27,22 @@ public class ChatRecyclerListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private String doctor_id;
     private Context context;
 
-    public ChatRecyclerListAdapter(Context context, String doctor_id, ArrayList<IMMessage> list) {
+    public ChatRecyclerListAdapter(Context context, String doctor_id) {
         super();
         this.doctor_id = doctor_id;
         this.context = context;
-        this.list = list;
+
+        this.list = new ArrayList<>();
+    }
+
+    public void addData(ArrayList<IMMessage> newList) {
+        list.addAll(newList);
+        notifyDataSetChanged();
+    }
+
+    public void updateData(IMMessage imMessage) {
+        list.add(imMessage);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -224,5 +235,6 @@ public class ChatRecyclerListAdapter extends RecyclerView.Adapter<RecyclerView.V
 //                break;
         }
     }
+
 
 }

@@ -47,10 +47,15 @@ class ChatFragment : Fragment(), Watcher {
         adapter!!.setOnItemClickListener { _: Int, any: Any ->
             val lastMessage: LastMessage = any as LastMessage
 
-            val jid: String = lastMessage.jid
+            val toJid: String = lastMessage.jid
+            val toName: String = lastMessage.name
+            val toAvatar: String? = lastMessage.avatar
+
             startActivity(Intent(activity, ChatActivity::class.java)
-                    .putExtra("SingleUserChatJID", jid)
-                    .putExtra("ChatType", false))
+                    .putExtra("toJid", toJid)
+                    .putExtra("toName", toName)
+                    .putExtra("toAvatar", toAvatar)
+                    .putExtra("roomChatType", false))
         }
 
         initData()
@@ -87,22 +92,11 @@ class ChatFragment : Fragment(), Watcher {
             return
         }
 
-        try { // 保存最后一条数据
-            val lastMsg: LastMessage? = LastMessage.createLastMsg(message)
-            IMCache.saveOrUpdateLastMsg(context, lastMsg)
-            // 刷新界面
-            activity?.runOnUiThread {
-                loadingData()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val imMessage: IMMessage = IMMessage.getIMMessageByMessageBody(message.body)
 
         // ==========保存完整消息到数据库=================
         try {
-            val imMessage: IMMessage = IMMessage.getIMMessageByMessage(message.body)
-
-            if (imMessage.from == currUserJid) {
+            if (imMessage.fromJid == currUserJid) {
                 imMessage.fromType = IMConstant.FromType.SEND
             } else {
                 imMessage.fromType = IMConstant.FromType.RECEIVE
@@ -112,5 +106,20 @@ class ChatFragment : Fragment(), Watcher {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+        // 保存最后一条数据
+        try {
+            val lastMsg: LastMessage? = LastMessage.createLastMsg(imMessage)
+            IMCache.saveOrUpdateLastMsg(context, lastMsg)
+
+            // 刷新界面
+            activity?.runOnUiThread {
+                loadingData()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+
     }
 }

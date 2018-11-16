@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
 import com.sinothk.openfire.android.BuildConfig;
 import com.sinothk.openfire.android.IMHelper;
 
@@ -11,6 +12,7 @@ import org.jivesoftware.smack.packet.Message;
 
 import java.util.Date;
 
+@Table(name = "IMMessage")
 public class IMMessage {
 
     @Deprecated
@@ -21,11 +23,11 @@ public class IMMessage {
 
     private String chatType; // 消息分类：单聊，群聊，通知等
 
-    private String from;
+    private String fromJid;
     private String fromName;
     private String fromUserAvatar;
 
-    private String to;
+    private String toJid;
     private String toName;
     private String toUserAvatar;
 
@@ -70,12 +72,12 @@ public class IMMessage {
         this.chatType = chatType;
     }
 
-    public String getFrom() {
-        return from;
+    public String getFromJid() {
+        return fromJid;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setFromJid(String fromJid) {
+        this.fromJid = fromJid;
     }
 
     public String getFromName() {
@@ -94,12 +96,12 @@ public class IMMessage {
         this.fromUserAvatar = fromUserAvatar;
     }
 
-    public String getTo() {
-        return to;
+    public String getToJid() {
+        return toJid;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setToJid(String toJid) {
+        this.toJid = toJid;
     }
 
     public String getToName() {
@@ -234,10 +236,10 @@ public class IMMessage {
                 "jid='" + jid + '\'' +
                 ", msgId='" + msgId + '\'' +
                 ", chatType='" + chatType + '\'' +
-                ", from='" + from + '\'' +
+                ", fromJid='" + fromJid + '\'' +
                 ", fromName='" + fromName + '\'' +
                 ", fromUserAvatar='" + fromUserAvatar + '\'' +
-                ", to='" + to + '\'' +
+                ", toJid='" + toJid + '\'' +
                 ", toName='" + toName + '\'' +
                 ", toUserAvatar='" + toUserAvatar + '\'' +
                 ", fromType='" + fromType + '\'' +
@@ -254,21 +256,23 @@ public class IMMessage {
     }
 
     /*
-      ========================== 构建消息 ======================================
+      ========================== 创建消息 ======================================
      */
 
     /**
      * 创建单聊文本消息
      *
-     * @param singleJid
+     * @param toJid
+     * @param toName
+     * @param toAvatar
      * @param msg
      * @return
      */
-    public static IMMessage createSingleTxtMsg(String singleJid, String msg) {
+    public static IMMessage createSingleTxtMsg(String toJid, String toName, String toAvatar, String msg) {
 
         IMMessage imMessage = new IMMessage();
 
-        imMessage.setJid(singleJid);
+//        imMessage.setJid(toJid);
 
         imMessage.setChatType(IMConstant.ChatType.SINGLE);
         imMessage.setContentType(IMConstant.ContentType.TEXT);
@@ -278,17 +282,21 @@ public class IMMessage {
         imMessage.setMsgTime(msgTime);
         imMessage.setMsgId(String.valueOf(msgTime));
 
-        imMessage.setTo(singleJid);
-        imMessage.setToUserAvatar("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=2594910732,993782407&fm=58");
-        imMessage.setToName("迪丽热巴");
+        // 对方
+        imMessage.setToJid(toJid);
+        imMessage.setToUserAvatar(toAvatar);
+        imMessage.setToName(toName);
 
+        // 自己
         IMUser imUser = IMHelper.getCurrUser();
-        imMessage.setFrom(imUser.getJid());
-        imMessage.setFromUserAvatar("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3771747993,2777558986&fm=58");
-        imMessage.setFromName("薛之谦");
+        imMessage.setFromJid(imUser.getJid());
+        imMessage.setFromUserAvatar(imUser.getAvatar());
+        imMessage.setFromName(imUser.getName());
 
         return imMessage;
     }
+
+    // ========================================== 解析消息 ====================================================
 
     /**
      * 根据Message获得IMMessage
@@ -296,7 +304,7 @@ public class IMMessage {
      * @param messageBody
      * @return
      */
-    public static IMMessage getIMMessageByMessage(String messageBody) {
+    public static IMMessage getIMMessageByMessageBody(String messageBody) {
         try {
             if (BuildConfig.DEBUG) {
                 Log.i("IMMessage", messageBody);

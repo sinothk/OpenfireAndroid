@@ -89,7 +89,9 @@ public class CommonUtils {
      * @param imageView
      */
     public static void setImage(Context mContext, String avatarUrl, ImageView imageView) {
-        Glide.with(mContext).load(avatarUrl).into(imageView);
+        if (!TextUtils.isEmpty(avatarUrl)) {
+            Glide.with(mContext).load(avatarUrl).into(imageView);
+        }
 
 //        String imageUri = "";
 //        if (!TextUtils.isEmpty(sender_photo)) {

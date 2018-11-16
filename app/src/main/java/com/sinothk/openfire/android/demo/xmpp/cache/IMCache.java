@@ -105,62 +105,87 @@ public class IMCache {
         return DBHelper.with(context).saveOrUpdate(msg);
     }
 
-    public static ArrayList<IMMessage> findChatMsg(Context mContext, String chatJid, String currUserJid) {
+    public static ArrayList<IMMessage> findChatMsg(Context mContext, String toJid, String currUserJid) {
         if (mContext == null) {
             return new ArrayList<>();
         }
 
-//        try {
-//            String sql = "SELECT " +
-//
-//                    "jid, currJid, avatar, name, msgTime, chatType, msgType, msgTxt, msgImg, msgLoc, msgVoice, msgVideo, msgStatus" +
-//                    ", msgUnread" +
-//
-//                    " FROM LastMessage" +
-//                    " WHERE " +
-//                    "to = \"" + currUserJid + "\"" +
-//                    " AND " +
-//                    "from = \"" + chatJid + "\"" +
-//                    " ORDER BY msgTime DESC";
-//
-//            List<DbModel> dbModels = DBHelper.with(mContext).db().findDbModelAll(new SqlInfo(sql)); // 自定义sql查询
-//
-//            ArrayList<IMMessage> lastMsgList = new ArrayList<>();
-//
-//            if (dbModels != null && dbModels.size() > 0) {
-//                for (DbModel dbModel : dbModels) {
-//                    IMMessage lastMsg = new IMMessage();
-//
-//                    lastMsg.setJid(dbModel.getString("jid"));
-//                    lastMsg.setCurrJid(dbModel.getString("currJid"));
-//
-//                    lastMsg.setAvatar(dbModel.getString("avatar"));
-//                    lastMsg.setName(dbModel.getString("name"));
-//                    lastMsg.setMsgTime(dbModel.getLong("msgTime"));
-//
-//                    lastMsg.setChatType(dbModel.getString("chatType"));
-//
-//                    lastMsg.setMsgType(dbModel.getString("msgType"));
-//                    lastMsg.setMsgTxt(dbModel.getString("msgTxt"));
-//                    lastMsg.setMsgImg(dbModel.getString("msgImg"));
-//                    lastMsg.setMsgLoc(dbModel.getString("msgLoc"));
-//                    lastMsg.setMsgVoice(dbModel.getString("msgVoice"));
-//                    lastMsg.setMsgVideo(dbModel.getString("msgVideo"));
-//
-//                    lastMsg.setMsgStatus(dbModel.getInt("msgStatus"));
-//
-//                    lastMsg.setMsgUnread(dbModel.getInt("msgUnread"));
-//
-//                    lastMsgList.add(lastMsg);
-//                }
-//                return lastMsgList;
-//            }
-//            return new ArrayList<>();
-//        } catch (DbException e) {
-//            e.printStackTrace();
-//            return new ArrayList<>();
-//        }
+        try {
+            String sql = "SELECT " +
 
-        return new ArrayList<>();
+                    "msgId, " + // id
+
+                    "fromJid, " +
+                    "fromName, " +
+                    "fromUserAvatar, " +
+                    "toJid, " +
+                    "toName, " +
+                    "toUserAvatar, " +
+
+                    "chatType, " + // 消息分类：单聊，群聊，通知等
+                    "fromType, " + // 发送分类：发送，接收等
+                    "msgTime, " + // 消息时间
+
+                    "contentType, " + // 内容类型：文本，图片，文件，位置等。
+
+                    "msgTxt, " +
+                    "msgImg, " +
+                    "msgLoc, " +
+                    "msgVoice, " +
+                    "msgVideo, " +
+
+                    "msgStatus" +
+
+                    " FROM IMMessage" + // 消息状态：发送失败:-2，正在发送:-1，已发送：0，已接收：1，未读:2等
+                    " WHERE " +
+
+                    "toJid = \"" + currUserJid + "\" AND fromJid = \"" + toJid + "\"" +
+
+                    " OR toJid = \"" + toJid + "\" AND fromJid = \"" + currUserJid + "\"" +
+
+                    " ORDER BY msgTime ASC";
+
+            List<DbModel> dbModels = DBHelper.with(mContext).db().findDbModelAll(new SqlInfo(sql)); // 自定义sql查询
+            ArrayList<IMMessage> msgList = new ArrayList<>();
+
+            if (dbModels != null && dbModels.size() > 0) {
+                for (DbModel dbModel : dbModels) {
+
+                    IMMessage msg = new IMMessage();
+                    msg.setMsgId(dbModel.getString("msgId"));
+
+                    msg.setFromJid(dbModel.getString("fromJid"));
+                    msg.setFromName(dbModel.getString("fromName"));
+                    msg.setFromUserAvatar(dbModel.getString("fromUserAvatar"));
+
+                    msg.setToJid(dbModel.getString("toJid"));
+                    msg.setToName(dbModel.getString("toName"));
+                    msg.setToUserAvatar(dbModel.getString("toUserAvatar"));
+
+                    // 消息分类：单聊，群聊，通知等
+                    msg.setChatType(dbModel.getString("chatType"));
+                    msg.setFromType(dbModel.getString("fromType"));
+                    msg.setMsgTime(dbModel.getLong("msgTime"));
+
+                    // 内容类型：文本，图片，文件，位置等。
+                    msg.setContentType(dbModel.getString("contentType"));
+
+                    msg.setMsgTxt(dbModel.getString("msgTxt"));
+                    msg.setMsgImg(dbModel.getString("msgImg"));
+                    msg.setMsgLoc(dbModel.getString("msgLoc"));
+                    msg.setMsgVoice(dbModel.getString("msgVoice"));
+                    msg.setMsgVideo(dbModel.getString("msgVideo"));
+
+                    msg.setMsgStatus(dbModel.getInt("msgStatus"));
+
+                    msgList.add(msg);
+                }
+                return msgList;
+            }
+            return new ArrayList<>();
+        } catch (DbException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }

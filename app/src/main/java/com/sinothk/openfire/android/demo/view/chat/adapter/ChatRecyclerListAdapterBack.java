@@ -41,7 +41,7 @@ public class ChatRecyclerListAdapterBack extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        if (list.get(position).getFrom().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
+        if (list.get(position).getFromJid().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
             switch (list.get(position).getContentType()) {
                 case IMConstant.ContentType.TEXT:
                     return 10;
@@ -56,7 +56,7 @@ public class ChatRecyclerListAdapterBack extends RecyclerView.Adapter<RecyclerVi
 ////                case 5:
 ////                    return 15;
             }
-        } else if (list.get(position).getTo().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
+        } else if (list.get(position).getToJid().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
             switch (list.get(position).getContentType()) {
                 case IMConstant.ContentType.TEXT:
                     return 20;

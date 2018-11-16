@@ -49,7 +49,7 @@ public class ImageHolder extends RecyclerView.ViewHolder {
     }
 
     public void doSomething(final IMMessage bean, String doctor_id, ImageHolder holder, final Context context) {
-        if (bean.getFrom().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
+        if (bean.getFromJid().equals(doctor_id)) {// 发送者id等于本人id,那么显示右边布局
 //            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewRight_imge);// 设置头像
             holder.chatTimeTextviewRight_imge.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutRight_imge.setVisibility(View.VISIBLE);
@@ -67,7 +67,7 @@ public class ImageHolder extends RecyclerView.ViewHolder {
             // 设置图片
 //            CommonUtils.setImage(bean.getImg_path(), holder.chatContentImageViewRight);
 
-        } else if (bean.getTo().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
+        } else if (bean.getToJid().equals(doctor_id)) {// 接受者id等于本人id,那么显示左边布局
 //            CommonUtils.setImage(bean.getSender_photo(), holder.chatImageviewLeft_imge);// 设置头像
             holder.chatTimeTextviewLeft_imge.setText(DateUtil.getFriendlyDate(new Date(bean.getMsgTime())));
             holder.chatLinearlayoutLeft_imge.setVisibility(View.VISIBLE);

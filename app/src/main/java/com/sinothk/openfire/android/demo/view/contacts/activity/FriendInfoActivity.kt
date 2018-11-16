@@ -1,5 +1,6 @@
 package com.sinothk.openfire.android.demo.view.contacts.activity
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -99,9 +100,15 @@ class FriendInfoActivity : TitleBarActivity() {
 
         // 开始聊天
         chatBtn.setOnClickListener {
-            val target: String = userInfo.userName
-            val title: String = StringUtil.getNotNullValue(userInfo.name, target)
-//            ChatActivity.startSingle(this@FriendInfoActivity, target, title)
+            val toJid: String = userInfo.jid
+            val toName: String = userInfo.name
+            val toAvatar: String? = userInfo.avatar
+
+            startActivity(Intent(this@FriendInfoActivity, ChatActivity::class.java)
+                    .putExtra("toJid", toJid)
+                    .putExtra("toName", toName)
+                    .putExtra("toAvatar", toAvatar)
+                    .putExtra("roomChatType", false))
         }
 
         // 删除好友
