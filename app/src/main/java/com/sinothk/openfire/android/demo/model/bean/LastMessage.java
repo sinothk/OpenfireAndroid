@@ -17,8 +17,8 @@ public class LastMessage {
     private String jid; // 对方jid
     private String currJid; // 当前用户jid
 
-    private String avatar; // 显示头像
-    private String name; // 显示名字
+    private String avatar; // 对方显示头像
+    private String name; // 对方显示名字
     private long msgTime;
 
     private String chatType; // 消息分类：单聊，群聊，通知等
@@ -33,7 +33,7 @@ public class LastMessage {
 
     private int msgStatus; // 消息状态：发送失败:-2，正在发送:-1，已发送：0，已接收：1，未读:2等
 
-    private int msgUnread;
+    private int msgUnread; // 未读条数
 
     public String getJid() {
         return jid;

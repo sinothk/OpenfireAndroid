@@ -1,16 +1,19 @@
 package com.sinothk.openfire.android.demo
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import com.sinothk.openfire.android.IMHelper
+import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.util.ActivityUtil
 import com.sinothk.openfire.android.demo.view.ChatFragment
 import com.sinothk.openfire.android.demo.view.ContactsFragment
 import com.sinothk.openfire.android.demo.view.MineFragment
 import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener
+import com.sinothk.openfire.android.demo.xmpp.cache.IMCache
 import com.sinothk.tab.weiXin.WxTabMenuMainAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.title_layout.*
@@ -27,6 +30,8 @@ import java.util.*
  */
 class MainActivity : AppCompatActivity() {
 
+    var currJid: String = "";
+
     // 模拟Home键
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -39,8 +44,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         ActivityUtil.addActivity(this)
+
+        val currUser: IMUser = IMHelper.getCurrUser()
+
+        currJid = currUser.jid
 
         initView()
         initIM()
@@ -82,9 +90,11 @@ class MainActivity : AppCompatActivity() {
         })
 
         // 未读数据提示
-        alphaIndicator!!.getTabView(0).showNumber(144)
-        alphaIndicator!!.getTabView(1).showNumber(36)
-        alphaIndicator!!.getTabView(2).showPoint()
+        refreshMainTab0()
+
+//        alphaIndicator!!.getTabView(0).showNumber(144)
+//        alphaIndicator!!.getTabView(1).showNumber(36)
+//        alphaIndicator!!.getTabView(2).showPoint()
     }
 
     private fun initIM() {
@@ -104,6 +114,7 @@ class MainActivity : AppCompatActivity() {
 
     // 群聊的聊天室列表
     private var multiUserChatList: MutableList<MultiUserChat> = ArrayList()
+
     // 群聊，加入聊天室，并且监听聊天室消息
     private fun initGroupChatManager() {
 //        for (hostedRoomStr in Arrays.asList(Constant.roomNameList)) {
@@ -112,5 +123,12 @@ class MainActivity : AppCompatActivity() {
 //        for (multiUserChat in multiUserChatList) {
 //            multiUserChat.addMessageListener(XMChatMessageListener())
 //        }
+    }
+
+    // 更新Tab0提示数据
+    fun refreshMainTab0() {
+        // 消息未读数量
+        val msgUnreadNum: Int = IMCache.getInstance().findAllMsgUnread(this@MainActivity, currJid)
+        runOnUiThread { alphaIndicator!!.getTabView(0).showNumber(msgUnreadNum) }
     }
 }

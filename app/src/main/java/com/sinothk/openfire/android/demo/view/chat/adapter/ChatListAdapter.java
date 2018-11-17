@@ -18,6 +18,7 @@ import com.sinothk.comm.utils.DateUtil;
 import com.sinothk.openfire.android.bean.IMConstant;
 import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
+import com.sinothk.openfire.android.demo.model.StringValue;
 import com.sinothk.openfire.android.demo.model.bean.LastMessage;
 import com.sinothk.openfire.android.demo.view.base.adapter.ChatBaseAdapter;
 import com.sinothk.widget.tipView.style1.BadgeView;
@@ -61,7 +62,14 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Contac
         });
 
         holder.timeTv.setText(DateUtil.getFriendlyDate(new Date(lastMsg.getMsgTime())));
-        holder.unreadNumTv.setText("" + lastMsg.getMsgUnread());
+
+        int unreadNum = lastMsg.getMsgUnread();
+        if (unreadNum > 0) {
+            holder.unreadNumTv.setText(String.valueOf(unreadNum));
+            holder.unreadNumTv.setVisibility(View.VISIBLE);
+        } else {
+            holder.unreadNumTv.setVisibility(View.INVISIBLE);
+        }
 
         if (lastMsg.getAvatar() != null) {
             Glide.with(mContext).load(lastMsg.getAvatar()).into(holder.avatarIv);

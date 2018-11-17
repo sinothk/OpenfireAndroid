@@ -24,13 +24,13 @@ import com.sinothk.openfire.android.IMHelper;
 import com.sinothk.openfire.android.bean.IMConstant;
 import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
+import com.sinothk.openfire.android.demo.model.bean.LastMessage;
 import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity;
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatRecyclerListAdapter;
 import com.sinothk.openfire.android.demo.xmpp.Watch.Watcher;
 import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener;
 import com.sinothk.openfire.android.demo.xmpp.cache.IMCache;
 
-import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.util.ArrayList;
@@ -101,7 +101,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
     }
 
     private void initView() {
-        setTitleBar("聊天", true, "更多", new OnClickListener() {
+        setTitleBar(!TextUtils.isEmpty(toName) ? toName : "聊天", true, "更多", new OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -259,22 +259,6 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         XMChatMessageListener.removeWatcher(this);// 删除XMPP消息观察者
         super.onDestroy();
     }
-
-    @SuppressLint("HandlerLeak")
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 5:// 下拉加载更多
-//                    PageNumber++;
-//                    loadData(PageNumber);// 从本地读取旧的信息并加载数据源
-                    swipeView.setRefreshing(false);
-                    break;
-            }
-        }
-    };
-
     /*
      * 单条刷新界面
      */
@@ -310,6 +294,11 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         }).start();
     }
 
+    /**
+     * 发出或收到消息监听
+     *
+     * @param message message
+     */
     @Override
     public void update(final org.jivesoftware.smack.packet.Message message) {
 
@@ -320,13 +309,13 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
             return;
         }
 
-        try {
-            if (imMessage.getFromJid().equals(currJid)) {
-                imMessage.setFromType(IMConstant.FromType.SEND);
-            } else {
-                imMessage.setFromType(IMConstant.FromType.RECEIVE);
-            }
+        if (imMessage.getFromJid().equals(currJid)) {
+            imMessage.setFromType(IMConstant.FromType.SEND);
+        } else {
+            imMessage.setFromType(IMConstant.FromType.RECEIVE);
+        }
 
+        try {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -340,30 +329,13 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
             e.printStackTrace();
         }
 
-//        if (IMConstant.ChatType.SINGLE.equals(imMessage.getChatType())) {
-//
-//            if (imMessage.getToJid().equals(currJid)) {
-//                imMessage.setFromType(IMConstant.FromType.RECEIVE);
-//            } else if (imMessage.getFromJid().equals(currJid)) {
-//                imMessage.setFromType(IMConstant.FromType.SEND);
-//            }
-//
-//        } else if (IMConstant.ChatType.ROOM.equals(imMessage.getChatType())) {
-//
-//        }
-//
-//        // 是当前聊天对象或者聊天群才显示这条消息
-//        if (chat != null) {// 单聊
-//            if (message.getFrom() != null && !message.getFrom().toString().contains(chat.getXmppAddressOfChatPartner())) {
-//                return;
-//            }
-//        } else if (muc != null) {// 群聊
-//            if (!message.getFrom().toString().contains(muc.getRoom().toString())) {
-//                return;
-//            }
-//        }
-
-
+        // 保存最后一条数据
+        try {
+            LastMessage lastMsg = LastMessage.createLastMsg(imMessage);
+            IMCache.saveOrUpdateLastMsg(ChatActivity.this, lastMsg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // 长按语音按钮的监听事件
@@ -406,4 +378,19 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         // 下拉加载更多
         handler.sendEmptyMessageDelayed(5, 500);
     }
+
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 5:// 下拉加载更多
+//                    PageNumber++;
+//                    loadData(PageNumber);// 从本地读取旧的信息并加载数据源
+                    swipeView.setRefreshing(false);
+                    break;
+            }
+        }
+    };
 }

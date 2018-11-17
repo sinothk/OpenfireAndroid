@@ -35,4 +35,9 @@ public class IMConstant {
         public static final String SEND = "SEND";
         public static final String RECEIVE = "FROM_FRIEND";
     }
+
+    public static class MsgStatus {
+        public static final int READ = 0;// 已读
+        public static final int UNREAD = 1;// 未读
+    }
 }

@@ -2,6 +2,7 @@ package com.sinothk.openfire.android.demo;
 
 import android.app.Application;
 
+import com.sinothk.comm.utils.LogUtil;
 import com.sinothk.comm.utils.PreferUtil;
 import com.sinothk.comm.utils.ToastUtil;
 import com.sinothk.openfire.android.demo.xmpp.cache.IMCache;
@@ -19,6 +20,7 @@ public class MainApplication extends Application {
 
         PreferUtil.init(this);
         ToastUtil.init(this);
+        LogUtil.init(this,true);
     }
 
 

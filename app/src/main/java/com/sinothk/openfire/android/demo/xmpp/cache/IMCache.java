@@ -2,21 +2,35 @@ package com.sinothk.openfire.android.demo.xmpp.cache;
 
 import android.content.Context;
 
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.SqlInfo;
 import com.lidroid.xutils.db.table.DbModel;
 import com.lidroid.xutils.exception.DbException;
+import com.sinothk.comm.utils.LogUtil;
 import com.sinothk.openfire.android.bean.IMMessage;
+import com.sinothk.openfire.android.demo.BuildConfig;
 import com.sinothk.openfire.android.demo.model.bean.LastMessage;
 import com.sinothk.storage.dbhelper.DBHelper;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class IMCache {
+
+    private volatile static IMCache singleton;
+
+    public static IMCache getInstance() {
+        if (singleton == null) {
+            synchronized (IMCache.class) {
+                if (singleton == null) {
+                    singleton = new IMCache();
+                }
+            }
+        }
+        return singleton;
+    }
 
     /**
      * 保存最新消息
@@ -45,13 +59,30 @@ public class IMCache {
         }
 
         try {
+
             String sql = "SELECT " +
+                    "jid, " +
+                    "currJid, " +
+                    "avatar, " +
+                    "name, " +
+                    "msgTime, " +
+                    "chatType, " +
+                    "msgType, " +
+                    "msgTxt, " +
+                    "msgImg, " +
+                    "msgLoc, " +
+                    "msgVoice, " +
+                    "msgVideo, " +
+                    "msgStatus, " + // 消息状态：发送失败:-2，正在发送:-1，已读：0，未读：1，已发送:2，已接收:3等
 
-                    "jid, currJid, avatar, name, msgTime, chatType, msgType, msgTxt, msgImg, msgLoc, msgVoice, msgVideo, msgStatus" +
-                    ", msgUnread" +
+                    "(SELECT COUNT(*) FROM IMMessage" +
 
-                    " FROM LastMessage" +
-                    " WHERE currJid=\"" + currUserJid + "\" ORDER BY msgTime DESC";
+                    " WHERE toJid = \"" + currUserJid + "\" AND fromJid = lm.jid AND msgStatus = 1) unreadNum" +
+
+                    " FROM LastMessage lm" +
+
+                    " WHERE currJid=\"" + currUserJid + "\" "
+                    + " ORDER BY msgTime DESC";
 
             List<DbModel> dbModels = DBHelper.with(mContext).db().findDbModelAll(new SqlInfo(sql)); // 自定义sql查询
 
@@ -78,10 +109,17 @@ public class IMCache {
 
                     lastMsg.setMsgStatus(dbModel.getInt("msgStatus"));
 
-                    lastMsg.setMsgUnread(dbModel.getInt("msgUnread"));
+                    lastMsg.setMsgUnread(dbModel.getInt("unreadNum"));
+
+                    if (BuildConfig.DEBUG) {
+                        LogUtil.e(IMCache.class, "sql = " + sql);
+
+                        LogUtil.e(IMCache.class, "unreadNum = " + lastMsg.getMsgUnread());
+                    }
 
                     lastMsgList.add(lastMsg);
                 }
+
                 return lastMsgList;
             }
             return new ArrayList<>();
@@ -105,6 +143,14 @@ public class IMCache {
         return DBHelper.with(context).saveOrUpdate(msg);
     }
 
+    /**
+     * 获得聊天记录：
+     *
+     * @param mContext
+     * @param toJid
+     * @param currUserJid
+     * @return
+     */
     public static ArrayList<IMMessage> findChatMsg(Context mContext, String toJid, String currUserJid) {
         if (mContext == null) {
             return new ArrayList<>();
@@ -134,9 +180,9 @@ public class IMCache {
                     "msgVoice, " +
                     "msgVideo, " +
 
-                    "msgStatus" +
+                    "msgStatus" +   // 消息状态：发送失败:-2，正在发送:-1，已读：0，未读：1，已发送:2，已接收:3等
 
-                    " FROM IMMessage" + // 消息状态：发送失败:-2，正在发送:-1，已发送：0，已接收：1，未读:2等
+                    " FROM IMMessage" +
                     " WHERE " +
 
                     "toJid = \"" + currUserJid + "\" AND fromJid = \"" + toJid + "\"" +
@@ -187,5 +233,25 @@ public class IMCache {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    public int findAllMsgUnread(Context mContext, String currJid) {
+        try {
+            String sql = "SELECT COUNT(*) allUnread FROM IMMessage WHERE toJid = \"" + currJid + "\" AND msgStatus = 1";
+            List<DbModel> dbModels = DBHelper.with(mContext).db().findDbModelAll(new SqlInfo(sql));
+            if (dbModels != null && dbModels.size() > 0) {
+                DbModel dbModel = dbModels.get(0);
+                int allUnread = dbModel.getInt("allUnread");
+
+                if (BuildConfig.DEBUG) {
+                    LogUtil.e(IMCache.class, "sql = " + sql);
+                    LogUtil.e(IMCache.class, "allUnread = " + allUnread);
+                }
+                return allUnread;
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

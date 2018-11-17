@@ -41,7 +41,7 @@ public class IMMessage {
     private String msgVoice;
     private String msgVideo;
 
-    private int msgStatus; // 消息状态：发送失败:-2，正在发送:-1，已发送：0，已接收：1，未读:2等
+    private int msgStatus; // 消息状态：发送失败:-2，正在发送:-1，已读：0，未读：1，已发送:2，已接收:3等
 
     public IMMessage() {
     }
