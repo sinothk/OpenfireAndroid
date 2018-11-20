@@ -22,6 +22,7 @@ import com.sinothk.openfire.android.demo.view.MineFragment
 import com.sinothk.openfire.android.demo.view.comm.LoginActivity
 import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener
 import com.sinothk.openfire.android.inters.IMCallback
+import com.sinothk.openfire.android.util.IMUtil
 import com.sinothk.tab.weiXin.WxTabMenuMainAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.title_layout.*
@@ -38,7 +39,7 @@ import java.util.*
  */
 class MainActivity : AppCompatActivity() {
 
-    var currUser: IMUser? = null
+    private var currUser: IMUser? = null
 
     // 模拟Home键
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -63,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         checkIM()
     }
-
 
     private fun initView() {
         val fragments = ArrayList<Fragment>()
@@ -102,6 +102,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkIM() {
+        if (!IMUtil.checkNetwork(this)) {
+            return
+        }
+
         if (IMHelper.isAuthenticated()) {
             isOnConnected()
         } else {
@@ -161,9 +165,8 @@ class MainActivity : AppCompatActivity() {
 
     // 更新Tab0提示数据
     fun refreshMainTab0() {
-        if (currUser == null || TextUtils.isEmpty(currUser?.jid)) {
-            return
-        }
+
+        if (currUser == null || TextUtils.isEmpty(currUser?.jid)) return
 
         // 消息未读数量
         val msgUnreadNum: Int = IMCache.getInstance().findAllMsgUnread(this@MainActivity, currUser?.jid)

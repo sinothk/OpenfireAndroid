@@ -39,5 +39,5 @@ dependencies {
     api 'com.github.sinothk:DBHelper:1.2.1108'
     implementation 'com.github.sinothk:CommUnit:3.2.1024'
     // json compile 'com.alibaba:fastjson:1.2.51'
-    api 'com.alibaba:fastjson:1.2.51'
+    implementation 'com.alibaba:fastjson:1.2.51'
 }
