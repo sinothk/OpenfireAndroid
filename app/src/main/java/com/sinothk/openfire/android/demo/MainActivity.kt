@@ -7,6 +7,9 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.KeyEvent
+import android.view.View
+import com.jiangyy.easydialog.CommonDialog
+import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.openfire.android.IMCache
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
@@ -16,6 +19,7 @@ import com.sinothk.openfire.android.util.ActivityUtil
 import com.sinothk.openfire.android.demo.view.ChatFragment
 import com.sinothk.openfire.android.demo.view.ContactsFragment
 import com.sinothk.openfire.android.demo.view.MineFragment
+import com.sinothk.openfire.android.demo.view.comm.LoginActivity
 import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener
 import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.tab.weiXin.WxTabMenuMainAdapter
@@ -106,10 +110,23 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onEnd(result: IMResult) {
-                    if (result.code == IMCode.SUCCESS) {
+                    if (result.code != IMCode.SUCCESS) {
                         isOnConnected()
                     } else {
-                        // 重登
+                        CommonDialog.Builder(this@MainActivity)
+                                .setTitle("提示")
+                                .setMessage("登录超时，请重新登录?")
+                                .setPositiveButton("重新登录") {
+
+                                    IMCache.setAutoLogin(false)
+
+                                    ActivityUtil.finishAllActivity()
+                                    IntentUtil.openActivity(this@MainActivity, LoginActivity::class.java).start()
+
+                                }.setNegativeButton("退出应用") {
+                                    IMCache.setAutoLogin(false)
+                                    ActivityUtil.finishAllActivity()
+                                }.show()
                     }
                 }
             })
