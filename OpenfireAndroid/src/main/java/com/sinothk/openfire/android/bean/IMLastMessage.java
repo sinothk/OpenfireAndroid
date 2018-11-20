@@ -4,7 +4,7 @@ import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Table;
 import com.sinothk.openfire.android.IMHelper;
 
-@Table(name = "LastMessage")
+@Table(name = "IMLastMessage")
 public class IMLastMessage {
 
     @Id

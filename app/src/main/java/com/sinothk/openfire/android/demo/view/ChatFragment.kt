@@ -27,6 +27,12 @@ class ChatFragment : Fragment(), Watcher {
     var adapter: ChatListAdapter? = null
     private var rootView: View? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        currUserJid = IMCache.getUserJid()//IMHelper.getCurrUser().jid
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.chat_list_fragment, container, false)
@@ -52,21 +58,24 @@ class ChatFragment : Fragment(), Watcher {
             val toName: String = lastMessage.name
             val toAvatar: String? = lastMessage.avatar
 
+            // 更新单消息未读！
+            Thread { IMCache.getInstance().clearUnread(activity, currUserJid, toJid) }.start()
+
+            // 进入聊天
             startActivity(Intent(activity, ChatActivity::class.java)
                     .putExtra("toJid", toJid)
                     .putExtra("toName", toName)
                     .putExtra("toAvatar", toAvatar)
                     .putExtra("roomChatType", false))
         }
+    }
 
-        initData()
+    override fun onResume() {
+        super.onResume()
         // 加载数据
         loadingData()
     }
 
-    private fun initData() {
-        currUserJid = IMCache.getUserJid()//IMHelper.getCurrUser().jid
-    }
 
     private fun loadingData() {
         val lastMsg: ArrayList<IMLastMessage> = IMCache.findMyLastMsg(context, currUserJid)

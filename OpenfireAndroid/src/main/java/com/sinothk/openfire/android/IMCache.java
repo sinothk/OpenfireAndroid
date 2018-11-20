@@ -81,7 +81,7 @@ public class IMCache {
 
                     " WHERE toJid = \"" + currUserJid + "\" AND fromJid = lm.jid AND msgStatus = 1) unreadNum" +
 
-                    " FROM LastMessage lm" +
+                    " FROM IMLastMessage lm" +
 
                     " WHERE currJid=\"" + currUserJid + "\" "
                     + " ORDER BY msgTime DESC";
@@ -254,6 +254,19 @@ public class IMCache {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public void clearUnread(Context mContext, String currJid, String toJid) {
+        if (mContext == null || TextUtils.isEmpty(currJid) || TextUtils.isEmpty(toJid)) {
+            return;
+        }
+
+        try {
+            String sql = "UPDATE IMMessage SET msgStatus= 0 WHERE toJid = \"" + currJid + "\" AND fromJid = \"" + toJid + "\"";
+            DBHelper.with(mContext).db().execNonQuery(sql);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     // ============================== 偏好设置 =========================
