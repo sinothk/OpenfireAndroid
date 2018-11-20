@@ -284,12 +284,20 @@ public class IMCache {
         PreferUtil.set(IMConstant.Login.IS_AUTO_LOGIN, String.valueOf(isAutoLogin));
     }
 
+    public static String getUserJid() {
+        return (String) PreferUtil.get(IMConstant.Login.USER_JID, "");
+    }
+
     public static String getUserName() {
         return (String) PreferUtil.get(IMConstant.Login.USER_NAME, "");
     }
 
     public static String getUserPwd() {
         return (String) PreferUtil.get(IMConstant.Login.USER_PWD, "");
+    }
+
+    public static void setUserJid(String userJid) {// 登录设置
+        PreferUtil.set(IMConstant.Login.USER_JID, userJid);
     }
 
     public static void setUserName(String userName) {// 登录设置

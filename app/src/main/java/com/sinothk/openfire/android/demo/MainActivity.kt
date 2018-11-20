@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onEnd(result: IMResult) {
-                    if (result.code != IMCode.SUCCESS) {
+                    if (result.code == IMCode.SUCCESS) {
                         isOnConnected()
                     } else {
                         CommonDialog.Builder(this@MainActivity)

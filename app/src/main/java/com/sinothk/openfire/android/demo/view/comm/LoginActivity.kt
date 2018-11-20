@@ -75,6 +75,7 @@ class LoginActivity : AppCompatActivity() {
                     val imUser: IMUser = result.data as IMUser
                     IMCache.setUserInfo(imUser)
 
+                    IMCache.setUserJid(imUser.jid)
                     IMCache.setUserName(userName)
                     IMCache.setUserPwd(userPwd)
 

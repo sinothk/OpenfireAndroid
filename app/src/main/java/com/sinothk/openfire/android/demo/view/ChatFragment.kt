@@ -7,17 +7,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.sinothk.openfire.android.IMCache
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMConstant
+import com.sinothk.openfire.android.bean.IMLastMessage
 import com.sinothk.openfire.android.bean.IMMessage
 import com.sinothk.openfire.android.demo.MainActivity
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.model.bean.LastMessage
 import com.sinothk.openfire.android.demo.view.chat.activity.ChatActivity
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatListAdapter
 import com.sinothk.openfire.android.demo.xmpp.Watch.Watcher
 import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener
-import com.sinothk.openfire.android.demo.xmpp.cache.IMCache
 import kotlinx.android.synthetic.main.chat_list_fragment.*
 import org.jivesoftware.smack.packet.Message
 import java.lang.Exception
@@ -46,7 +46,7 @@ class ChatFragment : Fragment(), Watcher {
         recyclerView.adapter = adapter
 
         adapter!!.setOnItemClickListener { _: Int, any: Any ->
-            val lastMessage: LastMessage = any as LastMessage
+            val lastMessage: IMLastMessage = any as IMLastMessage
 
             val toJid: String = lastMessage.jid
             val toName: String = lastMessage.name
@@ -65,11 +65,11 @@ class ChatFragment : Fragment(), Watcher {
     }
 
     private fun initData() {
-        currUserJid = IMHelper.getCurrUser().jid
+        currUserJid = IMCache.getUserJid()//IMHelper.getCurrUser().jid
     }
 
     private fun loadingData() {
-        val lastMsg: ArrayList<LastMessage> = IMCache.findMyLastMsg(context, currUserJid)
+        val lastMsg: ArrayList<IMLastMessage> = IMCache.findMyLastMsg(context, currUserJid)
         adapter!!.setData(lastMsg)
     }
 
@@ -111,7 +111,7 @@ class ChatFragment : Fragment(), Watcher {
 
         // 保存最后一条数据
         try {
-            val lastMsg: LastMessage? = LastMessage.createLastMsg(imMessage)
+            val lastMsg: IMLastMessage? = IMLastMessage.createLastMsg(imMessage)
             IMCache.saveOrUpdateLastMsg(context, lastMsg)
         } catch (e: Exception) {
             e.printStackTrace()

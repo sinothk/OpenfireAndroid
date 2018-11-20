@@ -20,16 +20,18 @@ import android.widget.TextView;
 import com.huang.utils.CommonUtils;
 import com.huang.utils.voice.MediaPlayManager;
 import com.huang.utils.voice.VoiceRecorderButton;
+import com.sinothk.comm.utils.IntentUtil;
+import com.sinothk.openfire.android.IMCache;
 import com.sinothk.openfire.android.IMHelper;
 import com.sinothk.openfire.android.bean.IMConstant;
+import com.sinothk.openfire.android.bean.IMLastMessage;
 import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
-import com.sinothk.openfire.android.demo.model.bean.LastMessage;
 import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity;
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatRecyclerListAdapter;
+import com.sinothk.openfire.android.demo.view.contacts.activity.FriendInfoActivity;
 import com.sinothk.openfire.android.demo.xmpp.Watch.Watcher;
 import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener;
-import com.sinothk.openfire.android.demo.xmpp.cache.IMCache;
 
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
@@ -104,7 +106,10 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         setTitleBar(!TextUtils.isEmpty(toName) ? toName : "聊天", true, "更多", new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                IntentUtil.openActivity(ChatActivity.this, FriendInfoActivity.class)
+                        .putStringExtra("jid", toJid)
+                        .putStringExtra("name", toName)
+                        .start();
             }
         });
 
@@ -259,6 +264,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         XMChatMessageListener.removeWatcher(this);// 删除XMPP消息观察者
         super.onDestroy();
     }
+
     /*
      * 单条刷新界面
      */
@@ -331,7 +337,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
 
         // 保存最后一条数据
         try {
-            LastMessage lastMsg = LastMessage.createLastMsg(imMessage);
+            IMLastMessage lastMsg = IMLastMessage.createLastMsg(imMessage);
             IMCache.saveOrUpdateLastMsg(ChatActivity.this, lastMsg);
         } catch (Exception e) {
             e.printStackTrace();

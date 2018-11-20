@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sinothk.comm.utils.DateUtil;
+import com.sinothk.openfire.android.bean.IMLastMessage;
 import com.sinothk.openfire.android.demo.R;
-import com.sinothk.openfire.android.demo.model.bean.LastMessage;
 import com.sinothk.widget.tipView.style1.BadgeView;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ContactsViewHolder> {
     private Context mContext;
 
-    private List<LastMessage> dataList = new ArrayList<>();
+    private List<IMLastMessage> dataList = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
 
     public ChatListAdapter(Context context) {
@@ -40,7 +40,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Contac
 
     @Override
     public void onBindViewHolder(ContactsViewHolder holder, final int position) {
-        final LastMessage lastMsg = dataList.get(position);
+        final IMLastMessage lastMsg = dataList.get(position);
 
         holder.nameTv.setText(lastMsg.getName());
         holder.contentTv.setText(lastMsg.getMsgTxt());
@@ -79,9 +79,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Contac
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void setData(ArrayList<LastMessage> data) {
+    public void setData(ArrayList<IMLastMessage> data) {
         dataList.clear();
-        dataList.addAll(data == null ? new ArrayList<LastMessage>() : data);
+        dataList.addAll(data == null ? new ArrayList<IMLastMessage>() : data);
         notifyDataSetChanged();
     }
 
