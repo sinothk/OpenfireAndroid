@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android;
+package com.sinothk.openfire.android.xmpp.back;
 
 import android.app.Activity;
 import android.text.TextUtils;

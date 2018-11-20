@@ -11,6 +11,7 @@ import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.StringUtil
 import com.sinothk.comm.utils.ToastUtil
+import com.sinothk.openfire.android.IMCache
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
@@ -160,6 +161,9 @@ class MineFragment : Fragment(), View.OnClickListener {
                         loadingDialog.dismiss()
 
                         if (result.code == IMCode.SUCCESS) {
+
+                            IMCache.setAutoLogin(false)
+
                             ActivityUtil.finishAllActivity()
                             IntentUtil.openActivity(activity, LoginActivity::class.java).start()
                         } else {

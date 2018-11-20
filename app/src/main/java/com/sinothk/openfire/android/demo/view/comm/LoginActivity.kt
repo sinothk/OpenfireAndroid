@@ -7,15 +7,15 @@ import android.view.View
 import android.widget.Toast
 import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.comm.utils.IntentUtil
-import com.sinothk.comm.utils.PreferUtil
 import com.sinothk.comm.utils.StringUtil
 import com.sinothk.comm.utils.ViewUtil
+import com.sinothk.openfire.android.IMCache
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
+import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.MainActivity
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.model.StringValue
 import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.openfire.android.util.ActivityUtil
 import kotlinx.android.synthetic.main.activity_login.*
@@ -32,11 +32,10 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
         ActivityUtil.addActivity(this)
 
-        val nameStr: String = PreferUtil.get("userName", "") as String
-        val pwdStr: String = PreferUtil.get("userPwd", "") as String
+        val nameStr: String = IMCache.getUserName()
+        val pwdStr: String = IMCache.getUserPwd()
 
         userNameEt.setText(StringUtil.getNotNullValue(nameStr))
         userPwdEt.setText(StringUtil.getNotNullValue(pwdStr))
@@ -72,8 +71,14 @@ class LoginActivity : AppCompatActivity() {
                 loadingDialog.dismiss()
 
                 if (result.code == IMCode.SUCCESS) {
-                    PreferUtil.set("userName", userName)
-                    PreferUtil.set("userPwd", userPwd)
+
+                    val imUser: IMUser = result.data as IMUser
+                    IMCache.setUserInfo(imUser)
+
+                    IMCache.setUserName(userName)
+                    IMCache.setUserPwd(userPwd)
+
+                    IMCache.setAutoLogin(true)
 
                     IntentUtil.openActivity(this@LoginActivity, MainActivity::class.java).finish(true).start()
                 } else {
@@ -96,14 +101,13 @@ class LoginActivity : AppCompatActivity() {
         super.onResume()
 
         if (!IMHelper.isConfig()) {
-            val serverName = PreferUtil.get(StringValue.SERVER_NAME, "") as String
-            val serverIp = PreferUtil.get(StringValue.SERVER_IP, "") as String
-            val serverPort = PreferUtil.get(StringValue.SERVER_PORT, "") as String
 
-            if (TextUtils.isEmpty(serverName) || TextUtils.isEmpty(serverIp) || TextUtils.isEmpty(serverPort)) {
+            val serverConfig: Array<String> = IMCache.getServerConfig()
+
+            if (TextUtils.isEmpty(serverConfig[0]) || TextUtils.isEmpty(serverConfig[1]) || TextUtils.isEmpty(serverConfig[2])) {
                 IntentUtil.openActivity(this, ConfigServerActivity::class.java).finish(true).start()
             } else {
-                IMHelper.init(serverName, serverIp, Integer.parseInt(serverPort))
+                IMHelper.init(serverConfig[0], serverConfig[1], Integer.parseInt(serverConfig[2]))
             }
         }
     }

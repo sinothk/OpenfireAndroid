@@ -1,6 +1,13 @@
 package com.sinothk.openfire.android.bean;
 
 public class IMConstant {
+
+    public static class Config {
+        public static final String SERVER_NAME = "SERVER_NAME";
+        public static final String SERVER_PORT = "SERVER_PORT";
+        public static final String SERVER_IP = "SERVER_IP";
+    }
+
     public static class Chat {
         public static final String CHAT_TARGET = "chatTarget";
         public static final String CHAT_TITLE = "chatTitle";
@@ -39,5 +46,17 @@ public class IMConstant {
     public static class MsgStatus {
         public static final int READ = 0;// 已读
         public static final int UNREAD = 1;// 未读
+    }
+
+    public static class Login {
+        public static final String IS_AUTO_LOGIN = "IS_AUTO_LOGIN";
+
+        public static final String USER_JID = "USER_JID";
+        public static final String USER_NAME = "USER_NAME";
+        public static final String USER_PWD = "USER_PWD";
+
+        public static final String USER_EMAIL = "USER_EMAIL";
+
+        public static final String USER_JSON = "USER_JSON";
     }
 }

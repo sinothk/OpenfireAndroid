@@ -6,21 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sinothk.comm.utils.DateUtil;
-import com.sinothk.openfire.android.bean.IMConstant;
-import com.sinothk.openfire.android.bean.IMMessage;
 import com.sinothk.openfire.android.demo.R;
-import com.sinothk.openfire.android.demo.model.StringValue;
 import com.sinothk.openfire.android.demo.model.bean.LastMessage;
-import com.sinothk.openfire.android.demo.view.base.adapter.ChatBaseAdapter;
 import com.sinothk.widget.tipView.style1.BadgeView;
 
 import java.util.ArrayList;

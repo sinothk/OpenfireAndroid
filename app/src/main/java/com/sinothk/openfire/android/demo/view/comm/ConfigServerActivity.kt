@@ -3,11 +3,10 @@ package com.sinothk.openfire.android.demo.view.comm
 import android.os.Bundle
 import android.text.TextUtils
 import com.sinothk.comm.utils.IntentUtil
-import com.sinothk.comm.utils.PreferUtil
 import com.sinothk.comm.utils.ToastUtil
+import com.sinothk.openfire.android.IMCache
 import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.model.StringValue
 import com.sinothk.openfire.android.util.ActivityUtil
 import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
 import kotlinx.android.synthetic.main.activity_config_server_ip.*
@@ -26,13 +25,12 @@ class ConfigServerActivity : TitleBarActivity() {
         okBtn.setOnClickListener { doUpdatePwd() }
 
         try {
-            val serverName = PreferUtil.get(StringValue.SERVER_NAME, "") as String
-            val serverIp = PreferUtil.get(StringValue.SERVER_IP, "") as String
-            val serverPort = PreferUtil.get(StringValue.SERVER_PORT, "") as String
+            val serverConfig: Array<String> = IMCache.getServerConfig()
 
+            val serverIp = serverConfig[1]
 
-            serverNameEt.setText(serverName)
-            serverPortEt.setText(serverPort)
+            serverNameEt.setText(serverConfig[0])
+            serverPortEt.setText(serverConfig[2])
 
             if (!TextUtils.isEmpty(serverIp)) {
                 val strArr = serverIp.split(".")
@@ -64,15 +62,12 @@ class ConfigServerActivity : TitleBarActivity() {
             ToastUtil.show("输入不正确")
             return
         }
-
-        PreferUtil.set(StringValue.SERVER_NAME, serverName)
-        PreferUtil.set(StringValue.SERVER_PORT, serverPort)
-
         val serverIp = "$ip0.$ip1.$ip2.$ip3"
-        PreferUtil.set(StringValue.SERVER_IP, serverIp)
 
         // 立即更新,为了进入登录界面可以马上登录
         IMHelper.init(serverName, serverIp, Integer.parseInt(serverPort))
+
+        IMCache.setServerConfig(serverName, serverIp, serverPort)
 
         ActivityUtil.finishAllActivity()
         IntentUtil.openActivity(this@ConfigServerActivity, LoginActivity::class.java).start()

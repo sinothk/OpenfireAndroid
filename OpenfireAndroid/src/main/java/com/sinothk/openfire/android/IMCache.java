@@ -1,22 +1,24 @@
-package com.sinothk.openfire.android.demo.xmpp.cache;
+package com.sinothk.openfire.android;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
+import com.alibaba.fastjson.JSON;
 import com.lidroid.xutils.db.sqlite.SqlInfo;
 import com.lidroid.xutils.db.table.DbModel;
 import com.lidroid.xutils.exception.DbException;
-import com.sinothk.comm.utils.LogUtil;
+import com.sinothk.comm.utils.PreferUtil;
+import com.sinothk.openfire.android.bean.IMConstant;
+import com.sinothk.openfire.android.bean.IMLastMessage;
 import com.sinothk.openfire.android.bean.IMMessage;
-import com.sinothk.openfire.android.demo.BuildConfig;
-import com.sinothk.openfire.android.demo.model.bean.LastMessage;
+import com.sinothk.openfire.android.bean.IMUser;
 import com.sinothk.storage.dbhelper.DBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated
+
 public class IMCache {
 
     private volatile static IMCache singleton;
@@ -39,7 +41,7 @@ public class IMCache {
      * @param lastMsg
      * @return
      */
-    public static boolean saveOrUpdateLastMsg(Context mContext, LastMessage lastMsg) {
+    public static boolean saveOrUpdateLastMsg(Context mContext, IMLastMessage lastMsg) {
         if (mContext == null || lastMsg == null) {
             return false;
         }
@@ -53,7 +55,7 @@ public class IMCache {
      * @param mContext
      * @return
      */
-    public static ArrayList<LastMessage> findMyLastMsg(Context mContext, String currUserJid) {
+    public static ArrayList<IMLastMessage> findMyLastMsg(Context mContext, String currUserJid) {
         if (mContext == null) {
             return new ArrayList<>();
         }
@@ -86,10 +88,10 @@ public class IMCache {
 
             List<DbModel> dbModels = DBHelper.with(mContext).db().findDbModelAll(new SqlInfo(sql)); // 自定义sql查询
 
-            ArrayList<LastMessage> lastMsgList = new ArrayList<>();
+            ArrayList<IMLastMessage> lastMsgList = new ArrayList<>();
             if (dbModels != null && dbModels.size() > 0) {
                 for (DbModel dbModel : dbModels) {
-                    LastMessage lastMsg = new LastMessage();
+                    IMLastMessage lastMsg = new IMLastMessage();
 
                     lastMsg.setJid(dbModel.getString("jid"));
                     lastMsg.setCurrJid(dbModel.getString("currJid"));
@@ -112,9 +114,8 @@ public class IMCache {
                     lastMsg.setMsgUnread(dbModel.getInt("unreadNum"));
 
                     if (BuildConfig.DEBUG) {
-                        LogUtil.e(IMCache.class, "sql = " + sql);
-
-                        LogUtil.e(IMCache.class, "unreadNum = " + lastMsg.getMsgUnread());
+                        Log.e(IMCache.class.getSimpleName(), "sql = " + sql);
+                        Log.e(IMCache.class.getSimpleName(), "unreadNum = " + lastMsg.getMsgUnread());
                     }
 
                     lastMsgList.add(lastMsg);
@@ -244,8 +245,8 @@ public class IMCache {
                 int allUnread = dbModel.getInt("allUnread");
 
                 if (BuildConfig.DEBUG) {
-                    LogUtil.e(IMCache.class, "sql = " + sql);
-                    LogUtil.e(IMCache.class, "allUnread = " + allUnread);
+                    Log.e(IMCache.class.getSimpleName(), "sql = " + sql);
+                    Log.e(IMCache.class.getSimpleName(), "allUnread = " + allUnread);
                 }
                 return allUnread;
             }
@@ -253,5 +254,58 @@ public class IMCache {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    // ============================== 偏好设置 =========================
+    public static void setServerConfig(String serverName, String serverIp, String serverPort) {
+        PreferUtil.set(IMConstant.Config.SERVER_NAME, serverName);
+        PreferUtil.set(IMConstant.Config.SERVER_IP, serverIp);
+        PreferUtil.set(IMConstant.Config.SERVER_PORT, serverPort);
+    }
+
+    public static String[] getServerConfig() {
+        String serverName = (String) PreferUtil.get(IMConstant.Config.SERVER_NAME, "");
+        String serverIp = (String) PreferUtil.get(IMConstant.Config.SERVER_IP, "");
+        String serverPort = (String) PreferUtil.get(IMConstant.Config.SERVER_PORT, "");
+
+        String[] config = new String[3];
+        config[0] = TextUtils.isEmpty(serverName) ? null : serverName;
+        config[1] = TextUtils.isEmpty(serverIp) ? null : serverIp;
+        config[2] = TextUtils.isEmpty(serverPort) ? null : serverPort;
+        return config;
+    }
+
+    public static boolean isAutoLogin() {
+        String isAutoLoginFlag = (String) PreferUtil.get(IMConstant.Login.IS_AUTO_LOGIN, "false");
+        return isAutoLoginFlag != null && !isAutoLoginFlag.equals("false");
+    }
+
+    public static void setAutoLogin(boolean isAutoLogin) {
+        PreferUtil.set(IMConstant.Login.IS_AUTO_LOGIN, String.valueOf(isAutoLogin));
+    }
+
+    public static String getUserName() {
+        return (String) PreferUtil.get(IMConstant.Login.USER_NAME, "");
+    }
+
+    public static String getUserPwd() {
+        return (String) PreferUtil.get(IMConstant.Login.USER_PWD, "");
+    }
+
+    public static void setUserName(String userName) {// 登录设置
+        PreferUtil.set(IMConstant.Login.USER_NAME, userName);
+    }
+
+    public static void setUserPwd(String userPwd) {// 登录设置
+        PreferUtil.set(IMConstant.Login.USER_PWD, userPwd);
+    }
+
+    public static void setUserInfo(IMUser imUser) {
+        PreferUtil.set(IMConstant.Login.USER_JSON, JSON.toJSONString(imUser));
+    }
+
+    public static IMUser getUserInfo() {
+        String jsonStr = (String) PreferUtil.get(IMConstant.Login.USER_JSON, "");
+        return JSON.parseObject(jsonStr, IMUser.class);
     }
 }

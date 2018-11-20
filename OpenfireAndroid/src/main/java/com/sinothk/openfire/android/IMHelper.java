@@ -144,6 +144,9 @@ public class IMHelper {
      * @return
      */
     public static IMResult login(String userName, String pwd) {
+        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(pwd)) {
+            return new IMResult(IMCode.ERROR, "登录失败", "参数有误");
+        }
 
         if (isAuthenticated()) {
             disconnect();
@@ -156,7 +159,8 @@ public class IMHelper {
         String result = XmppConnection.getInstance().login(userName, pwd);
 
         if (TextUtils.isEmpty(result)) {
-            return new IMResult(IMCode.SUCCESS, "登录成功");
+            IMUser imUser = getCurrUser();
+            return new IMResult(IMCode.SUCCESS, imUser);
         } else {
             disconnect();
 
@@ -167,6 +171,7 @@ public class IMHelper {
             }
         }
     }
+
 
     /**
      * 用户登录
@@ -198,6 +203,19 @@ public class IMHelper {
                 });
             }
         }).start();
+    }
+
+    public static void autoLogin(Activity currActivity, final IMCallback callback) {
+        String userName = IMCache.getUserName();
+        String userPwd = IMCache.getUserPwd();
+
+        final IMResult result = login(userName, userPwd);
+        currActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                callback.onEnd(result);
+            }
+        });
     }
 
     /**
@@ -380,8 +398,7 @@ public class IMHelper {
 
     public static IMUser getCurrUser() {
         try {
-            IMUser imUser = XmppConnection.getInstance().getCurrUserInfo();
-            return imUser;
+            return XmppConnection.getInstance().getCurrUserInfo();
         } catch (Exception e) {
             e.printStackTrace();
         }

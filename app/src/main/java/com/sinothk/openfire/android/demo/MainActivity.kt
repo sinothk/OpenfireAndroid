@@ -5,15 +5,19 @@ import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import android.view.KeyEvent
+import com.sinothk.openfire.android.IMCache
 import com.sinothk.openfire.android.IMHelper
+import com.sinothk.openfire.android.bean.IMCode
+import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.util.ActivityUtil
 import com.sinothk.openfire.android.demo.view.ChatFragment
 import com.sinothk.openfire.android.demo.view.ContactsFragment
 import com.sinothk.openfire.android.demo.view.MineFragment
 import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener
-import com.sinothk.openfire.android.demo.xmpp.cache.IMCache
+import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.tab.weiXin.WxTabMenuMainAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.title_layout.*
@@ -30,7 +34,7 @@ import java.util.*
  */
 class MainActivity : AppCompatActivity() {
 
-    var currJid: String = "";
+    var currUser: IMUser? = null
 
     // 模拟Home键
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -46,13 +50,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         ActivityUtil.addActivity(this)
 
-        val currUser: IMUser = IMHelper.getCurrUser()
-
-        currJid = currUser.jid
+        currUser = IMCache.getUserInfo()
 
         initView()
-        initIM()
     }
+
+    override fun onResume() {
+        super.onResume()
+        checkIM()
+    }
+
 
     private fun initView() {
         val fragments = ArrayList<Fragment>()
@@ -88,28 +95,38 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
-        // 未读数据提示
-        refreshMainTab0()
-
-//        alphaIndicator!!.getTabView(0).showNumber(144)
-//        alphaIndicator!!.getTabView(1).showNumber(36)
-//        alphaIndicator!!.getTabView(2).showPoint()
     }
 
-    private fun initIM() {
+    private fun checkIM() {
+        if (IMHelper.isAuthenticated()) {
+            isOnConnected()
+        } else {
+            IMHelper.autoLogin(this@MainActivity, object : IMCallback {
+                override fun onStart() {
+                }
+
+                override fun onEnd(result: IMResult) {
+                    if (result.code == IMCode.SUCCESS) {
+                        isOnConnected()
+                    } else {
+                        // 重登
+                    }
+                }
+            })
+        }
+    }
+
+    private fun isOnConnected() {
         // 聊天监听类：单聊
-        initChatManager()
-        // 聊天监听类：群聊
-        initGroupChatManager()
-    }
-
-    // 聊天监听类
-    private fun initChatManager() {
-        // 单聊
         val cm: ChatManager = IMHelper.getChatManager()
         cm.addIncomingListener(XMChatMessageListener())
         cm.addOutgoingListener(XMChatMessageListener())
+
+        // 聊天监听类：群聊
+        initGroupChatManager()
+
+        // 未读数据提示
+        refreshMainTab0()
     }
 
     // 群聊的聊天室列表
@@ -127,8 +144,12 @@ class MainActivity : AppCompatActivity() {
 
     // 更新Tab0提示数据
     fun refreshMainTab0() {
+        if (currUser == null || TextUtils.isEmpty(currUser?.jid)) {
+            return
+        }
+
         // 消息未读数量
-        val msgUnreadNum: Int = IMCache.getInstance().findAllMsgUnread(this@MainActivity, currJid)
+        val msgUnreadNum: Int = IMCache.getInstance().findAllMsgUnread(this@MainActivity, currUser?.jid)
         runOnUiThread { alphaIndicator!!.getTabView(0).showNumber(msgUnreadNum) }
     }
 }

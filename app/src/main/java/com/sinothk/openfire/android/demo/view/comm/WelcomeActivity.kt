@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import com.sinothk.comm.utils.IntentUtil
-import com.sinothk.comm.utils.PreferUtil
+import com.sinothk.openfire.android.IMCache
 import com.sinothk.openfire.android.IMHelper
+import com.sinothk.openfire.android.demo.MainActivity
 import com.sinothk.openfire.android.demo.R
-import com.sinothk.openfire.android.demo.model.StringValue
 import java.util.*
 
 /**
@@ -23,28 +23,36 @@ class WelcomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_welcome)
 
         Thread {
-            val serverName: String = PreferUtil.get(StringValue.SERVER_NAME, "") as String
-            val serverIp: String = PreferUtil.get(StringValue.SERVER_IP, "") as String
-            val serverPort: String = PreferUtil.get(StringValue.SERVER_PORT, "") as String
+            val startTime: Long = Date().time
 
-            if (TextUtils.isEmpty(serverName) || TextUtils.isEmpty(serverIp) || TextUtils.isEmpty(serverPort)) {
+            // 获取服务器配置
+            val serverConfig: Array<String> = IMCache.getServerConfig()
+
+            if (TextUtils.isEmpty(serverConfig[0]) || TextUtils.isEmpty(serverConfig[1]) || TextUtils.isEmpty(serverConfig[2])) {
                 IntentUtil.openActivity(this, ConfigServerActivity::class.java).finish(true).start()
+
             } else {
-                val startTime: Long = Date().time
 
                 // 配置连接参数
-                IMHelper.init(serverName, serverIp, Integer.parseInt(serverPort))
-                // 打开连接
-                IMHelper.openConnection()
+                IMHelper.init(serverConfig[0], serverConfig[1], Integer.parseInt(serverConfig[2]))
+                if (IMCache.isAutoLogin()) {
 
-                val endTime: Long = Date().time
-                val takeTime: Long = endTime - startTime
+                    IMHelper.openConnection()
 
-                if (takeTime < 3000) {
-                    Thread.sleep(3000 - takeTime)
+                    val endTime: Long = Date().time
+                    val takeTime: Long = endTime - startTime
+                    if (takeTime < 2000) {
+                        Thread.sleep(2000 - takeTime)
+                    }
+
+                    IntentUtil.openActivity(this, MainActivity::class.java).finish(true).start()
+                } else {
+                    IntentUtil.openActivity(this, LoginActivity::class.java).finish(true).start()
                 }
 
-                IntentUtil.openActivity(this, LoginActivity::class.java).finish(true).start()
+
+
+
             }
         }.start()
     }

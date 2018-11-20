@@ -6,6 +6,7 @@ package com.sinothk.openfire.android.bean;
  * @ Describe
  */
 public class IMCode {
+
     public static int SUCCESS; // 成功
     public static int ERROR; // 失败
 

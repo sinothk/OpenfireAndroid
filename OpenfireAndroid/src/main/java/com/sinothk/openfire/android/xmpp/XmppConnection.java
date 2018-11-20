@@ -300,6 +300,7 @@ public class XmppConnection {
             // 添加连接监听
             connectionListener = new XMConnectionListener(account, password);
             getConnection().addConnectionListener(connectionListener);
+
             return "";
         } catch (XMPPException | IOException | SmackException | InterruptedException e) {
             e.printStackTrace();
