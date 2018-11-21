@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sinothk.openfire.android.IMCache
-import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMConstant
 import com.sinothk.openfire.android.bean.IMLastMessage
 import com.sinothk.openfire.android.bean.IMMessage
@@ -16,8 +15,8 @@ import com.sinothk.openfire.android.demo.MainActivity
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.view.chat.activity.ChatActivity
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatListAdapter
-import com.sinothk.openfire.android.demo.xmpp.Watch.Watcher
-import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener
+import com.sinothk.openfire.android.demo.XMChatMessageListener
+import com.sinothk.openfire.android.patterns.Watch.Watcher
 import kotlinx.android.synthetic.main.chat_list_fragment.*
 import org.jivesoftware.smack.packet.Message
 import java.lang.Exception

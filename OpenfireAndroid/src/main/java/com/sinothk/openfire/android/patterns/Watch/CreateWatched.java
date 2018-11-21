@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android.demo.xmpp.Watch;
+package com.sinothk.openfire.android.patterns.Watch;
 
 /**
  * 抽象主题角色

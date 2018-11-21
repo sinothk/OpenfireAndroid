@@ -30,8 +30,8 @@ import com.sinothk.openfire.android.demo.R;
 import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity;
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatRecyclerListAdapter;
 import com.sinothk.openfire.android.demo.view.contacts.activity.FriendInfoActivity;
-import com.sinothk.openfire.android.demo.xmpp.Watch.Watcher;
-import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener;
+import com.sinothk.openfire.android.demo.XMChatMessageListener;
+import com.sinothk.openfire.android.patterns.Watch.Watcher;
 
 import org.jivesoftware.smackx.muc.MultiUserChat;
 

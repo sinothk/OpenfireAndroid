@@ -17,7 +17,6 @@ import com.sinothk.openfire.android.demo.view.ChatFragment
 import com.sinothk.openfire.android.demo.view.ContactsFragment
 import com.sinothk.openfire.android.demo.view.MineFragment
 import com.sinothk.openfire.android.demo.view.comm.LoginActivity
-import com.sinothk.openfire.android.demo.xmpp.XMChatMessageListener
 import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.openfire.android.util.ActivityUtil
 import com.sinothk.openfire.android.util.IMUtil

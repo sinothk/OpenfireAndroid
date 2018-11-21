@@ -1,8 +1,8 @@
-package com.sinothk.openfire.android.demo.xmpp;
+package com.sinothk.openfire.android.demo;
 
-import com.sinothk.openfire.android.demo.xmpp.Watch.CreateWatched;
-import com.sinothk.openfire.android.demo.xmpp.Watch.Watched;
-import com.sinothk.openfire.android.demo.xmpp.Watch.Watcher;
+import com.sinothk.openfire.android.patterns.Watch.CreateWatched;
+import com.sinothk.openfire.android.patterns.Watch.Watched;
+import com.sinothk.openfire.android.patterns.Watch.Watcher;
 
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.chat2.Chat;

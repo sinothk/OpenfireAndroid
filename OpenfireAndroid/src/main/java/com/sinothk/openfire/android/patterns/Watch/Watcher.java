@@ -1,4 +1,4 @@
-package com.sinothk.openfire.android.demo.xmpp.Watch;
+package com.sinothk.openfire.android.patterns.Watch;
 
 import org.jivesoftware.smack.packet.Message;
 
