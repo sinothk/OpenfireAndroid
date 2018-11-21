@@ -163,6 +163,7 @@ class MineFragment : Fragment(), View.OnClickListener {
                         if (result.code == IMCode.SUCCESS) {
 
                             IMCache.setAutoLogin(false)
+                            IMHelper.stopKeepAliveService(activity)
 
                             ActivityUtil.finishAllActivity()
                             IntentUtil.openActivity(activity, LoginActivity::class.java).start()

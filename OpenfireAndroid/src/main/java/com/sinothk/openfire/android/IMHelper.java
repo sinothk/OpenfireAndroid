@@ -1,6 +1,8 @@
 package com.sinothk.openfire.android;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -11,6 +13,7 @@ import com.sinothk.openfire.android.bean.IMConstant;
 import com.sinothk.openfire.android.bean.IMResult;
 import com.sinothk.openfire.android.bean.IMUser;
 import com.sinothk.openfire.android.inters.IMCallback;
+import com.sinothk.openfire.android.keep.ConnectionService;
 import com.sinothk.openfire.android.xmpp.XmppConnection;
 
 import org.jivesoftware.smack.chat2.Chat;
@@ -55,7 +58,7 @@ public class IMHelper {
     /**
      * 判断是否已连接
      */
-    private static boolean checkConnection() {
+    public static boolean checkConnection() {
         return XmppConnection.getInstance().checkConnection();
     }
 
@@ -186,13 +189,30 @@ public class IMHelper {
      */
     public static IMResult autoLogin() {
         final String userName = IMCache.getUserName();
-        final String userPwd = IMCache.getUserPwd();
+        final String pwd = IMCache.getUserPwd();
 
-        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(userPwd)) {
+        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(pwd)) {
             return new IMResult(IMCode.ERROR, "登录失败", "登录参数为空");
         }
 
-        return login(userName, userPwd);
+        if (!checkConnection()) {
+            exeConnection();
+        }
+
+        // 登录
+        String result = XmppConnection.getInstance().login(userName, pwd);
+        if (TextUtils.isEmpty(result)) {
+            IMUser imUser = getCurrUser();
+            return new IMResult(IMCode.SUCCESS, imUser);
+        } else {
+            disconnect();
+
+            if (result.contains("not-authorized")) {
+                return new IMResult(IMCode.ERROR, "账号或密码错误", result);
+            } else {
+                return new IMResult(IMCode.ERROR, "登录失败", result);
+            }
+        }
     }
 
     /**
@@ -1063,11 +1083,6 @@ public class IMHelper {
         return false;
     }
 
-    /**
-     * 打开连接
-     *
-     * @return
-     */
     public static boolean openConnection() {
         return XmppConnection.getInstance().getConnection() != null;
     }
@@ -1107,6 +1122,25 @@ public class IMHelper {
 
         } else if (IMConstant.ChatType.GROUP.equals(imMessage.getChatType())) {
 
+        }
+    }
+
+    /**
+     * ============================  启动服务  ========================================
+     */
+
+    public static void startKeepAliveService(Activity mActivity) {
+        //连续启动Service
+        Intent intentConnection = new Intent(mActivity, ConnectionService.class);
+        mActivity.startService(intentConnection);
+    }
+
+    public static void stopKeepAliveService(Activity mActivity) {
+        //停止Service
+        if (mActivity != null) {
+            // 停止服务，同时取消闹钟定时
+            Intent intentConnection = new Intent(mActivity, ConnectionService.class);
+            mActivity.stopService(intentConnection);
         }
     }
 }

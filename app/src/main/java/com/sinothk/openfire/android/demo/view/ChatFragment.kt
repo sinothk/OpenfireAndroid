@@ -15,8 +15,8 @@ import com.sinothk.openfire.android.demo.MainActivity
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.view.chat.activity.ChatActivity
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatListAdapter
-import com.sinothk.openfire.android.demo.XMChatMessageListener
 import com.sinothk.openfire.android.patterns.Watch.Watcher
+import com.sinothk.openfire.android.xmpp.XMChatMessageListener
 import kotlinx.android.synthetic.main.chat_list_fragment.*
 import org.jivesoftware.smack.packet.Message
 import java.lang.Exception
@@ -37,8 +37,9 @@ class ChatFragment : Fragment(), Watcher {
             rootView = inflater.inflate(R.layout.chat_list_fragment, container, false)
         }
 
-        // 添加消息监听器
-        addWatcher()
+        // 增加XMPP消息观察者
+        XMChatMessageListener.addWatcher(this)
+
         return rootView
     }
 
@@ -85,11 +86,6 @@ class ChatFragment : Fragment(), Watcher {
         super.onDestroyView()
         // 删除XMPP消息观察者
         XMChatMessageListener.removeWatcher(this)
-    }
-
-    private fun addWatcher() {
-        // 增加XMPP消息观察者
-        XMChatMessageListener.addWatcher(this)
     }
 
     /**

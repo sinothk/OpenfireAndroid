@@ -20,6 +20,7 @@ import com.sinothk.openfire.android.demo.view.comm.LoginActivity
 import com.sinothk.openfire.android.inters.IMCallback
 import com.sinothk.openfire.android.util.ActivityUtil
 import com.sinothk.openfire.android.util.IMUtil
+import com.sinothk.openfire.android.xmpp.XMChatMessageListener
 import com.sinothk.tab.weiXin.WxTabMenuMainAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.title_layout.*
@@ -53,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         ActivityUtil.addActivity(this)
 
         currUser = IMCache.getUserInfo()
+
+        IMHelper.startKeepAliveService(this)
 
         initView()
     }

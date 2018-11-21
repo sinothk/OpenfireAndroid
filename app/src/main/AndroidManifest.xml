@@ -5,12 +5,14 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:persistent="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -41,8 +43,25 @@
         <activity android:name=".view.chat.activity.ChatActivity" />
         <activity android:name=".view.contacts.activity.GroupListActivity" />
         <activity android:name=".view.contacts.chatRoom.RoomListActivity" />
-        <activity android:name=".view.contacts.chatRoom.RoomCreateActivity"></activity>
+        <activity android:name=".view.contacts.chatRoom.RoomCreateActivity" />
         <activity android:name=".view.contacts.chatRoom.RoomChatActivity" />
+
+        <receiver android:name="com.sinothk.openfire.android.keep.ConnectionReceive">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.example.service_destory" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.sinothk.openfire.android.keep.ConnectionService"
+            android:enabled="true"
+            android:process=":sinothk.im">
+            <intent-filter android:priority="1000">
+                <action android:name="com.dbjtech.myservice" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
