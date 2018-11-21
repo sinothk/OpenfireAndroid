@@ -159,8 +159,8 @@ public class XmppConnection {
 
             XMPPTCPConnectionConfiguration.Builder config = createBuilder();
             connection = new XMPPTCPConnection(config.build());
-            // 添加连接监听器
-            addConnectListener(connection);
+//            // 添加连接监听器
+//            addConnectListener(connection);
 
             // 断网重连
 
@@ -219,14 +219,14 @@ public class XmppConnection {
         return config;
     }
 
-    /**
-     * 添加连接监听器
-     *
-     * @param connection
-     */
-    private void addConnectListener(AbstractXMPPConnection connection) {
-
-//        connectionListener = new XMConnectionListener() {
+//    /**
+//     * 添加连接监听器
+//     *
+//     * @param connection
+//     */
+//    private void addConnectListener(AbstractXMPPConnection connection) {
+//
+//        connectionListener = new XMConnectionListener("111", "222") {
 //            @Override
 //            public void connected(XMPPConnection xmppConnection) {
 //                Log.e(TAG, "addConnectListener -> connected");
@@ -249,7 +249,7 @@ public class XmppConnection {
 //        };
 //
 //        connection.addConnectionListener(connectionListener);
-    }
+//    }
 
     /**
      * 关闭连接
@@ -292,14 +292,17 @@ public class XmppConnection {
             if (getConnection() == null)
                 return "连接已断开";
 
-            getConnection().login(account, password);
+            // 添加连接监听,为了重连！
+            connectionListener = new XMConnectionListener(account, password);
+            connection.addConnectionListener(connectionListener);
+
+            // 登录
+            connection.login(account, password);
 
             // 更改在线状态
             setPresence(IMStatus.USER_STATUS_ONLINE);
 
-            // 添加连接监听
-            connectionListener = new XMConnectionListener(account, password);
-            getConnection().addConnectionListener(connectionListener);
+
 
             return "";
         } catch (XMPPException | IOException | SmackException | InterruptedException e) {

@@ -205,17 +205,26 @@ public class IMHelper {
         }).start();
     }
 
-    public static void autoLogin(Activity currActivity, final IMCallback callback) {
-        String userName = IMCache.getUserName();
-        String userPwd = IMCache.getUserPwd();
+    public static void autoLogin(final Activity currActivity, final IMCallback callback) {
+        final String userName = IMCache.getUserName();
+        final String userPwd = IMCache.getUserPwd();
 
-        final IMResult result = login(userName, userPwd);
-        currActivity.runOnUiThread(new Runnable() {
+        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(userPwd)) {
+            return;
+        }
+
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                callback.onEnd(result);
+                final IMResult result = login(userName, userPwd);
+                currActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onEnd(result);
+                    }
+                });
             }
-        });
+        }).start();
     }
 
     /**

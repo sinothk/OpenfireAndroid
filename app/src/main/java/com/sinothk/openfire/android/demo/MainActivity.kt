@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         checkIM()
+
+        updateUnread()
     }
 
     private fun initView() {
@@ -106,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (IMHelper.isAuthenticated()) {
-            isOnConnected()
+            isOnConnectOk()
         } else {
             IMHelper.autoLogin(this@MainActivity, object : IMCallback {
                 override fun onStart() {
@@ -114,7 +116,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onEnd(result: IMResult) {
                     if (result.code == IMCode.SUCCESS) {
-                        isOnConnected()
+                        isOnConnectOk()
                     } else {
                         CommonDialog.Builder(this@MainActivity)
                                 .setTitle("提示")
@@ -136,17 +138,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun isOnConnected() {
+    private var chatManager: ChatManager? = null
+
+    private fun isOnConnectOk() {
         // 聊天监听类：单聊
-        val cm: ChatManager = IMHelper.getChatManager()
-        cm.addIncomingListener(XMChatMessageListener())
-        cm.addOutgoingListener(XMChatMessageListener())
+        if (chatManager == null) {
+            chatManager = IMHelper.getChatManager()
+        }
+        chatManager?.addIncomingListener(XMChatMessageListener())
+        chatManager?.addOutgoingListener(XMChatMessageListener())
 
         // 聊天监听类：群聊
         initGroupChatManager()
-
-        // 未读数据提示
-        refreshMainTab0()
     }
 
     // 群聊的聊天室列表
@@ -160,6 +163,11 @@ class MainActivity : AppCompatActivity() {
 //        for (multiUserChat in multiUserChatList) {
 //            multiUserChat.addMessageListener(XMChatMessageListener())
 //        }
+    }
+
+    // 未读数据提示
+    private fun updateUnread() {
+        refreshMainTab0()
     }
 
     // 更新Tab0提示数据

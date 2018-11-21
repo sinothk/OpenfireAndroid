@@ -47,22 +47,6 @@ public class XMConnectionListener implements ConnectionListener {
     }
 
     @Override
-    public void connectionClosedOnError(Exception e) {
-        Log.i("XMConnectionListener", "连接关闭异常");
-        // 判断账号已被登录
-        boolean error = e.getMessage().equals("stream:error (conflict)");
-        if (!error) {
-            // 关闭连接
-            XmppConnection.getInstance().closeConnection();
-            // 重连服务器
-            tExit = new Timer();
-            tExit.schedule(new TimeTask(), loginTime);
-        } else {
-            // 退出登录
-        }
-    }
-
-    @Override
     public void reconnectionSuccessful() {
 
     }
@@ -77,6 +61,24 @@ public class XMConnectionListener implements ConnectionListener {
 
     }
 
+    @Override
+    public void connectionClosedOnError(Exception e) {
+        Log.i("XMConnectionListener", "连接关闭异常");
+
+        // 判断账号已被登录
+        boolean error = e.getMessage().equals("stream:error (conflict)");
+        if (!error) {
+            // 关闭连接
+            XmppConnection.getInstance().getConnection().disconnect();
+
+            // 重连服务器
+            tExit = new Timer();
+            tExit.schedule(new TimeTask(), loginTime);
+        } else {
+            // 退出登录
+        }
+    }
+
     private class TimeTask extends TimerTask {
         @Override
         public void run() {
@@ -89,9 +91,7 @@ public class XMConnectionListener implements ConnectionListener {
 
                         if ("".equals(XmppConnection.getInstance().login(username, password))) {
                             Log.i("XMConnectionListener", "登录成功");
-
                         } else {
-
                             Log.i("XMConnectionListener", "重新登录");
                             tExit.schedule(new TimeTask(), loginTime);
                         }
@@ -102,20 +102,4 @@ public class XMConnectionListener implements ConnectionListener {
             }
         }
     }
-
-//    @Override
-//    public void reconnectingIn(int in) {
-//        Log.i("XMConnectionListener", "reconnectingIn" + in);
-//    }
-//
-//    @Override
-//    public void reconnectionFailed(Exception e) {
-//        Log.i("XMConnectionListener", "reconnectionFailed" + e.getMessage());
-//    }
-//
-//    @Override
-//    public void reconnectionSuccessful() {
-//        Log.i("XMConnectionListener", "reconnectionSuccessful");
-//    }
-
 }
