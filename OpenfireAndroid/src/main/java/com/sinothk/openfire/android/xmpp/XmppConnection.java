@@ -159,10 +159,6 @@ public class XmppConnection {
 
             XMPPTCPConnectionConfiguration.Builder config = createBuilder();
             connection = new XMPPTCPConnection(config.build());
-//            // 添加连接监听器
-//            addConnectListener(connection);
-
-            // 断网重连
 
             // 连接到服务器
             connection.connect();
@@ -208,48 +204,8 @@ public class XmppConnection {
 
         //不需要经过同意才可以添加好友
         Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.accept_all);
-
-
-        // 将相应机制隐掉
-        //SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
-        //SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
-
-        // 断网重连
-
         return config;
     }
-
-//    /**
-//     * 添加连接监听器
-//     *
-//     * @param connection
-//     */
-//    private void addConnectListener(AbstractXMPPConnection connection) {
-//
-//        connectionListener = new XMConnectionListener("111", "222") {
-//            @Override
-//            public void connected(XMPPConnection xmppConnection) {
-//                Log.e(TAG, "addConnectListener -> connected");
-//            }
-//
-//            @Override
-//            public void authenticated(XMPPConnection xmppConnection, boolean b) {
-//                Log.e(TAG, "addConnectListener -> authenticated");
-//            }
-//
-//            @Override
-//            public void connectionClosed() {
-//                Log.e(TAG, "addConnectListener -> connectionClosed");
-//            }
-//
-//            @Override
-//            public void connectionClosedOnError(Exception e) {
-//                Log.e(TAG, "addConnectListener -> connectionClosedOnError");
-//            }
-//        };
-//
-//        connection.addConnectionListener(connectionListener);
-//    }
 
     /**
      * 关闭连接
@@ -301,9 +257,6 @@ public class XmppConnection {
 
             // 更改在线状态
             setPresence(IMStatus.USER_STATUS_ONLINE);
-
-
-
             return "";
         } catch (XMPPException | IOException | SmackException | InterruptedException e) {
             e.printStackTrace();

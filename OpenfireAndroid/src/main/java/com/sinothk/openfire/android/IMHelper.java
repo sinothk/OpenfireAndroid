@@ -59,13 +59,6 @@ public class IMHelper {
         return XmppConnection.getInstance().checkConnection();
     }
 
-//    /**
-//     * 判断是否已连接
-//     */
-//    public static boolean isConnection() {
-//        return XmppConnection.getInstance().checkConnection();
-//    }
-
     /**
      * 判断连接是否通过了身份验证
      * 即是否已登录
@@ -75,46 +68,6 @@ public class IMHelper {
     public static boolean isAuthenticated() {
         return XmppConnection.getInstance().isAuthenticated();
     }
-
-//    /**
-//     * 打开连接
-//     */
-//    public static void exeConnection(final Activity currActivity, final IMCallback callback) {
-//
-//        currActivity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                callback.onStart();
-//            }
-//        });
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                if (XmppConnection.getInstance().checkConfig()) {
-//
-//                    final IMResult imResult = exeConnection();
-//
-//                    currActivity.runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            // 执行连接
-//                            callback.onEnd(imResult);
-//                        }
-//                    });
-//
-//                } else {
-//                    currActivity.runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            callback.onEnd(new IMResult(IMCode.ERROR, "参数初始化有误", "连接参数异常：请检查IMHelper.init(*)是否已经调用！"));
-//                        }
-//                    });
-//                }
-//            }
-//        }).start();
-//    }
 
     /**
      * 连接
@@ -205,18 +158,17 @@ public class IMHelper {
         }).start();
     }
 
+    /**
+     * 自动登录
+     *
+     * @param currActivity
+     * @param callback
+     */
     public static void autoLogin(final Activity currActivity, final IMCallback callback) {
-        final String userName = IMCache.getUserName();
-        final String userPwd = IMCache.getUserPwd();
-
-        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(userPwd)) {
-            return;
-        }
-
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final IMResult result = login(userName, userPwd);
+                final IMResult result = autoLogin();
                 currActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -225,6 +177,22 @@ public class IMHelper {
                 });
             }
         }).start();
+    }
+
+    /**
+     * 自动登录
+     *
+     * @return
+     */
+    public static IMResult autoLogin() {
+        final String userName = IMCache.getUserName();
+        final String userPwd = IMCache.getUserPwd();
+
+        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(userPwd)) {
+            return new IMResult(IMCode.ERROR, "登录失败", "登录参数为空");
+        }
+
+        return login(userName, userPwd);
     }
 
     /**
@@ -1114,6 +1082,10 @@ public class IMHelper {
      * @param imMessage
      */
     public static void send(IMMessage imMessage) {
+
+        if (!XmppConnection.getInstance().isAuthenticated()) {
+            autoLogin();
+        }
 
         if (IMConstant.ChatType.SINGLE.equals(imMessage.getChatType())) {
 

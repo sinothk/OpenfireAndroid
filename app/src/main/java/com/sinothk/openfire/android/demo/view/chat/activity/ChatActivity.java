@@ -214,7 +214,6 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
                 String msg = chatNewEditText.getText().toString();
                 if (!TextUtils.isEmpty(CommonUtils.replaceStr(msg))) {
                     // 创建单聊文本发送信息
-
                     IMMessage imMessage = IMMessage.createSingleTxtMsg(toJid, toName, toAvatar, msg);
                     sendMsg(imMessage);
                 }
@@ -228,22 +227,18 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
      * open fire发送消息
      */
     private void sendMsg(final IMMessage msg) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 IMHelper.send(msg);
-
-                // 更新界面
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        chatNewEditText.setText("");// 输入框内容设置为空
-                        chatAddButton.setVisibility(View.VISIBLE);// 显示“+”按钮
-                        chatNewSend.setVisibility(View.GONE);// 隐藏发送按钮
-                    }
-                });
             }
         }).start();
+
+        // 更新界面
+        chatNewEditText.setText("");// 输入框内容设置为空
+        chatAddButton.setVisibility(View.VISIBLE);// 显示“+”按钮
+        chatNewSend.setVisibility(View.GONE);// 隐藏发送按钮
     }
 
     @Override

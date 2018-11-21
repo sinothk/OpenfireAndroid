@@ -1,12 +1,16 @@
 package com.sinothk.openfire.android.xmpp;
 
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.sinothk.openfire.android.BuildConfig;
 import com.sinothk.openfire.android.xmpp.XmppConnection;
 
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,15 +40,6 @@ public class XMConnectionListener implements ConnectionListener {
         Log.i("XMConnectionListener", "authenticated" + b);
     }
 
-    @Override
-    public void connectionClosed() {
-        Log.i("XMConnectionListener", "连接关闭");
-        // 关闭连接
-        XmppConnection.getInstance().closeConnection();
-        // 重连服务器
-        tExit = new Timer();
-        tExit.schedule(new TimeTask(), loginTime);
-    }
 
     @Override
     public void reconnectionSuccessful() {
@@ -62,20 +57,28 @@ public class XMConnectionListener implements ConnectionListener {
     }
 
     @Override
+    public void connectionClosed() {
+        Log.i("XMConnectionListener", "连接关闭");
+        doReconnect("");
+    }
+
+    @Override
     public void connectionClosedOnError(Exception e) {
         Log.i("XMConnectionListener", "连接关闭异常");
+        doReconnect(e.getMessage());
+    }
 
+    private void doReconnect(String errorDesc) {
         // 判断账号已被登录
-        boolean error = e.getMessage().equals("stream:error (conflict)");
-        if (!error) {
+        boolean isConflict = "stream:error (conflict)".equals(errorDesc);
+        if (isConflict) {
+            // 退出应用
+        } else {
             // 关闭连接
             XmppConnection.getInstance().getConnection().disconnect();
-
             // 重连服务器
             tExit = new Timer();
             tExit.schedule(new TimeTask(), loginTime);
-        } else {
-            // 退出登录
         }
     }
 
@@ -83,8 +86,13 @@ public class XMConnectionListener implements ConnectionListener {
         @Override
         public void run() {
 
-            if (username != null && password != null) {
-                Log.i("XMConnectionListener", "尝试登录");
+            if (TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
+
+                if (BuildConfig.DEBUG) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Log.e("XMConnectionListener", "尝试登录——" + sdf.format(new Date()));
+                }
+
                 // 连接服务器
                 try {
                     if (!XmppConnection.getInstance().isAuthenticated()) {// 用户未登录
@@ -99,6 +107,8 @@ public class XMConnectionListener implements ConnectionListener {
                 } catch (Exception e) {
                     Log.i("XMConnectionListener", "尝试登录,出现异常!");
                 }
+            } else {
+                Log.i("XMConnectionListener", "重登username和password不能为空！");
             }
         }
     }
