@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.openfire.android.IMCache
-import com.sinothk.openfire.android.IMHelper
+import com.sinothk.openfire.android.SmackHelper
 import com.sinothk.openfire.android.demo.MainActivity
 import com.sinothk.openfire.android.demo.R
 import java.util.*
@@ -25,34 +25,33 @@ class WelcomeActivity : AppCompatActivity() {
         Thread {
             val startTime: Long = Date().time
 
+            val serverConfig = IMCache.getServerConfig()
             // 获取服务器配置
-            val serverConfig: Array<String> = IMCache.getServerConfig()
+            val serverName = serverConfig[0]
+            val serverHost = serverConfig[1]
+            val serverPort:Int = Integer.valueOf(serverConfig[2])
 
-            if (TextUtils.isEmpty(serverConfig[0]) || TextUtils.isEmpty(serverConfig[1]) || TextUtils.isEmpty(serverConfig[2])) {
+            if (TextUtils.isEmpty(serverName) || TextUtils.isEmpty(serverHost) || serverPort == 0) {
                 IntentUtil.openActivity(this, ConfigServerActivity::class.java).finish(true).start()
 
             } else {
-
                 // 配置连接参数
-                IMHelper.init(serverConfig[0], serverConfig[1], Integer.parseInt(serverConfig[2]))
-                if (IMCache.isAutoLogin()) {
+                SmackHelper.init(this)
 
-                    IMHelper.openConnection()
-
-                    val endTime: Long = Date().time
-                    val takeTime: Long = endTime - startTime
-                    if (takeTime < 2000) {
-                        Thread.sleep(2000 - takeTime)
-                    }
-
-                    IntentUtil.openActivity(this, MainActivity::class.java).finish(true).start()
-                } else {
+//                if (IMCache.isAutoLogin()) {
+//
+//                    SmackHelper.connect()// 开始连接
+//
+//                    val endTime: Long = Date().time
+//                    val takeTime: Long = endTime - startTime
+//                    if (takeTime < 2000) {
+//                        Thread.sleep(2000 - takeTime)
+//                    }
+//
+//                    IntentUtil.openActivity(this, MainActivity::class.java).finish(true).start()
+//                } else {
                     IntentUtil.openActivity(this, LoginActivity::class.java).finish(true).start()
-                }
-
-
-
-
+//                }
             }
         }.start()
     }

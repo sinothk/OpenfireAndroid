@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.sinothk.comm.utils.IntentUtil
-import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMUser
@@ -93,32 +92,32 @@ class ContactsFragment : Fragment() {
 
 
     private fun getFriendsData() {
-        IMHelper.getFriends(activity, object : IMCallback {
-            override fun onStart() {
-            }
-
-            override fun onEnd(result: IMResult) {
-                var contacts = ArrayList<IMUser>()
-
-                if (result.code == IMCode.SUCCESS) {
-
-                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
-//                    for (imUser in userList) {
-//                        val user = UserBean()
-//                        user.jid = imUser.jid.toString()
-//                        user.name = imUser.name
-//                        user.userAvatar = imUser.userAvatar
-//                        contacts.add(user)
-//                    }
-
-                    IMUser.sort(userList)
-
-                    adapter?.setData(userList)
-                } else {
-
-                }
-            }
-        })
+//        IMHelper.getFriends(activity, object : IMCallback {
+//            override fun onStart() {
+//            }
+//
+//            override fun onEnd(result: IMResult) {
+//                var contacts = ArrayList<IMUser>()
+//
+//                if (result.code == IMCode.SUCCESS) {
+//
+//                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
+////                    for (imUser in userList) {
+////                        val user = UserBean()
+////                        user.jid = imUser.jid.toString()
+////                        user.name = imUser.name
+////                        user.userAvatar = imUser.userAvatar
+////                        contacts.add(user)
+////                    }
+//
+//                    IMUser.sort(userList)
+//
+//                    adapter?.setData(userList)
+//                } else {
+//
+//                }
+//            }
+//        })
     }
 
     /**

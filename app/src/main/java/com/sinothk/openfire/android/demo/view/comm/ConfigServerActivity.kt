@@ -5,7 +5,6 @@ import android.text.TextUtils
 import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.ToastUtil
 import com.sinothk.openfire.android.IMCache
-import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.util.ActivityUtil
 import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
@@ -65,7 +64,7 @@ class ConfigServerActivity : TitleBarActivity() {
         val serverIp = "$ip0.$ip1.$ip2.$ip3"
 
         // 立即更新,为了进入登录界面可以马上登录
-        IMHelper.init(serverName, serverIp, Integer.parseInt(serverPort))
+//        IMHelper.init(serverName, serverIp, Integer.parseInt(serverPort))
 
         IMCache.setServerConfig(serverName, serverIp, serverPort)
 

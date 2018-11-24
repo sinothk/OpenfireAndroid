@@ -1,0 +1,5 @@
+<resources>
+    <string name="serverName">sinothk.org</string>
+    <string name="serverHost">192.168.124.19</string>
+    <string name="serverPort">5222</string>
+</resources>

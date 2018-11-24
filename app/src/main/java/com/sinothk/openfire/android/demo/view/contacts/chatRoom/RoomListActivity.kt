@@ -6,7 +6,6 @@ import android.view.View
 import com.jiangyy.easydialog.InputDialog
 import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.ToastUtil
-import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMChatRoom
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
@@ -41,34 +40,34 @@ class RoomListActivity : TitleBarActivity() {
 
         adapter!!.setOnItemClickListener { _: Int, any: Any ->
 
-            // 开始进入聊天
-            val currUser: IMUser = IMHelper.getCurrUser()
-            val chatRoom: IMChatRoom = any as IMChatRoom
-
-            if (!chatRoom.isPasswordProtected) {
-                val muc: MultiUserChat = IMHelper.joinMultiUserChat(chatRoom.roomJid, currUser.name)
-                RoomChatActivity.startRoomChat(this@RoomListActivity, muc, chatRoom.roomName)
-            } else {
-                InputDialog.Builder(this)
-                        .setTitle("会议室密码")
-                        .setHint("请输入密码进入")
-                        .setLines(1)
-                        .setPositiveButton("进入") { view ->
-                            val pwdStr: String = view.tag.toString()
-                            if (pwdStr.isEmpty()) {
-                                ToastUtil.show("请输入密码")
-                                return@setPositiveButton
-                            }
-
-                            val muc: MultiUserChat? = IMHelper.joinMultiUserChat(chatRoom.roomJid, currUser.name, pwdStr)
-                            if (muc == null) {
-                                ToastUtil.show("密码不正确")
-                                return@setPositiveButton
-                            }
-                            RoomChatActivity.startRoomChat(this@RoomListActivity, muc, chatRoom.roomName)
-
-                        }.setNegativeButton("取消", null).show()
-            }
+//            // 开始进入聊天
+//            val currUser: IMUser = IMHelper.getCurrUser()
+//            val chatRoom: IMChatRoom = any as IMChatRoom
+//
+//            if (!chatRoom.isPasswordProtected) {
+//                val muc: MultiUserChat = IMHelper.joinMultiUserChat(chatRoom.roomJid, currUser.name)
+//                RoomChatActivity.startRoomChat(this@RoomListActivity, muc, chatRoom.roomName)
+//            } else {
+//                InputDialog.Builder(this)
+//                        .setTitle("会议室密码")
+//                        .setHint("请输入密码进入")
+//                        .setLines(1)
+//                        .setPositiveButton("进入") { view ->
+//                            val pwdStr: String = view.tag.toString()
+//                            if (pwdStr.isEmpty()) {
+//                                ToastUtil.show("请输入密码")
+//                                return@setPositiveButton
+//                            }
+//
+//                            val muc: MultiUserChat? = IMHelper.joinMultiUserChat(chatRoom.roomJid, currUser.name, pwdStr)
+//                            if (muc == null) {
+//                                ToastUtil.show("密码不正确")
+//                                return@setPositiveButton
+//                            }
+//                            RoomChatActivity.startRoomChat(this@RoomListActivity, muc, chatRoom.roomName)
+//
+//                        }.setNegativeButton("取消", null).show()
+//            }
         }
 
         findGroupList()
@@ -76,18 +75,18 @@ class RoomListActivity : TitleBarActivity() {
 
     private fun findGroupList() {
 
-        IMHelper.getHostAllRooms(this, object : IMCallback {
-            override fun onStart() {
-            }
-
-            override fun onEnd(result: IMResult) {
-                if (result.code == IMCode.SUCCESS) {
-                    val roomList: ArrayList<IMChatRoom> = result.data as ArrayList<IMChatRoom>
-                    adapter?.setData(roomList)
-                } else {
-
-                }
-            }
-        })
+//        IMHelper.getHostAllRooms(this, object : IMCallback {
+//            override fun onStart() {
+//            }
+//
+//            override fun onEnd(result: IMResult) {
+//                if (result.code == IMCode.SUCCESS) {
+//                    val roomList: ArrayList<IMChatRoom> = result.data as ArrayList<IMChatRoom>
+//                    adapter?.setData(roomList)
+//                } else {
+//
+//                }
+//            }
+//        })
     }
 }

@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import com.sinothk.comm.utils.IntentUtil
-import com.sinothk.openfire.android.IMHelper
+import com.sinothk.openfire.android.SmackHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMUser
@@ -44,7 +44,7 @@ class FriendAddActivity : TitleBarActivity() {
 
             val user: IMUser = any as IMUser
 
-            val currUserName: String = IMHelper.getCurrUser().userName
+            val currUserName: String = SmackHelper.getCurrUser().userName
             if (currUserName == user.userName) {
                 IntentUtil.openActivity(this@FriendAddActivity, UserInfoActivity::class.java).start()
             } else {
@@ -73,32 +73,32 @@ class FriendAddActivity : TitleBarActivity() {
 
     private fun doSearch(content: String) {
 
-        IMHelper.searchUser(this, content, object : IMCallback {
-            override fun onStart() {
-            }
-
-            override fun onEnd(result: IMResult) {
-                val contacts = ArrayList<IMUser>()
-
-                if (result.code == IMCode.SUCCESS) {
-
-                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
-//                    for (imUser in userList) {
-//                        val user = UserBean()
-//                        user.jid = imUser.jid.toString()
-//                        user.userName = imUser.userName
-//                        user.name = imUser.name
-//                        user.email = imUser.email
+//        IMHelper.searchUser(this, content, object : IMCallback {
+//            override fun onStart() {
+//            }
 //
-//                        contacts.add(user)
-//                    }
-
-                    IMUser.sort(userList)
-                    adapter?.setData(userList)
-                } else {
-
-                }
-            }
-        })
+//            override fun onEnd(result: IMResult) {
+//                val contacts = ArrayList<IMUser>()
+//
+//                if (result.code == IMCode.SUCCESS) {
+//
+//                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
+////                    for (imUser in userList) {
+////                        val user = UserBean()
+////                        user.jid = imUser.jid.toString()
+////                        user.userName = imUser.userName
+////                        user.name = imUser.name
+////                        user.email = imUser.email
+////
+////                        contacts.add(user)
+////                    }
+//
+//                    IMUser.sort(userList)
+//                    adapter?.setData(userList)
+//                } else {
+//
+//                }
+//            }
+//        })
     }
 }

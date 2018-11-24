@@ -5,7 +5,6 @@ import android.text.TextUtils
 import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.ToastUtil
-import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.demo.R
@@ -45,21 +44,21 @@ class ChangePwdActivity : TitleBarActivity() {
         val loadingDialog = LoadingDialog.Builder(this@ChangePwdActivity)
         loadingDialog.setTitle("正在加载ing...")
 
-        IMHelper.changePassword(this@ChangePwdActivity, newPwd, object : IMCallback {
-            override fun onStart() {
-                loadingDialog.show()
-            }
-
-            override fun onEnd(result: IMResult?) {
-                loadingDialog.dismiss()
-
-                if (result?.code == IMCode.SUCCESS) {
-                    ActivityUtil.finishAllActivity()
-                    IntentUtil.openActivity(this@ChangePwdActivity, LoginActivity::class.java).start()
-                } else {
-                    ToastUtil.show("修改密码失败")
-                }
-            }
-        })
+//        IMHelper.changePassword(this@ChangePwdActivity, newPwd, object : IMCallback {
+//            override fun onStart() {
+//                loadingDialog.show()
+//            }
+//
+//            override fun onEnd(result: IMResult?) {
+//                loadingDialog.dismiss()
+//
+//                if (result?.code == IMCode.SUCCESS) {
+//                    ActivityUtil.finishAllActivity()
+//                    IntentUtil.openActivity(this@ChangePwdActivity, LoginActivity::class.java).start()
+//                } else {
+//                    ToastUtil.show("修改密码失败")
+//                }
+//            }
+//        })
     }
 }

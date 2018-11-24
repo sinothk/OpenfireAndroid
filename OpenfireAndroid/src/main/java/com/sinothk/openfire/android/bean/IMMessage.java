@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Table;
 import com.sinothk.openfire.android.BuildConfig;
-import com.sinothk.openfire.android.IMHelper;
+import com.sinothk.openfire.android.SmackHelper;
 
 import org.jivesoftware.smack.packet.Message;
 
@@ -288,7 +288,7 @@ public class IMMessage {
         imMessage.setToName(toName);
 
         // 自己
-        IMUser imUser = IMHelper.getCurrUser();
+        IMUser imUser = SmackHelper.getCurrUser();
         imMessage.setFromJid(imUser.getJid());
         imMessage.setFromUserAvatar(imUser.getAvatar());
         imMessage.setFromName(imUser.getName());

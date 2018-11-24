@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import com.sinothk.comm.utils.StringUtil
-import com.sinothk.openfire.android.IMHelper
+import com.sinothk.openfire.android.SmackHelper
 import com.sinothk.openfire.android.bean.IMUser
 import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity
@@ -44,7 +44,7 @@ class UserInfoActivity : TitleBarActivity() {
     }
 
     private fun initUserInfo() {
-        userInfo = IMHelper.getCurrUser()
+        userInfo = SmackHelper.getCurrUser()
 
         val userName: String = StringUtil.getNotNullValue(userInfo!!.userName, "未知")
         setTitleBar(StringUtil.getNotNullValue(userInfo!!.name, userName), true)

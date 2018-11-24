@@ -22,7 +22,8 @@ import com.huang.utils.voice.MediaPlayManager;
 import com.huang.utils.voice.VoiceRecorderButton;
 import com.sinothk.comm.utils.IntentUtil;
 import com.sinothk.openfire.android.IMCache;
-import com.sinothk.openfire.android.IMHelper;
+import com.sinothk.openfire.android.SmackConnection;
+import com.sinothk.openfire.android.SmackHelper;
 import com.sinothk.openfire.android.bean.IMConstant;
 import com.sinothk.openfire.android.bean.IMLastMessage;
 import com.sinothk.openfire.android.bean.IMMessage;
@@ -31,7 +32,6 @@ import com.sinothk.openfire.android.demo.view.base.activity.TitleBarActivity;
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatRecyclerListAdapter;
 import com.sinothk.openfire.android.demo.view.contacts.activity.FriendInfoActivity;
 import com.sinothk.openfire.android.patterns.Watch.Watcher;
-import com.sinothk.openfire.android.xmpp.XMChatMessageListener;
 
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
@@ -85,7 +85,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
 
     private void initData() {
         // 当前用户Jid
-        currJid = IMHelper.getCurrUser().getJid();
+        currJid = SmackHelper.getCurrUser().getJid();
 
         // 对方 "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=2594910732,993782407&fm=58"
         toJid = getIntent().getStringExtra("toJid");
@@ -113,7 +113,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
             }
         });
 
-        XMChatMessageListener.addWatcher(this);// 增加XMPP消息观察者
+        SmackConnection.addWatcher(this);// 增加XMPP消息观察者
 
         swipeView = (SwipeRefreshLayout) findViewById(R.id.swipe);// 下拉刷新
         swipeView.setOnRefreshListener(this);
@@ -231,7 +231,8 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
         new Thread(new Runnable() {
             @Override
             public void run() {
-                IMHelper.send(msg);
+                SmackHelper.send(msg);
+//                IMHelper.send(msg);
             }
         }).start();
 
@@ -256,7 +257,7 @@ public class ChatActivity extends TitleBarActivity implements OnClickListener, S
     @Override
     protected void onDestroy() {
         MediaPlayManager.release();
-        XMChatMessageListener.removeWatcher(this);// 删除XMPP消息观察者
+        SmackConnection.removeWatcher(this);// 删除XMPP消息观察者
         super.onDestroy();
     }
 

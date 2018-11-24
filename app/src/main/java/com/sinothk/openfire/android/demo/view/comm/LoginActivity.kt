@@ -10,7 +10,7 @@ import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.StringUtil
 import com.sinothk.comm.utils.ViewUtil
 import com.sinothk.openfire.android.IMCache
-import com.sinothk.openfire.android.IMHelper
+import com.sinothk.openfire.android.SmackHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMUser
@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
         val loadingDialog = LoadingDialog.Builder(this@LoginActivity)
         loadingDialog.setTitle("正在登录...")
 
-        IMHelper.login(this@LoginActivity, userName, userPwd, object : IMCallback {
+        SmackHelper.login(this@LoginActivity, userName, userPwd, object : IMCallback {
 
             override fun onStart() {
                 loadingDialog.show()
@@ -101,15 +101,15 @@ class LoginActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (!IMHelper.isConfig()) {
-
-            val serverConfig: Array<String> = IMCache.getServerConfig()
-
-            if (TextUtils.isEmpty(serverConfig[0]) || TextUtils.isEmpty(serverConfig[1]) || TextUtils.isEmpty(serverConfig[2])) {
-                IntentUtil.openActivity(this, ConfigServerActivity::class.java).finish(true).start()
-            } else {
-                IMHelper.init(serverConfig[0], serverConfig[1], Integer.parseInt(serverConfig[2]))
-            }
-        }
+//        if (!IMHelper.isConfig()) {
+//
+//            val serverConfig: Array<String> = IMCache.getServerConfig()
+//
+//            if (TextUtils.isEmpty(serverConfig[0]) || TextUtils.isEmpty(serverConfig[1]) || TextUtils.isEmpty(serverConfig[2])) {
+//                IntentUtil.openActivity(this, ConfigServerActivity::class.java).finish(true).start()
+//            } else {
+//                SmackHelper.init(serverConfig[0], serverConfig[1], Integer.parseInt(serverConfig[2]))
+//            }
+//        }
     }
 }

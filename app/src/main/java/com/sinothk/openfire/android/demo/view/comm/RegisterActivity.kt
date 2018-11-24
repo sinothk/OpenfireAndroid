@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.Toast
 import com.jiangyy.easydialog.LoadingDialog
 import com.sinothk.comm.utils.ToastUtil
-import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMUser
@@ -76,24 +75,24 @@ class RegisterActivity : AppCompatActivity() {
         val loadingDialog: LoadingDialog.Builder = LoadingDialog.Builder(this@RegisterActivity)
         loadingDialog.setTitle("注册中...")
 
-        IMHelper.signUp(this@RegisterActivity, newUser, object : IMCallback {
-
-            override fun onStart() {
-                loadingDialog.show()
-            }
-
-            override fun onEnd(result: IMResult) {
-                loadingDialog.dismiss()
-
-                if (result.code == IMCode.SUCCESS) {
-                    show(result.tip)
-                    finish()
-                } else {
-                    show(result.tip)
-                    logPrint(result.msg)
-                }
-            }
-        })
+//        IMHelper.signUp(this@RegisterActivity, newUser, object : IMCallback {
+//
+//            override fun onStart() {
+//                loadingDialog.show()
+//            }
+//
+//            override fun onEnd(result: IMResult) {
+//                loadingDialog.dismiss()
+//
+//                if (result.code == IMCode.SUCCESS) {
+//                    show(result.tip)
+//                    finish()
+//                } else {
+//                    show(result.tip)
+//                    logPrint(result.msg)
+//                }
+//            }
+//        })
     }
 
     private fun show(tip: String) {

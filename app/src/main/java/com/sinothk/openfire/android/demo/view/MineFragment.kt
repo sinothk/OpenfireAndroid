@@ -12,7 +12,7 @@ import com.sinothk.comm.utils.IntentUtil
 import com.sinothk.comm.utils.StringUtil
 import com.sinothk.comm.utils.ToastUtil
 import com.sinothk.openfire.android.IMCache
-import com.sinothk.openfire.android.IMHelper
+import com.sinothk.openfire.android.SmackHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMStatus
@@ -63,7 +63,7 @@ class MineFragment : Fragment(), View.OnClickListener {
      * 显示用户信息
      */
     private fun showUserInfo() {
-        val userInfo: IMUser = IMHelper.getCurrUser()
+        val userInfo: IMUser = SmackHelper.getCurrUser()
 
         val userName: String = StringUtil.getNotNullValue(userInfo.userName, "未知")
         userNameIv.text = userName
@@ -75,128 +75,128 @@ class MineFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            userInfoLayout -> {
-                IntentUtil.openActivity(activity, UserInfoActivity::class.java).start()
-            }
-
-            userQrCodeIv -> {
-                ToastUtil.show("开发中")
-            }
-
-            changePwdItem -> {// 修改密码
-                IntentUtil.openActivity(activity, ChangePwdActivity::class.java).start()
-            }
-
-            setOnlineItem -> {// 设置在线
-                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_ONLINE, object : IMCallback {
-                    override fun onStart() {
-                    }
-
-                    override fun onEnd(result: IMResult) {
-                        if (result.code == IMCode.SUCCESS) {
-                            ToastUtil.show(result.tip)
-                        } else {
-                            ToastUtil.show(result.tip)
-                        }
-                    }
-                })
-            }
-
-            setActiveItem -> {// 设置活跃
-                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_ACTIVE, object : IMCallback {
-                    override fun onStart() {
-                    }
-
-                    override fun onEnd(result: IMResult) {
-                        if (result.code == IMCode.SUCCESS) {
-                            ToastUtil.show(result.tip)
-                        } else {
-                            ToastUtil.show(result.tip)
-                        }
-                    }
-                })
-            }
-
-            setLeaveItem -> {// 设置离开
-                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_LEAVE, object : IMCallback {
-                    override fun onStart() {
-                    }
-
-                    override fun onEnd(result: IMResult) {
-                        if (result.code == IMCode.SUCCESS) {
-                            ToastUtil.show(result.tip)
-                        } else {
-                            ToastUtil.show(result.tip)
-                        }
-                    }
-                })
-            }
-
-            setOffLineItem -> {// 设置离线
-                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_OFFLINE, object : IMCallback {
-                    override fun onStart() {
-                    }
-
-                    override fun onEnd(result: IMResult) {
-                        if (result.code == IMCode.SUCCESS) {
-                            ToastUtil.show(result.tip)
-                        } else {
-                            ToastUtil.show(result.tip)
-                        }
-                    }
-                })
-            }
-
-            logout -> {
-                val loadingDialog = LoadingDialog.Builder(activity)
-                loadingDialog.setTitle("正在退出...")
-
-                IMHelper.logout(activity, object : IMCallback {
-                    override fun onStart() {
-                        loadingDialog.show()
-                    }
-
-                    override fun onEnd(result: IMResult) {
-                        loadingDialog.dismiss()
-
-                        if (result.code == IMCode.SUCCESS) {
-
-                            IMCache.setAutoLogin(false)
-                            IMHelper.stopKeepAliveService(activity)
-
-                            ActivityUtil.finishAllActivity()
-                            IntentUtil.openActivity(activity, LoginActivity::class.java).start()
-                        } else {
-                            ToastUtil.show(result.tip)
-                        }
-                    }
-                })
-            }
-
-            delCurrAccount -> {
-                CommonDialog.Builder(activity)
-                        .setTitle("提示")
-                        .setMessage("确定要删除账号吗?")
-                        .setPositiveButton("注销账号") {
-
-                            IMHelper.deleteAccount(activity, object : IMCallback {
-                                override fun onStart() {
-                                }
-
-                                override fun onEnd(result: IMResult) {
-
-                                    if (result.code == IMCode.SUCCESS) {
-                                        ActivityUtil.finishAllActivity()
-                                        IntentUtil.openActivity(activity, LoginActivity::class.java).start()
-                                    } else {
-                                        ToastUtil.show(result.tip)
-                                    }
-                                }
-                            })
-                        }
-                        .setNegativeButton("取消", null).show()
-            }
-        }
+//        when (v) {
+//            userInfoLayout -> {
+//                IntentUtil.openActivity(activity, UserInfoActivity::class.java).start()
+//            }
+//
+//            userQrCodeIv -> {
+//                ToastUtil.show("开发中")
+//            }
+//
+//            changePwdItem -> {// 修改密码
+//                IntentUtil.openActivity(activity, ChangePwdActivity::class.java).start()
+//            }
+//
+//            setOnlineItem -> {// 设置在线
+//                SmackHelper.setUserStatus(activity, IMStatus.USER_STATUS_ONLINE, object : IMCallback {
+//                    override fun onStart() {
+//                    }
+//
+//                    override fun onEnd(result: IMResult) {
+//                        if (result.code == IMCode.SUCCESS) {
+//                            ToastUtil.show(result.tip)
+//                        } else {
+//                            ToastUtil.show(result.tip)
+//                        }
+//                    }
+//                })
+//            }
+//
+//            setActiveItem -> {// 设置活跃
+//                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_ACTIVE, object : IMCallback {
+//                    override fun onStart() {
+//                    }
+//
+//                    override fun onEnd(result: IMResult) {
+//                        if (result.code == IMCode.SUCCESS) {
+//                            ToastUtil.show(result.tip)
+//                        } else {
+//                            ToastUtil.show(result.tip)
+//                        }
+//                    }
+//                })
+//            }
+//
+//            setLeaveItem -> {// 设置离开
+//                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_LEAVE, object : IMCallback {
+//                    override fun onStart() {
+//                    }
+//
+//                    override fun onEnd(result: IMResult) {
+//                        if (result.code == IMCode.SUCCESS) {
+//                            ToastUtil.show(result.tip)
+//                        } else {
+//                            ToastUtil.show(result.tip)
+//                        }
+//                    }
+//                })
+//            }
+//
+//            setOffLineItem -> {// 设置离线
+//                IMHelper.setUserStatus(activity, IMStatus.USER_STATUS_OFFLINE, object : IMCallback {
+//                    override fun onStart() {
+//                    }
+//
+//                    override fun onEnd(result: IMResult) {
+//                        if (result.code == IMCode.SUCCESS) {
+//                            ToastUtil.show(result.tip)
+//                        } else {
+//                            ToastUtil.show(result.tip)
+//                        }
+//                    }
+//                })
+//            }
+//
+//            logout -> {
+//                val loadingDialog = LoadingDialog.Builder(activity)
+//                loadingDialog.setTitle("正在退出...")
+//
+//                IMHelper.logout(activity, object : IMCallback {
+//                    override fun onStart() {
+//                        loadingDialog.show()
+//                    }
+//
+//                    override fun onEnd(result: IMResult) {
+//                        loadingDialog.dismiss()
+//
+//                        if (result.code == IMCode.SUCCESS) {
+//
+//                            IMCache.setAutoLogin(false)
+//                            IMHelper.stopKeepAliveService(activity)
+//
+//                            ActivityUtil.finishAllActivity()
+//                            IntentUtil.openActivity(activity, LoginActivity::class.java).start()
+//                        } else {
+//                            ToastUtil.show(result.tip)
+//                        }
+//                    }
+//                })
+//            }
+//
+//            delCurrAccount -> {
+//                CommonDialog.Builder(activity)
+//                        .setTitle("提示")
+//                        .setMessage("确定要删除账号吗?")
+//                        .setPositiveButton("注销账号") {
+//
+//                            IMHelper.deleteAccount(activity, object : IMCallback {
+//                                override fun onStart() {
+//                                }
+//
+//                                override fun onEnd(result: IMResult) {
+//
+//                                    if (result.code == IMCode.SUCCESS) {
+//                                        ActivityUtil.finishAllActivity()
+//                                        IntentUtil.openActivity(activity, LoginActivity::class.java).start()
+//                                    } else {
+//                                        ToastUtil.show(result.tip)
+//                                    }
+//                                }
+//                            })
+//                        }
+//                        .setNegativeButton("取消", null).show()
+//            }
+//        }
     }
 }

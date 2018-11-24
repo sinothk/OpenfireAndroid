@@ -2,7 +2,7 @@ package com.sinothk.openfire.android.bean;
 
 import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Table;
-import com.sinothk.openfire.android.IMHelper;
+import com.sinothk.openfire.android.SmackHelper;
 
 @Table(name = "IMLastMessage")
 public class IMLastMessage {
@@ -175,7 +175,7 @@ public class IMLastMessage {
             }
 
             // 当前用户
-            String currUserJid = IMHelper.getCurrUser().getJid();
+            String currUserJid = SmackHelper.getCurrUser().getJid();
 
             IMLastMessage lastMsg = new IMLastMessage();
             if (currUserJid.equals(imMessage.getToJid())) {

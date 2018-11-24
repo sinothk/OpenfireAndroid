@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import com.sinothk.comm.utils.ToastUtil
-import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMChatRoom
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
@@ -65,22 +64,22 @@ class RoomCreateActivity : TitleBarActivity() {
             // 是否是永久房间
             room.isPersistent = isPersistentRoom
 
-            IMHelper.createChartRoom(this@RoomCreateActivity, room, object : IMCallback {
-                override fun onStart() {
-
-                }
-
-                override fun onEnd(result: IMResult) {
-                    if (result.code == IMCode.SUCCESS) {
-                        ToastUtil.show("创建成功！")
-
-                        val muc: MultiUserChat = result.data as MultiUserChat
-                        RoomChatActivity.startRoomChat(this@RoomCreateActivity, muc, roomName)
-                    } else {
-                        ToastUtil.show(result.tip)
-                    }
-                }
-            })
+//            IMHelper.createChartRoom(this@RoomCreateActivity, room, object : IMCallback {
+//                override fun onStart() {
+//
+//                }
+//
+//                override fun onEnd(result: IMResult) {
+//                    if (result.code == IMCode.SUCCESS) {
+//                        ToastUtil.show("创建成功！")
+//
+//                        val muc: MultiUserChat = result.data as MultiUserChat
+//                        RoomChatActivity.startRoomChat(this@RoomCreateActivity, muc, roomName)
+//                    } else {
+//                        ToastUtil.show(result.tip)
+//                    }
+//                }
+//            })
         })
 
         needPwdRg.setOnCheckedChangeListener { group, checkedId ->

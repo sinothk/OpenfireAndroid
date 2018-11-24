@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sinothk.openfire.android.IMCache
+import com.sinothk.openfire.android.SmackConnection
 import com.sinothk.openfire.android.bean.IMConstant
 import com.sinothk.openfire.android.bean.IMLastMessage
 import com.sinothk.openfire.android.bean.IMMessage
@@ -16,7 +17,6 @@ import com.sinothk.openfire.android.demo.R
 import com.sinothk.openfire.android.demo.view.chat.activity.ChatActivity
 import com.sinothk.openfire.android.demo.view.chat.adapter.ChatListAdapter
 import com.sinothk.openfire.android.patterns.Watch.Watcher
-import com.sinothk.openfire.android.xmpp.XMChatMessageListener
 import kotlinx.android.synthetic.main.chat_list_fragment.*
 import org.jivesoftware.smack.packet.Message
 import java.lang.Exception
@@ -38,7 +38,7 @@ class ChatFragment : Fragment(), Watcher {
         }
 
         // 增加XMPP消息观察者
-        XMChatMessageListener.addWatcher(this)
+        SmackConnection.addWatcher(this)
 
         return rootView
     }
@@ -77,7 +77,7 @@ class ChatFragment : Fragment(), Watcher {
     }
 
 
-    private fun loadingData() {
+    fun loadingData() {
         val lastMsg: ArrayList<IMLastMessage> = IMCache.findMyLastMsg(context, currUserJid)
         adapter!!.setData(lastMsg)
     }
@@ -85,66 +85,66 @@ class ChatFragment : Fragment(), Watcher {
     override fun onDestroyView() {
         super.onDestroyView()
         // 删除XMPP消息观察者
-        XMChatMessageListener.removeWatcher(this)
+        SmackConnection.removeWatcher(this)
     }
 
     /**
      * 收到消息
      */
     override fun update(message: Message?) {
-        if (message == null) {
-            return
-        }
-
-        // 解析收到的消息
-        val imMessage: IMMessage = IMMessage.getIMMessageByMessageBody(message.body)
-        if (imMessage.fromJid == null || currUserJid == null) {
-            return
-        }
-
-        // 设置接收状态和未读状态
-        if (imMessage.fromJid == currUserJid) {
-            // 发出
-            imMessage.fromType = IMConstant.FromType.SEND
-            imMessage.msgStatus = IMConstant.MsgStatus.READ
-        } else {
-            // 收到消息
-            imMessage.fromType = IMConstant.FromType.RECEIVE
-            imMessage.msgStatus = IMConstant.MsgStatus.UNREAD
-        }
-
-        // 保存最后一条数据
-        try {
-            val lastMsg: IMLastMessage? = IMLastMessage.createLastMsg(imMessage)
-            IMCache.saveOrUpdateLastMsg(context, lastMsg)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        // 保存消息到数据库
-        try {
-            // 保存
-            IMCache.saveOrUpdateMsg(context, imMessage)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        // 保存后，再更新界面
-        try {
-            // 延迟，为了等消息保存完成后再查询
-            Thread.sleep(1000)
-
-            // 刷新界面
-            activity?.runOnUiThread {
-                // 更新数据
-                loadingData()
-
-                // 更新 MainActivity未读
-                refreshMainActivity()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//        if (message == null) {
+//            return
+//        }
+//
+//        // 解析收到的消息
+//        val imMessage: IMMessage = IMMessage.getIMMessageByMessageBody(message.body)
+//        if (imMessage.fromJid == null || currUserJid == null) {
+//            return
+//        }
+//
+//        // 设置接收状态和未读状态
+//        if (imMessage.fromJid == currUserJid) {
+//            // 发出
+//            imMessage.fromType = IMConstant.FromType.SEND
+//            imMessage.msgStatus = IMConstant.MsgStatus.READ
+//        } else {
+//            // 收到消息
+//            imMessage.fromType = IMConstant.FromType.RECEIVE
+//            imMessage.msgStatus = IMConstant.MsgStatus.UNREAD
+//        }
+//
+//        // 保存最后一条数据
+//        try {
+//            val lastMsg: IMLastMessage? = IMLastMessage.createLastMsg(imMessage)
+//            IMCache.saveOrUpdateLastMsg(context, lastMsg)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//
+//        // 保存消息到数据库
+//        try {
+//            // 保存
+//            IMCache.saveOrUpdateMsg(context, imMessage)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//
+//        // 保存后，再更新界面
+//        try {
+//            // 延迟，为了等消息保存完成后再查询
+//            Thread.sleep(1000)
+//
+//            // 刷新界面
+//            activity?.runOnUiThread {
+//                // 更新数据
+//                loadingData()
+//
+//                // 更新 MainActivity未读
+//                refreshMainActivity()
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
     }
 
     /**

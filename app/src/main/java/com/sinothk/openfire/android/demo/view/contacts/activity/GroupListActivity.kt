@@ -3,7 +3,7 @@ package com.sinothk.openfire.android.demo.view.contacts.activity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import com.sinothk.openfire.android.IMHelper
+//import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.demo.R
@@ -48,30 +48,30 @@ class GroupListActivity : TitleBarActivity() {
 
     private fun findGroupList() {
 
-        IMHelper.findMyGroups(this, "", object : IMCallback {
-            override fun onStart() {
-            }
-
-            override fun onEnd(result: IMResult) {
-                if (result.code == IMCode.SUCCESS) {
-
-//                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
-//                    for (imUser in userList) {
-//                        val user = UserBean()
-//                        user.jid = imUser.jid.toString()
-//                        user.userName = imUser.userName
-//                        user.name = imUser.name
-//                        user.email = imUser.email
+//        IMHelper.findMyGroups(this, "", object : IMCallback {
+//            override fun onStart() {
+//            }
 //
-//                        contacts.add(user)
-//                    }
+//            override fun onEnd(result: IMResult) {
+//                if (result.code == IMCode.SUCCESS) {
 //
-//                    UserBean.sort(contacts)
-//                    adapter?.setData(contacts)
-                } else {
-
-                }
-            }
-        })
+////                    val userList: ArrayList<IMUser> = result.data as ArrayList<IMUser>
+////                    for (imUser in userList) {
+////                        val user = UserBean()
+////                        user.jid = imUser.jid.toString()
+////                        user.userName = imUser.userName
+////                        user.name = imUser.name
+////                        user.email = imUser.email
+////
+////                        contacts.add(user)
+////                    }
+////
+////                    UserBean.sort(contacts)
+////                    adapter?.setData(contacts)
+//                } else {
+//
+//                }
+//            }
+//        })
     }
 }

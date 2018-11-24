@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import com.sinothk.comm.utils.StringUtil
 import com.sinothk.comm.utils.ToastUtil
-import com.sinothk.openfire.android.IMHelper
 import com.sinothk.openfire.android.bean.IMCode
 import com.sinothk.openfire.android.bean.IMResult
 import com.sinothk.openfire.android.bean.IMUser
@@ -60,27 +59,27 @@ class FriendInfoActivity : TitleBarActivity() {
 
     private fun getUserInf(jid: String?) {
 
-        IMHelper.getUserInfo(this, jid, object : IMCallback {
-            override fun onStart() {
-            }
-
-            override fun onEnd(result: IMResult) {
-
-                if (result.code == IMCode.SUCCESS) {
-                    val user: IMUser = result.data as IMUser
-                    user.friendship = IMUser.Friendship.FRIEND
-                    showUserInfo(user)
-
-                } else {
-                    val imUser = IMUser()
-                    imUser.friendship = IMUser.Friendship.NONE
-                    imUser.jid = jid
-                    imUser.name = name
-
-                    showUserInfo(imUser)
-                }
-            }
-        })
+//        IMHelper.getUserInfo(this, jid, object : IMCallback {
+//            override fun onStart() {
+//            }
+//
+//            override fun onEnd(result: IMResult) {
+//
+//                if (result.code == IMCode.SUCCESS) {
+//                    val user: IMUser = result.data as IMUser
+//                    user.friendship = IMUser.Friendship.FRIEND
+//                    showUserInfo(user)
+//
+//                } else {
+//                    val imUser = IMUser()
+//                    imUser.friendship = IMUser.Friendship.NONE
+//                    imUser.jid = jid
+//                    imUser.name = name
+//
+//                    showUserInfo(imUser)
+//                }
+//            }
+//        })
     }
 
     private fun showUserInfo(userInfo: IMUser) {
@@ -113,40 +112,40 @@ class FriendInfoActivity : TitleBarActivity() {
 
         // 删除好友
         delFriendBtn.setOnClickListener {
-            IMHelper.deleteFriend(this@FriendInfoActivity, userName, name, object : IMCallback {
-                override fun onStart() {
-
-                }
-
-                override fun onEnd(result: IMResult) {
-                    ToastUtil.show(result.tip)
-
-                    if (result.code == IMCode.SUCCESS) {
-                        showFriendship(false)
-                    } else {
-                        showFriendship(true)
-                    }
-                }
-            })
+//            IMHelper.deleteFriend(this@FriendInfoActivity, userName, name, object : IMCallback {
+//                override fun onStart() {
+//
+//                }
+//
+//                override fun onEnd(result: IMResult) {
+//                    ToastUtil.show(result.tip)
+//
+//                    if (result.code == IMCode.SUCCESS) {
+//                        showFriendship(false)
+//                    } else {
+//                        showFriendship(true)
+//                    }
+//                }
+//            })
         }
 
         // 添加好友
         addFriendBtn.setOnClickListener {
-            IMHelper.addFriend(this@FriendInfoActivity, userName, name, object : IMCallback {
-                override fun onStart() {
-
-                }
-
-                override fun onEnd(result: IMResult) {
-                    ToastUtil.show(result.tip)
-
-                    if (result.code == IMCode.SUCCESS) {
-                        showFriendship(true)
-                    } else {
-                        showFriendship(false)
-                    }
-                }
-            })
+//            IMHelper.addFriend(this@FriendInfoActivity, userName, name, object : IMCallback {
+//                override fun onStart() {
+//
+//                }
+//
+//                override fun onEnd(result: IMResult) {
+//                    ToastUtil.show(result.tip)
+//
+//                    if (result.code == IMCode.SUCCESS) {
+//                        showFriendship(true)
+//                    } else {
+//                        showFriendship(false)
+//                    }
+//                }
+//            })
         }
     }
 
